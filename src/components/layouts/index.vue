@@ -13,7 +13,7 @@
     </div>
 </template>
 <script>
-import HeadIndex from "./head/Index";
+import HeadIndex from "./head/index";
 export default {
     name: "layouts",
     components: { HeadIndex },

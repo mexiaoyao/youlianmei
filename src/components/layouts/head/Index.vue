@@ -10,8 +10,8 @@
     </a-row>
 </template>
 <script>
-import AppMenu from "./AppMenu.vue";
-import UserInfo from "./UserInfo.vue";
+import AppMenu from "./appMenu.vue";
+import UserInfo from "./userInfo.vue";
 export default {
     name: "head-indx",
     components: { AppMenu, UserInfo },
