@@ -7,23 +7,16 @@
             <router-view />
         </div>
         <div class="app_footer">
-            <a-row>版权所有：{{company}} 邮箱：{{email}}</a-row>
-            <a-row>备案号：{{beian}}</a-row>
+            <footer-index />
         </div>
     </div>
 </template>
 <script>
 import HeadIndex from "./head/index";
+import FooterIndex from "./footer/index";
 export default {
     name: "layouts",
-    components: { HeadIndex },
-    data() {
-        return {
-            company: process.env.VUE_APP_COMPANY,
-            email: process.env.VUE_APP_EMAIL,
-            beian: process.env.VUE_APP_BEIAN
-        };
-    }
+    components: { HeadIndex, FooterIndex }
 };
 </script>
 <style scoped>
@@ -33,4 +26,4 @@ export default {
 .app_footer {
     text-align: center;
 }
-</style>>
+</style>

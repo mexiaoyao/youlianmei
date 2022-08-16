@@ -1,5 +1,5 @@
 <template functional>
-    <h3 :style="{ margin: '16px 0', paddingLeft:'15px' }">{{ props.info}}</h3>
+    <div class="titleName">{{ props.info}}</div>
 </template>
 <script>
 export default {
@@ -19,4 +19,19 @@ export default {
 //
 </script> -->
 <style scoped>
+.titleName {
+    margin: 16px;
+    padding-left: 15px;
+    position: relative;
+}
+.titleName::before {
+    content: "";
+    width: 4px;
+    height: 80%;
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 2px;
+    background: #40a0ce;
+}
 </style>
