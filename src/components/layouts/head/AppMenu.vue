@@ -36,16 +36,32 @@ export default {
     methods: {
         //获取当前URL打开的菜单
         getDefaultMenuKeys() {
-            let menu = this.menus
-                .map((item) => item.children)
-                .flat()
-                .find((item) => this.$route.path.includes(item.path));
-            if (menu) {
-                this.openKeys = [menu.key.split(".")[0]];
-                this.selectedKeys = [menu.key];
-            } else {
-                this.openKeys = [""];
-                this.selectedKeys = [""];
+            if (null != this.menus && this.menus.length > 0) {
+                // let ss = this.menus
+                //     .filter((item) => {
+                //         console.log("1");
+                //         return item;
+                //     })
+                //     .find((item) => {
+                //         console.log("2");
+                //         return true;
+                //     });
+                let menu = this.menus
+                    .map((item) => item.children)
+                    .flat()
+                    .find((item) => {
+                        if (null != item && undefined != item && null != item.path) {
+                            return this.$route.path.includes(item.path);
+                        }
+                        return false;
+                    });
+                if (menu) {
+                    this.openKeys = [menu.key.split(".")[0]];
+                    this.selectedKeys = [menu.key];
+                } else {
+                    this.openKeys = [""];
+                    this.selectedKeys = [""];
+                }
             }
         },
         menuOpenChange(openKeys) {

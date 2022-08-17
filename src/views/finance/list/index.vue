@@ -1,10 +1,16 @@
 <template>
-    <div>股票列表</div>
+    <div>
+        <a-row>
+            <Breadcrumb />
+        </a-row>
+        <a-row>股票列表</a-row>
+    </div>
 </template>
 <script>
+import Breadcrumb from "@/components/common/Breadcrumb";
 export default {
     name: "finance-list",
-    components: {},
+    components: { Breadcrumb },
     data() {
         return {
             id: 123,
