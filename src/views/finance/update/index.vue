@@ -1,10 +1,16 @@
 <template>
-    <div>股票更新</div>
+    <div>
+        <a-row>
+            <Breadcrumb />
+        </a-row>
+        <a-row>股票更新</a-row>
+    </div>
 </template>
 <script>
+import Breadcrumb from "@/components/common/Breadcrumb";
 export default {
     name: "finance-update",
-    components: {},
+    components: { Breadcrumb },
     data() {
         return {
             id: 123,
