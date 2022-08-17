@@ -17,15 +17,15 @@ export default {
     components: { AppMenu, UserInfo },
     data() {
         return {
-            id: 123
+            id: 123,
         };
     },
     created() {
         this.init();
     },
     methods: {
-        init() {}
-    }
+        init() {},
+    },
 };
 </script>
 <style scoped>

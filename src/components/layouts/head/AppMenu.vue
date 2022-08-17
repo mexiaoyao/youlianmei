@@ -1,39 +1,77 @@
 <template>
     <div class="menuTop">
-        <a-menu mode="horizontal">
-            <a-menu-item key="home">首页</a-menu-item>
-            <a-sub-menu>
-                <span class="submenu-title-wrapper" slot="title">金融行业</span>
-                <a-menu-item key="setting:1">Option 1</a-menu-item>
-                <a-menu-divider />
-                <a-menu-item key="setting:2">Option 2</a-menu-item>
-            </a-sub-menu>
-            <a-menu-item key="alipay">健康管理</a-menu-item>
+        <a-menu :openKeys="openKeys" @openChange="menuOpenChange" mode="horizontal" v-model="selectedKeys">
+            <template v-for="item in menus">
+                <a-menu-item :key="item.key" @click="menuClick(item.path)" v-if="!item.children">
+                    <span>{{ item.meta.title }}</span>
+                </a-menu-item>
+                <sub-menu :key="item.key + 'sub'" :menuInfo="item" v-else />
+            </template>
         </a-menu>
     </div>
 </template>
 <script>
+import SubMenu from "./subMenu";
+import routerData from "@/router/routerData";
 export default {
     name: "app-menu",
+    components: {
+        "sub-menu": SubMenu,
+    },
     data() {
         return {
-            id: 123
+            openKeys: [],
+            selectedKeys: [],
         };
     },
+    computed: {
+        menus() {
+            //return routerData.filter((m) => !(m.key === "account" && localStorage.getItem(StorageConstant.ADMIN_ACCOUNT_TYPE) !== "super"));
+            return routerData;
+        },
+    },
     created() {
-        this.init();
+        this.getDefaultMenuKeys();
     },
     methods: {
-        init() {}
-    }
+        //获取当前URL打开的菜单
+        getDefaultMenuKeys() {
+            let menu = this.menus
+                .map((item) => item.children)
+                .flat()
+                .find((item) => this.$route.path.includes(item.path));
+            if (menu) {
+                this.openKeys = [menu.key.split(".")[0]];
+                this.selectedKeys = [menu.key];
+            } else {
+                this.openKeys = [""];
+                this.selectedKeys = [""];
+            }
+        },
+        menuOpenChange(openKeys) {
+            if (openKeys.length > 0) {
+                this.openKeys = [[...openKeys].pop()];
+            } else {
+                this.openKeys = [];
+            }
+        },
+        menuClick(path) {
+            this.$router.push(path.replace(":appId", this.$route.params.appId));
+        },
+    },
 };
 </script>
 <style scoped>
 .menuTop {
-    padding-top: 20px;
+    width: 100%;
+    height: 100%;
+    position: relative;
 }
 .ant-menu {
     background: none;
     color: #fff;
+    position: absolute;
+    bottom: -2px;
+    left: 0px;
 }
 </style>
