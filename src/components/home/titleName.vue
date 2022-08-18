@@ -3,21 +3,10 @@
 </template>
 <script>
 export default {
-    props: ["info"]
+    props: ["info"],
 };
 </script>
-<!-- //<script>
-// export default {
-//     name: "titleName",
-//     props: {
-//         titleName: {
-//             type: String,
-//             default: ""
-//         }
-//     }
-// };
-//
-</script> -->
+
 <style scoped>
 .titleName {
     margin: 16px;

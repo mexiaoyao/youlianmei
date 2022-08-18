@@ -16,13 +16,17 @@ import HeadIndex from "./head/index";
 import FooterIndex from "./footer/index";
 export default {
     name: "layouts",
-    components: { HeadIndex, FooterIndex }
+    components: { HeadIndex, FooterIndex },
 };
 </script>
 <style scoped>
 .app_header {
-    background-color: #18a8ff;
+    background: #141414;
 }
+.app_content {
+    background: #f0f2f5;
+}
+
 .app_footer {
     text-align: center;
 }
