@@ -3,7 +3,7 @@
         <a-row>
             <Breadcrumb />
         </a-row>
-        <a-row>
+        <a-row class="pdlr20 paddtb15">
             <a-form :form="form" @submit="submitSearch" layout="inline">
                 <a-form-item label="名称">
                     <a-input placeholder="名称"></a-input>
