@@ -40,6 +40,7 @@
     </div>
 </template>
 <script>
+import axios from "axios";
 import Breadcrumb from "@/components/common/Breadcrumb";
 export default {
     name: "finance-list",
@@ -65,7 +66,9 @@ export default {
     },
     methods: {
         init() {
-            this.$axiosPost("/login/verCode").then((res) => {
+            axios.get("http://localhost:7878/ylm/indexCode").then((res) => {
+                debugger;
+                
                 this.verCode = res;
             });
         },
