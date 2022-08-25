@@ -40,8 +40,6 @@
     </div>
 </template>
 <script>
-import { FinanceControl } from "@/api/finance.js";
-
 import Breadcrumb from "@/components/common/Breadcrumb";
 export default {
     name: "finance-list",
@@ -67,7 +65,16 @@ export default {
     },
     methods: {
         init() {
-            this.getfinanceList();
+            $axios
+                .get("https://172.16.8.152:10669/server-enterprise/loginController/getVerCode.vrv?ran=1661417419716")
+                .then(function (response) {
+                    debugger;
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            //this.getfinanceList();
         },
         submitSearch() {},
         //定义一个请求数据的方法
