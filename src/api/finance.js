@@ -11,10 +11,12 @@ import axios from "@/axios/axios";
 
 解决方法 : 在vue.config.js中 设置跨域处理
 */
-export default {
+
+export class FinanceControl {
     //封装查询用户的方法
-    async getAllUsers() {
-        let res = await axios.post("/vueapi/api/admin/getAllUsers");
+    static getfinanceList(params) {
+        let res = axios.post("/finance/list", params);
+        debugger;
         return res;
     }
-};
+}

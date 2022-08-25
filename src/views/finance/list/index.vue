@@ -18,7 +18,7 @@
         </a-row>
         <a-row>
             <a-table
-                :data-source="tableData"
+                :data-source="list"
                 :loading="isLoading"
                 :locale="locale"
                 :pagination="pagination"
@@ -40,6 +40,8 @@
     </div>
 </template>
 <script>
+import { FinanceControl } from "@/api/finance.js";
+
 import Breadcrumb from "@/components/common/Breadcrumb";
 export default {
     name: "finance-list",
@@ -52,129 +54,9 @@ export default {
                 code: "",
                 alias: "",
             },
-            tableData: [
-                {
-                    id:1,
-                    indexType:1,
-                    codeNumber:'002400',
-                    sharesName:'省广集团',
-                    sharesAlise:'广东省广集团',
-                    status:0,
-                    createTime:'2022.05.06 15:16:10',
-                    updateTime:'2022.05.06 15:16:10',
-                    remarks:''
-                },
-                {
-                    id:1,
-                    indexType:1,
-                    codeNumber:'002400',
-                    sharesName:'省广集团',
-                    sharesAlise:'广东省广集团',
-                    status:0,
-                    createTime:'2022.05.06 15:16:10',
-                    updateTime:'2022.05.06 15:16:10',
-                    remarks:''
-                },
-                {
-                    id:1,
-                    indexType:1,
-                    codeNumber:'002400',
-                    sharesName:'省广集团',
-                    sharesAlise:'广东省广集团',
-                    status:0,
-                    createTime:'2022.05.06 15:16:10',
-                    updateTime:'2022.05.06 15:16:10',
-                    remarks:''
-                },
-                {
-                    id:1,
-                    indexType:1,
-                    codeNumber:'002400',
-                    sharesName:'省广集团',
-                    sharesAlise:'广东省广集团',
-                    status:0,
-                    createTime:'2022.05.06 15:16:10',
-                    updateTime:'2022.05.06 15:16:10',
-                    remarks:''
-                },
-                {
-                    id:1,
-                    indexType:1,
-                    codeNumber:'002400',
-                    sharesName:'省广集团',
-                    sharesAlise:'广东省广集团',
-                    status:0,
-                    createTime:'2022.05.06 15:16:10',
-                    updateTime:'2022.05.06 15:16:10',
-                    remarks:''
-                },
-                {
-                    id:1,
-                    indexType:1,
-                    codeNumber:'002400',
-                    sharesName:'省广集团',
-                    sharesAlise:'广东省广集团',
-                    status:0,
-                    createTime:'2022.05.06 15:16:10',
-                    updateTime:'2022.05.06 15:16:10',
-                    remarks:''
-                },
-                {
-                    id:1,
-                    indexType:1,
-                    codeNumber:'002400',
-                    sharesName:'省广集团',
-                    sharesAlise:'广东省广集团',
-                    status:0,
-                    createTime:'2022.05.06 15:16:10',
-                    updateTime:'2022.05.06 15:16:10',
-                    remarks:''
-                },
-                {
-                    id:1,
-                    indexType:1,
-                    codeNumber:'002400',
-                    sharesName:'省广集团',
-                    sharesAlise:'广东省广集团',
-                    status:0,
-                    createTime:'2022.05.06 15:16:10',
-                    updateTime:'2022.05.06 15:16:10',
-                    remarks:''
-                },
-                {
-                    id:1,
-                    indexType:1,
-                    codeNumber:'002400',
-                    sharesName:'省广集团',
-                    sharesAlise:'广东省广集团',
-                    status:0,
-                    createTime:'2022.05.06 15:16:10',
-                    updateTime:'2022.05.06 15:16:10',
-                    remarks:''
-                },
-                {
-                    id:1,
-                    indexType:1,
-                    codeNumber:'002400',
-                    sharesName:'省广集团',
-                    sharesAlise:'广东省广集团',
-                    status:0,
-                    createTime:'2022.05.06 15:16:10',
-                    updateTime:'2022.05.06 15:16:10',
-                    remarks:''
-                },
-                {
-                    id:1,
-                    indexType:1,
-                    codeNumber:'002400',
-                    sharesName:'省广集团',
-                    sharesAlise:'广东省广集团',
-                    status:0,
-                    createTime:'2022.05.06 15:16:10',
-                    updateTime:'2022.05.06 15:16:10',
-                    remarks:''
-                },
-            ],
+            page: 1,
+            taotal: 0,
+            list: [],
             pagination: {},
             locale: { emptyText: <a-empty description="暂无数据" /> },
         };
@@ -184,8 +66,15 @@ export default {
         this.init();
     },
     methods: {
-        init() {},
+        init() {
+            this.getfinanceList();
+        },
         submitSearch() {},
+        //定义一个请求数据的方法
+        async getfinanceList() {
+            let res = await FinanceControl.getfinanceList({});
+            this.tableData = res;
+        },
     },
 };
 </script>
