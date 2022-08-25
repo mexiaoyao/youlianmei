@@ -6,12 +6,11 @@ module.exports = {
         // 是否在浏览器打开
         open: false,
         proxy: {
-            "/api": {
+            "/(vrv-manage-center|linkdood-resource|picture)": {
                 target: API_FIEX,
                 // 获取cookie
                 changeOrigin: true,
-                secure: false,
-                disableHostCheck: true
+                secure: false
             }
         }
     }
