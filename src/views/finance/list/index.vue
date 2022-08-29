@@ -66,9 +66,7 @@ export default {
     },
     methods: {
         init() {
-            axios.get("http://localhost:7878/ylm/indexCode").then((res) => {
-                debugger;
-                
+            axios.get("/ylm/indexCode").then((res) => {
                 this.verCode = res;
             });
         },

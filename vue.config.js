@@ -6,7 +6,7 @@ module.exports = {
         // 是否在浏览器打开
         open: false,
         proxy: {
-            "/(vrv-manage-center|linkdood-resource|picture)": {
+            "/ylm": {
                 target: API_FIEX,
                 // 获取cookie
                 changeOrigin: true,
