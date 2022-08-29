@@ -3,7 +3,7 @@
         <a-row>
             <Breadcrumb />
         </a-row>
-        <a-row class="pdlr20 paddtb15">
+        <a-row class="rowPdMar">
             <a-form :form="form" @submit="submitSearch" layout="inline">
                 <a-form-item label="名称">
                     <a-input placeholder="名称"></a-input>
@@ -16,7 +16,7 @@
                 </a-form-item>
             </a-form>
         </a-row>
-        <a-row>
+        <a-row class="rowPdMar">
             <a-table
                 :data-source="list"
                 :loading="isLoading"
@@ -66,15 +66,17 @@ export default {
     },
     methods: {
         init() {
-            axios.get("/ylm/indexCode").then((res) => {
-                this.verCode = res;
-            });
+            // axios.get("/ylm/indexCode").then((res) => {
+            //     this.verCode = res;
+            // });
+            this.getfinanceList();
         },
         submitSearch() {},
         //定义一个请求数据的方法
-        async getfinanceList() {
-            let res = await FinanceControl.getfinanceList({});
-            this.tableData = res;
+        getfinanceList() {
+            axios.post("/ylm/finance/list").then((res) => {
+                this.list = res.data.data.list || [];
+            });
         },
     },
 };

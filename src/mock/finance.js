@@ -1,6 +1,6 @@
 import Mock from "mockjs";
 
-Mock.mock("/finance/list", "post", {
+Mock.mock("/ylm/finance/list", "post", {
     code: 10000,
     data: {
         total: 100,
