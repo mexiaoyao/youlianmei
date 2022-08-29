@@ -24,23 +24,32 @@
                 :pagination="pagination"
                 :rowKey="item => item.id"
             >
-                <a-table-column align="center" title="序号">
+                <a-table-column align="center" key="id" title="序号">
                     <template slot-scope="text, item, index">{{ index+1 }}</template>
                 </a-table-column>
-                <a-table-column align="center" data-index="indexType" title="指数类型" />
-                <a-table-column align="center" data-index="codeNumber" title="股票代码" />
-                <a-table-column align="center" data-index="sharesName" title="股票名称" />
-                <a-table-column align="center" data-index="sharesAlise" title="股票别名" />
-                <a-table-column align="center" data-index="status" title="状态" />
-                <a-table-column align="center" data-index="createTime" title="添加时间" />
-                <a-table-column align="center" data-index="updateTime" title="修改时间" />
-                <a-table-column align="center" data-index="remarks" title="备注" />
+                <a-table-column align="center" data-index="indexType" key="indexType" title="指数类型" />
+                <a-table-column align="center" data-index="codeNumber" key="codeNumber" title="股票代码" />
+                <a-table-column align="center" data-index="sharesName" key="sharesName" title="股票名称" />
+                <a-table-column align="center" data-index="sharesAlise" key="sharesAlise" title="股票别名" />
+                <a-table-column align="center" data-index="status" key="status" title="状态" />
+                <a-table-column align="center" data-index="createTime" key="createTime" title="添加时间" />
+                <a-table-column align="center" data-index="updateTime" key="updateTime" title="修改时间" />
+                <a-table-column align="center" data-index="remarks" key="remarks" title="备注" />
+                <a-table-column key="action" title="操作" width="180px">
+                    <template slot-scope="text, item">
+                        <div>
+                            <a-button @click="showModal(item)" icon="edit" size="small" title="编辑" type="primary">编辑</a-button>
+                            <a-button @click="deletes(item)" icon="delete" size="small" title="删除" type="danger">删除</a-button>
+                        </div>
+                    </template>
+                </a-table-column>
             </a-table>
         </a-row>
     </div>
 </template>
 <script>
 import axios from "axios";
+import { constants } from "@/lib/constants";
 import Breadcrumb from "@/components/common/Breadcrumb";
 export default {
     name: "finance-list",
