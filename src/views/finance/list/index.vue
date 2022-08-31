@@ -32,6 +32,9 @@
                         >{{item.codeName}}</a-select-option>
                     </a-select>
                 </a-form-item>
+                <a-form-item label="添加时间">
+                    <a-date-picker format="YYYY-MM-DD HH:mm:ss" />
+                </a-form-item>
                 <a-form-item>
                     <a-button :disabled="isLoading" html-type="submit" type="primary">查询</a-button>
                 </a-form-item>
@@ -80,7 +83,7 @@
                                 size="small"
                                 title="编辑"
                                 type="primary"
-                                v-if="item.status===0"
+                                v-if="item.status===2"
                             />
                             <a-button
                                 @click="deletes(item)"
@@ -88,7 +91,7 @@
                                 size="small"
                                 title="上线"
                                 type="primary"
-                                v-if="item.status===0"
+                                v-if="item.status===2"
                             />
                             <a-button
                                 @click="deletes(item)"
@@ -104,7 +107,7 @@
                                 size="small"
                                 title="删除"
                                 type="danger"
-                                v-if="item.status===0"
+                                v-if="item.status===2"
                             />
                         </div>
                     </template>
