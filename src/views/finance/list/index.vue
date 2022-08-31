@@ -51,7 +51,7 @@
                 <a-table-column align="center" key="id" title="序号">
                     <template slot-scope="text, item, index">{{ index+1 }}</template>
                 </a-table-column>
-                <a-table-column align="center" key="codeNumber" title="股票编码">
+                <a-table-column align="center" title="股票编码">
                     <template slot-scope="text, item">
                         <span>{{item.codeNumber}}{{ item.indexType | CusListFind(indexTypeCodeList, 'code', 'codeName') }}</span>
                     </template>
