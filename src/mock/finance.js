@@ -8,11 +8,11 @@ Mock.mock("/ylm/finance/list", "post", {
         [`list|10`]: [
             {
                 id: "@increment(1)",
-                "indexType|1": [0, 1],
+                "indexType|1": [1, 2],
                 codeNumber: "@cword('0123456789', 6, 6)", //随机生成留个数字
                 sharesName: "@cname",
                 sharesAlise: "@cname",
-                "status|1": [0, 1],
+                "status|1": [1, 2],
                 createTime: "@datetime",
                 updateTime: "@datetime",
                 remarks: "@csentence(1,5)"

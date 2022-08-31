@@ -3,6 +3,12 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
+import filters from "@/libs/filter";
+// filters
+Object.keys(filters).forEach(key => {
+    Vue.filter(key, filters[key]);
+});
+
 import Antd from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 Vue.use(Antd);

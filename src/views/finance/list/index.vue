@@ -5,11 +5,32 @@
         </a-row>
         <a-row class="rowPdMar">
             <a-form :form="form" @submit="submitSearch" layout="inline">
-                <a-form-item label="名称">
-                    <a-input placeholder="名称"></a-input>
+                <a-form-item label="指数类型">
+                    <a-select :style="{width:'100px'}" v-model="form.indexType">
+                        <a-select-option
+                            :key="index"
+                            :value="item.code"
+                            v-for="(item,index) in indexTypeList"
+                        >{{item.codeName}}</a-select-option>
+                    </a-select>
                 </a-form-item>
-                <a-form-item label="编码">
-                    <a-input placeholder="编号"></a-input>
+                <a-form-item label="股票代码">
+                    <a-input placeholder="请输入股票代码" v-model="form.codeNumber"></a-input>
+                </a-form-item>
+                <a-form-item label="股票名称">
+                    <a-input placeholder="请输入股票名称" v-model="form.sharesName"></a-input>
+                </a-form-item>
+                <a-form-item label="股票别名">
+                    <a-input placeholder="请输入股票别名" v-model="form.sharesAlise"></a-input>
+                </a-form-item>
+                <a-form-item label="状态">
+                    <a-select :style="{width:'100px'}" v-model="form.status">
+                        <a-select-option
+                            :key="index"
+                            :value="item.code"
+                            v-for="(item,index) in statusList"
+                        >{{item.codeName}}</a-select-option>
+                    </a-select>
                 </a-form-item>
                 <a-form-item>
                     <a-button :disabled="isLoading" html-type="submit" type="primary">查询</a-button>
@@ -27,19 +48,64 @@
                 <a-table-column align="center" key="id" title="序号">
                     <template slot-scope="text, item, index">{{ index+1 }}</template>
                 </a-table-column>
-                <a-table-column align="center" data-index="indexType" key="indexType" title="指数类型" />
+                <a-table-column align="center" key="codeNumber" title="股票编码">
+                    <template slot-scope="text, item">
+                        <span>{{item.codeNumber}}{{ item.indexType | CusListFind(indexTypeCodeList, 'code', 'codeName') }}</span>
+                    </template>
+                </a-table-column>
+                <a-table-column align="center" data-index="indexType" key="indexType" title="指数类型">
+                    <template slot-scope="text, item">
+                        <span>{{ item.indexType | CusListFind(indexTypeList, 'code', 'codeName') }}({{ item.indexType | CusListFind(indexTypeCodeList, 'code', 'codeName') }})</span>
+                    </template>
+                </a-table-column>
                 <a-table-column align="center" data-index="codeNumber" key="codeNumber" title="股票代码" />
                 <a-table-column align="center" data-index="sharesName" key="sharesName" title="股票名称" />
                 <a-table-column align="center" data-index="sharesAlise" key="sharesAlise" title="股票别名" />
-                <a-table-column align="center" data-index="status" key="status" title="状态" />
+                <a-table-column align="center" data-index="status" key="status" title="状态">
+                    <template slot-scope="text, item">
+                        <span
+                            :style="{color: item.status===1?'#67C23A':'#303133'}"
+                        >{{ item.status | CusListFind(statusList, 'code', 'codeName') }}</span>
+                    </template>
+                </a-table-column>
                 <a-table-column align="center" data-index="createTime" key="createTime" title="添加时间" />
                 <a-table-column align="center" data-index="updateTime" key="updateTime" title="修改时间" />
                 <a-table-column align="center" data-index="remarks" key="remarks" title="备注" />
-                <a-table-column key="action" title="操作" width="180px">
+                <a-table-column align="center" key="action" title="操作" width="180px">
                     <template slot-scope="text, item">
-                        <div>
-                            <a-button @click="showModal(item)" icon="edit" size="small" title="编辑" type="primary">编辑</a-button>
-                            <a-button @click="deletes(item)" icon="delete" size="small" title="删除" type="danger">删除</a-button>
+                        <div style="text-align:right;">
+                            <a-button
+                                @click="showModal(item)"
+                                icon="edit"
+                                size="small"
+                                title="编辑"
+                                type="primary"
+                                v-if="item.status===0"
+                            />
+                            <a-button
+                                @click="deletes(item)"
+                                icon="check"
+                                size="small"
+                                title="上线"
+                                type="primary"
+                                v-if="item.status===0"
+                            />
+                            <a-button
+                                @click="deletes(item)"
+                                icon="close"
+                                size="small"
+                                title="下线"
+                                type="primary"
+                                v-if="item.status===1"
+                            />
+                            <a-button
+                                @click="deletes(item)"
+                                icon="delete"
+                                size="small"
+                                title="删除"
+                                type="danger"
+                                v-if="item.status===0"
+                            />
                         </div>
                     </template>
                 </a-table-column>
@@ -49,7 +115,7 @@
 </template>
 <script>
 import axios from "axios";
-import { constants } from "@/lib/constants";
+import Constants from "@/libs/utils/constants";
 import Breadcrumb from "@/components/common/Breadcrumb";
 export default {
     name: "finance-list",
@@ -58,15 +124,21 @@ export default {
         return {
             isLoading: false,
             form: {
-                name: "",
-                code: "",
-                alias: "",
+                indexType: 0,
+                codeNumber: "",
+                sharesName: "",
+                sharesAlise: "",
+                status: 0,
             },
             page: 1,
             taotal: 0,
             list: [],
             pagination: {},
             locale: { emptyText: <a-empty description="暂无数据" /> },
+
+            indexTypeList: Constants.FINANCE.INDEX_TYPE,
+            indexTypeCodeList: Constants.FINANCE.INDEX_TYPE_CODE,
+            statusList: Constants.FINANCE.STATUS,
         };
     },
     watch: {},
