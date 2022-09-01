@@ -33,7 +33,23 @@
                     </a-select>
                 </a-form-item>
                 <a-form-item label="添加时间">
-                    <a-date-picker format="YYYY-MM-DD HH:mm:ss" />
+                    <a-date-picker
+                        :disabled-date="disabledStartDateCreateTime"
+                        @openChange="handleStartOpenChange"
+                        format="YYYY-MM-DD HH:mm:ss"
+                        placeholder="请输入开始时间"
+                        show-time
+                        v-model="createTimeStart"
+                    />
+                    <a-date-picker
+                        :disabled-date="disabledEndDateCreateTime"
+                        :open="endOpen"
+                        @openChange="handleEndOpenChange"
+                        format="YYYY-MM-DD HH:mm:ss"
+                        placeholder="请输入结束时间"
+                        show-time
+                        v-model="createTimeStartEnd"
+                    />
                 </a-form-item>
                 <a-form-item>
                     <a-button :disabled="isLoading" html-type="submit" type="primary">查询</a-button>
@@ -132,6 +148,8 @@ export default {
                 sharesName: "",
                 sharesAlise: "",
                 status: 0,
+                createTimeStart: undefined,
+                createTimeStartEnd: undefined,
             },
             page: 1,
             taotal: 0,
@@ -142,6 +160,8 @@ export default {
             indexTypeList: Constants.FINANCE.INDEX_TYPE,
             indexTypeCodeList: Constants.FINANCE.INDEX_TYPE_CODE,
             statusList: Constants.FINANCE.STATUS,
+
+            endOpenCreateTime: false,
         };
     },
     watch: {},
@@ -149,6 +169,29 @@ export default {
         this.init();
     },
     methods: {
+        disabledStartDateCreateTime(startValue) {
+            const endValue = this.form.createTimeStartEnd;
+            if (!startValue || !endValue) {
+                return false;
+            }
+            return startValue.valueOf() > endValue.valueOf();
+        },
+        disabledEndDateCreateTime(endValue) {
+            const startValue = this.form.createTimeStart;
+            if (!endValue || !startValue) {
+                return false;
+            }
+            return startValue.valueOf() >= endValue.valueOf();
+        },
+        handleStartOpenChange(open) {
+            if (!open) {
+                this.endOpenCreateTime = true;
+            }
+        },
+        handleEndOpenChange(open) {
+            this.endOpenCreateTime = open;
+        },
+
         init() {
             // axios.get("/ylm/indexCode").then((res) => {
             //     this.verCode = res;
