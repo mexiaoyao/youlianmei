@@ -32,23 +32,33 @@
                         >{{item.codeName}}</a-select-option>
                     </a-select>
                 </a-form-item>
+                <!--
+                     :disabled-date="disabledStartDateCreateTime" 
+                     @openChange="handleStartOpenChange"
+                     v-model="createTimeStart"
+                    -->
+                <!---
+                    :disabled-date="disabledEndDateCreateTime"
+                     @openChange="handleEndOpenChange"
+                     :open="endOpen"
+                    --->
                 <a-form-item label="添加时间">
                     <a-date-picker
-                        :disabled-date="disabledStartDateCreateTime"
-                        @openChange="handleStartOpenChange"
+                        :mode="modeCreateTimeStart"
+                        show-time
+                        @openChange="handleOpenChangeCreateTimeStart"
+                        @panelChange="handlePanelChangeCreateTimeStart"
                         format="YYYY-MM-DD HH:mm:ss"
                         placeholder="请输入开始时间"
-                        show-time
-                        v-model="createTimeStart"
                     />
+                    ~
                     <a-date-picker
-                        :disabled-date="disabledEndDateCreateTime"
-                        :open="endOpen"
-                        @openChange="handleEndOpenChange"
-                        format="YYYY-MM-DD HH:mm:ss"
-                        placeholder="请输入结束时间"
+                        :mode="modecreateTimeEnd"
                         show-time
-                        v-model="createTimeStartEnd"
+                        @openChange="handleOpenChangeCreateTimeEnd"
+                        @panelChange="handlePanelChangeCreateTimeEnd"
+                        format="YYYY-MM-DD HH:mm:ss"
+                        placeholder="请输入开始时间"
                     />
                 </a-form-item>
                 <a-form-item>
@@ -148,9 +158,12 @@ export default {
                 sharesName: "",
                 sharesAlise: "",
                 status: 0,
-                createTimeStart: undefined,
-                createTimeStartEnd: undefined,
+                createTimeStart: null,
+                createTimeStartEnd: null,
             },
+            modeCreateTimeStart:'date',
+            modecreateTimeEnd:'date',
+
             page: 1,
             taotal: 0,
             list: [],
@@ -169,6 +182,29 @@ export default {
         this.init();
     },
     methods: {
+        //CreateTimeStart
+        handleOpenChangeCreateTimeStart(open) {
+            if (open) {
+                this.modeCreateTimeStart = 'date';
+            }
+        },
+        handlePanelChangeCreateTimeStart(value, mode) {
+            this.modeCreateTimeStart = mode;
+        },
+
+        //CreateTimeEnd
+        handleOpenChangeCreateTimeEnd(open) {
+            if (open) {
+                this.modecreateTimeEnd = 'date';
+            }
+        },
+        handlePanelChangeCreateTimeEnd(value, mode) {
+            this.modecreateTimeEnd = mode;
+        },
+
+
+
+
         disabledStartDateCreateTime(startValue) {
             const endValue = this.form.createTimeStartEnd;
             if (!startValue || !endValue) {
