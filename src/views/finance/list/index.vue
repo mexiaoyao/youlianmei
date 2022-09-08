@@ -36,29 +36,50 @@
                      :disabled-date="disabledStartDateCreateTime" 
                      @openChange="handleStartOpenChange"
                      v-model="createTimeStart"
-                    -->
+                -->
                 <!---
                     :disabled-date="disabledEndDateCreateTime"
                      @openChange="handleEndOpenChange"
                      :open="endOpen"
-                    --->
+                --->
                 <a-form-item label="添加时间">
                     <a-date-picker
                         :mode="modeCreateTimeStart"
-                        show-time
                         @openChange="handleOpenChangeCreateTimeStart"
                         @panelChange="handlePanelChangeCreateTimeStart"
                         format="YYYY-MM-DD HH:mm:ss"
                         placeholder="请输入开始时间"
-                    />
-                    ~
+                        show-time
+                        v-model="form.createTimeStart"
+                    />~
                     <a-date-picker
                         :mode="modecreateTimeEnd"
-                        show-time
                         @openChange="handleOpenChangeCreateTimeEnd"
                         @panelChange="handlePanelChangeCreateTimeEnd"
                         format="YYYY-MM-DD HH:mm:ss"
+                        placeholder="请输入结束时间"
+                        show-time
+                        v-model="form.createTimeEnd"
+                    />
+                </a-form-item>
+                <a-form-item label="修改时间">
+                    <a-date-picker
+                        :mode="modecreateTimeEnd"
+                        @openChange="handleOpenChangeCreateTimeStart"
+                        @panelChange="handlePanelChangeCreateTimeStart"
+                        format="YYYY-MM-DD HH:mm:ss"
                         placeholder="请输入开始时间"
+                        show-time
+                        v-model="form.updateTimeStart"
+                    />~
+                    <a-date-picker
+                        :mode="modecreateTimeEnd"
+                        @openChange="handleOpenChangeCreateTimeEnd"
+                        @panelChange="handlePanelChangeCreateTimeEnd"
+                        format="YYYY-MM-DD HH:mm:ss"
+                        placeholder="请输入结束时间"
+                        show-time
+                        v-model="form.updateTimeEnd"
                     />
                 </a-form-item>
                 <a-form-item>
@@ -158,11 +179,15 @@ export default {
                 sharesName: "",
                 sharesAlise: "",
                 status: 0,
+
                 createTimeStart: null,
-                createTimeStartEnd: null,
+                createTimeEnd: null,
+
+                updateTimeStart: null,
+                updateTimeEnd: null,
             },
-            modeCreateTimeStart:'date',
-            modecreateTimeEnd:'date',
+            modeCreateTimeStart: "date",
+            modecreateTimeEnd: "date",
 
             page: 1,
             taotal: 0,
@@ -185,7 +210,7 @@ export default {
         //CreateTimeStart
         handleOpenChangeCreateTimeStart(open) {
             if (open) {
-                this.modeCreateTimeStart = 'date';
+                this.modeCreateTimeStart = "date";
             }
         },
         handlePanelChangeCreateTimeStart(value, mode) {
@@ -195,15 +220,12 @@ export default {
         //CreateTimeEnd
         handleOpenChangeCreateTimeEnd(open) {
             if (open) {
-                this.modecreateTimeEnd = 'date';
+                this.modecreateTimeEnd = "date";
             }
         },
         handlePanelChangeCreateTimeEnd(value, mode) {
             this.modecreateTimeEnd = mode;
         },
-
-
-
 
         disabledStartDateCreateTime(startValue) {
             const endValue = this.form.createTimeStartEnd;
@@ -234,7 +256,11 @@ export default {
             // });
             this.getfinanceList();
         },
-        submitSearch() {},
+        submitSearch() {
+            let ll = this.form;
+
+            debugger;
+        },
         //定义一个请求数据的方法
         getfinanceList() {
             axios.post("/ylm/finance/list").then((res) => {
