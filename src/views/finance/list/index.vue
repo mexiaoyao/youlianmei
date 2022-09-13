@@ -43,44 +43,10 @@
                      :open="endOpen"
                 --->
                 <a-form-item label="添加时间">
-                    <a-date-picker
-                        :mode="modeCreateTimeStart"
-                        @openChange="handleOpenChangeCreateTimeStart"
-                        @panelChange="handlePanelChangeCreateTimeStart"
-                        format="YYYY-MM-DD HH:mm:ss"
-                        placeholder="请输入开始时间"
-                        show-time
-                        v-model="form.createTimeStart"
-                    />~
-                    <a-date-picker
-                        :mode="modecreateTimeEnd"
-                        @openChange="handleOpenChangeCreateTimeEnd"
-                        @panelChange="handlePanelChangeCreateTimeEnd"
-                        format="YYYY-MM-DD HH:mm:ss"
-                        placeholder="请输入结束时间"
-                        show-time
-                        v-model="form.createTimeEnd"
-                    />
+                    <a-range-picker format="YYYY-MM-DD" v-model="createTime" />
                 </a-form-item>
                 <a-form-item label="修改时间">
-                    <a-date-picker
-                        :mode="modecreateTimeEnd"
-                        @openChange="handleOpenChangeCreateTimeStart"
-                        @panelChange="handlePanelChangeCreateTimeStart"
-                        format="YYYY-MM-DD HH:mm:ss"
-                        placeholder="请输入开始时间"
-                        show-time
-                        v-model="form.updateTimeStart"
-                    />~
-                    <a-date-picker
-                        :mode="modecreateTimeEnd"
-                        @openChange="handleOpenChangeCreateTimeEnd"
-                        @panelChange="handlePanelChangeCreateTimeEnd"
-                        format="YYYY-MM-DD HH:mm:ss"
-                        placeholder="请输入结束时间"
-                        show-time
-                        v-model="form.updateTimeEnd"
-                    />
+                    <a-range-picker format="YYYY-MM-DD" v-model="updateTime" />
                 </a-form-item>
                 <a-form-item>
                     <a-button :disabled="isLoading" html-type="submit" type="primary">查询</a-button>
@@ -179,15 +145,9 @@ export default {
                 sharesName: "",
                 sharesAlise: "",
                 status: 0,
-
-                createTimeStart: null,
-                createTimeEnd: null,
-
-                updateTimeStart: null,
-                updateTimeEnd: null,
             },
-            modeCreateTimeStart: "date",
-            modecreateTimeEnd: "date",
+            createTime: [null, null],
+            updateTime: [null, null],
 
             page: 1,
             taotal: 0,
@@ -207,48 +167,7 @@ export default {
         this.init();
     },
     methods: {
-        //CreateTimeStart
-        handleOpenChangeCreateTimeStart(open) {
-            if (open) {
-                this.modeCreateTimeStart = "date";
-            }
-        },
-        handlePanelChangeCreateTimeStart(value, mode) {
-            this.modeCreateTimeStart = mode;
-        },
-
-        //CreateTimeEnd
-        handleOpenChangeCreateTimeEnd(open) {
-            if (open) {
-                this.modecreateTimeEnd = "date";
-            }
-        },
-        handlePanelChangeCreateTimeEnd(value, mode) {
-            this.modecreateTimeEnd = mode;
-        },
-
-        disabledStartDateCreateTime(startValue) {
-            const endValue = this.form.createTimeStartEnd;
-            if (!startValue || !endValue) {
-                return false;
-            }
-            return startValue.valueOf() > endValue.valueOf();
-        },
-        disabledEndDateCreateTime(endValue) {
-            const startValue = this.form.createTimeStart;
-            if (!endValue || !startValue) {
-                return false;
-            }
-            return startValue.valueOf() >= endValue.valueOf();
-        },
-        handleStartOpenChange(open) {
-            if (!open) {
-                this.endOpenCreateTime = true;
-            }
-        },
-        handleEndOpenChange(open) {
-            this.endOpenCreateTime = open;
-        },
+        onChange() {},
 
         init() {
             // axios.get("/ylm/indexCode").then((res) => {
@@ -257,7 +176,8 @@ export default {
             this.getfinanceList();
         },
         submitSearch() {
-            let ll = this.form;
+            let ll = this.createTime[0].format("YYYY - MM - DD");
+            let ls = this.updateTime;
 
             debugger;
         },
