@@ -173,17 +173,32 @@ export default {
             // axios.get("/ylm/indexCode").then((res) => {
             //     this.verCode = res;
             // });
-            this.getfinanceList();
+            this.getfinanceList({});
         },
         submitSearch() {
-            let ll = this.createTime[0].format("YYYY - MM - DD");
-            let ls = this.updateTime;
-
-            debugger;
+            let createTimeStart = "";
+            if (null != this.createTime[0]) {
+                createTimeStart = this.createTime[0].format("YYYY-MM-DD");
+            }
+            let createTimeEnd = "";
+            if (null != this.createTime[1]) {
+                createTimeEnd = this.createTime[1].format("YYYY-MM-DD");
+            }
+            let updateTimeStart = "";
+            if (null != this.updateTime[0]) {
+                updateTimeStart = this.updateTime[0].format("YYYY-MM-DD");
+            }
+            let updateTimeEnd = "";
+            if (null != this.updateTime[1]) {
+                updateTimeEnd = this.updateTime[1].format("YYYY-MM-DD");
+            }
+            this.getfinanceList({ createTimeStart: createTimeStart, createTimeEnd: createTimeEnd, updateTimeStart: updateTimeStart, updateTimeEnd: updateTimeEnd });
         },
         //定义一个请求数据的方法
-        getfinanceList() {
-            axios.post("/ylm/finance/list").then((res) => {
+        getfinanceList(timeRange) {
+            let parme = Object.assign(this.form, timeRange);
+            debugger;
+            axios.post("/ylm/finance/list", parme).then((res) => {
                 this.list = res.data.data.list || [];
             });
         },
