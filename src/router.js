@@ -16,7 +16,8 @@ const recursionMenu = (menus, routers) => {
         if (menu.path) {
             routers.push({
                 path: menu.path,
-                name: menu.meta.title,
+                title: menu.meta.title,
+                name: menu.name,
                 component: () => import(`./views${menu.path.replace(/\/:[a-zA-Z0-9]+\??/, "")}/index`),
                 meta: menu.meta
             });

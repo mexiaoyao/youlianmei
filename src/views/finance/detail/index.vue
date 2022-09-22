@@ -3,13 +3,13 @@
         <a-row>
             <Breadcrumb />
         </a-row>
-        <a-row>健康数据导入</a-row>
+        <a-row>模板{{$route.params.id}}</a-row>
     </div>
 </template>
 <script>
 import Breadcrumb from "@/components/common/Breadcrumb";
 export default {
-    name: "finance-import",
+    name: "finance-detail",
     components: { Breadcrumb },
     data() {
         return {
@@ -21,7 +21,10 @@ export default {
         this.init();
     },
     methods: {
-        init() {},
+        init() {
+            debugger;
+            console.log("params.id:" + this.$route.params.id);
+        },
     },
 };
 </script>

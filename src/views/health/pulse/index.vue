@@ -9,7 +9,7 @@
 <script>
 import Breadcrumb from "@/components/common/Breadcrumb";
 export default {
-    name: "finance-list",
+    name: "health-list",
     components: { Breadcrumb },
     data() {
         return {

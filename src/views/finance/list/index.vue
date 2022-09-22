@@ -91,6 +91,14 @@
                     <template slot-scope="text, item">
                         <div style="text-align:right;">
                             <a-button
+                                @click="goToDetail(item)"
+                                icon="eye"
+                                size="small"
+                                title="详情"
+                                type="primary"
+                                v-if="item.status===1"
+                            />
+                            <a-button
                                 @click="showModal(item)"
                                 icon="edit"
                                 size="small"
@@ -197,10 +205,16 @@ export default {
         //定义一个请求数据的方法
         getfinanceList(timeRange) {
             let parme = Object.assign(this.form, timeRange);
-            debugger;
             axios.post("/ylm/finance/list", parme).then((res) => {
                 this.list = res.data.data.list || [];
             });
+        },
+        goToDetail(row) {
+            //this.$router.push("/finance/detail");
+            console.log("row:" + row.id);
+            let push = { path: "/finance/detail", name: "finance-detail", params: { id: row.id } };
+            this.$router.push(push);
+            //this.$router.push({ path: "/finance/detail", name: "finance.detail", params: { id: row.id } });
         },
     },
 };
