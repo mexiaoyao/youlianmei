@@ -34,10 +34,9 @@ Mock.mock("/ylm/finance/detail", "post", {
                 sharesName: "@cname", //股票名字
                 "todayOpenPrice|1-100.1-10": 1, //今日开盘价
                 "yesterdayClosePrice|1-100.1-10": 1, //昨日收盘价
-                "currentPrice|1-100.1-10": 1, //当前价格
                 "todayMaxPrice|1-100.1-10": 1, //今日最高价
                 "todayMinPrice|1-100.1-10": 1, //今日最低价
-                "todayAveragePrice|1-100.1-10": 1, //今日平均低价
+                "todayAveragePrice|1-100.1-10": 1, //今日平均价
                 "dealSharesNumber|1000-10000": 1, //成交的股票数
                 "dealAmount|1000-10000": 1, //成交金额
                 "status|1": [1, 2, 3], //1定时器 2导入 3手动添加

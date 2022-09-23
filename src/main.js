@@ -17,6 +17,9 @@ import "./assets/style/common.less";
 
 import "./mock";
 
+import echarts from "echarts";
+Vue.prototype.$echarts = echarts;
+
 Vue.config.productionTip = false;
 
 console.log(`前端版本号：${process.env.currentVersion || require("../package.json").version}`);
