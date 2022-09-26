@@ -3,31 +3,40 @@
         <a-row>
             <a-form layout="inline">
                 <a-form-item label="今日开盘价">
-                    <a-checkbox :value="todayOpenPrice" />
+                    <a-checkbox :checked="form.todayOpenPrice" @click="form.todayOpenPrice = $event.target.checked" />
                 </a-form-item>
                 <a-form-item label="昨日收盘价">
-                    <a-checkbox :value="yesterdayClosePrice" />
+                    <a-checkbox
+                        :checked="form.yesterdayClosePrice"
+                        @click="form.yesterdayClosePrice = $event.target.checked"
+                    />
                 </a-form-item>
                 <a-form-item label="今日最高价">
-                    <a-checkbox :value="todayMaxPrice" />
+                    <a-checkbox :checked="form.todayMaxPrice" @click="form.todayMaxPrice = $event.target.checked" />
                 </a-form-item>
                 <a-form-item label="今日最低价">
-                    <a-checkbox :value="todayMaxPrice" />
+                    <a-checkbox :checked="form.todayMinPrice" @click="form.todayMinPrice = $event.target.checked" />
                 </a-form-item>
                 <a-form-item label="今日平均低价">
-                    <a-checkbox :value="todayMaxPrice" />
+                    <a-checkbox
+                        :checked="form.todayAveragePrice"
+                        @click="form.todayAveragePrice = $event.target.checked"
+                    />
                 </a-form-item>
                 <a-form-item label="成交金额">
-                    <a-checkbox :value="todayMaxPrice" />
+                    <a-checkbox :checked="form.dealAmount" @click="form.dealAmount = $event.target.checked" />
                 </a-form-item>
                 <a-form-item label="股票总数">
-                    <a-checkbox :value="todayMaxPrice" />
+                    <a-checkbox
+                        :checked="form.sharesTotalNumber"
+                        @click="form.sharesTotalNumber = $event.target.checked"
+                    />
                 </a-form-item>
                 <a-form-item label="可流动股票总数">
-                    <a-checkbox :value="todayMaxPrice" />
-                </a-form-item>
-                <a-form-item label="成交的股票数">
-                    <a-checkbox :value="todayMaxPrice" />
+                    <a-checkbox
+                        :checked="form.sharesAllowTotalNumber"
+                        @click="form.sharesAllowTotalNumber = $event.target.checked"
+                    />
                 </a-form-item>
             </a-form>
         </a-row>
@@ -42,9 +51,22 @@ export default {
     name: "finance-detail-echarts",
     data() {
         return {
-            todayOpenPrice: false,
-            yesterdayClosePrice: false,
-            todayMaxPrice: false,
+            form: {
+                todayOpenPrice: true,
+                yesterdayClosePrice: false,
+                todayMaxPrice: false,
+                todayMinPrice: false,
+                todayAveragePrice: false,
+                dealAmount: false,
+                sharesTotalNumber: false,
+                sharesAllowTotalNumber: false,
+            },
+            echarts_data: {
+                title: "", //echarts标题
+                elegend: [], //echarts图例
+                xAxis: [], //x轴日期
+                series: [], //数据集合
+            },
         };
     },
     created() {},
@@ -61,17 +83,18 @@ export default {
                 this.drawChart();
             });
         },
+
         drawChart() {
             let myChart = this.$echarts.init(document.getElementById("echartsId"));
             let option = {
                 title: {
-                    text: "Stacked Line",
+                    text: this.echarts_data.title,
                 },
                 tooltip: {
                     trigger: "axis",
                 },
                 legend: {
-                    data: ["Email", "Union Ads", "Video Ads", "Direct", "Search Engine"],
+                    data: this.echarts_data.legend,
                 },
                 grid: {
                     left: "3%",
@@ -87,43 +110,12 @@ export default {
                 xAxis: {
                     type: "category",
                     boundaryGap: false,
-                    data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                    data: this.echarts_data.xAxis,
                 },
                 yAxis: {
                     type: "value",
                 },
-                series: [
-                    {
-                        name: "Email",
-                        type: "line",
-                        stack: "Total",
-                        data: [120, 132, 101, 134, 90, 230, 210],
-                    },
-                    {
-                        name: "Union Ads",
-                        type: "line",
-                        stack: "Total",
-                        data: [220, 182, 191, 234, 290, 330, 310],
-                    },
-                    {
-                        name: "Video Ads",
-                        type: "line",
-                        stack: "Total",
-                        data: [150, 232, 201, 154, 190, 330, 410],
-                    },
-                    {
-                        name: "Direct",
-                        type: "line",
-                        stack: "Total",
-                        data: [320, 332, 301, 334, 390, 330, 320],
-                    },
-                    {
-                        name: "Search Engine",
-                        type: "line",
-                        stack: "Total",
-                        data: [820, 932, 901, 934, 1290, 1330, 1320],
-                    },
-                ],
+                series: this.echarts_data.series,
             };
             myChart.setOption(option);
         },
