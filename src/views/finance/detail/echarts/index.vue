@@ -56,7 +56,7 @@
             </a-form>
         </a-row>
         <a-row>
-            <div id="echartsId" style="width:100%; height:300px;"></div>
+            <div id="echartsId" style="width:100%; height:600px;"></div>
         </a-row>
     </div>
 </template>
@@ -102,7 +102,12 @@ export default {
         },
 
         showTypeMet() {
-            this.echarts_data = this.$options.data.call(this).echarts_data;
+            this.echarts_data = {
+                title: "", //echarts标题
+                legend: [], //echarts图例
+                xAxis: [], //x轴日期
+                series: [], //数据集合
+            };
             this.echarts_data.title = null != this.list && this.list.length > 0 ? this.list[0].sharesName : "";
             this.checkBoxSelected(null, "legend");
             this.checkBoxSelected(this.list, "xAxis");
@@ -161,6 +166,7 @@ export default {
                 let dealAmount = [];
                 let sharesTotalNumber = [];
                 let sharesAllowTotalNumber = [];
+                let series = [];
                 list.forEach((element) => {
                     if (this.form.todayOpenPrice) {
                         todayOpenPrice.push(element.todayOpenPrice);
@@ -191,74 +197,74 @@ export default {
                     }
                 });
                 if (this.form.todayOpenPrice) {
-                    this.echarts_data.series.push({
+                    series.push({
                         name: "今日开盘价",
                         type: "line",
                         data: todayOpenPrice,
                     });
                 }
                 if (this.form.yesterdayClosePrice) {
-                    this.echarts_data.series.push({
+                    series.push({
                         name: "昨日收盘价",
                         type: "line",
                         data: yesterdayClosePrice,
                     });
                 }
                 if (this.form.todayMaxPrice) {
-                    this.echarts_data.series.push({
+                    series.push({
                         name: "今日最高价",
                         type: "line",
                         data: todayMaxPrice,
                     });
                 }
                 if (this.form.todayMinPrice) {
-                    this.echarts_data.series.push({
+                    series.push({
                         name: "今日最低价",
                         type: "line",
                         data: todayMinPrice,
                     });
                 }
                 if (this.form.todayAveragePrice) {
-                    this.echarts_data.series.push({
+                    series.push({
                         name: "今日平均价",
                         type: "line",
                         data: todayAveragePrice,
                     });
                 }
                 if (this.form.dealSharesNumber) {
-                    this.echarts_data.series.push({
+                    series.push({
                         name: "成交的股票数",
                         type: "line",
                         data: dealSharesNumber,
                     });
                 }
                 if (this.form.dealAmount) {
-                    this.echarts_data.series.push({
+                    series.push({
                         name: "成交金额",
                         type: "line",
                         data: dealAmount,
                     });
                 }
                 if (this.form.sharesTotalNumber) {
-                    this.echarts_data.series.push({
+                    series.push({
                         name: "股票总数",
                         type: "line",
                         data: sharesTotalNumber,
                     });
                 }
                 if (this.form.sharesAllowTotalNumber) {
-                    this.echarts_data.series.push({
+                    series.push({
                         name: "可流动股票总数",
                         type: "line",
                         data: sharesAllowTotalNumber,
                     });
                 }
+                this.echarts_data.series = series;
             }
         },
 
         drawChart() {
             let myChart = this.$echarts.init(document.getElementById("echartsId"));
-            let ll = this.echarts_data;
             let option = {
                 title: {
                     text: this.echarts_data.title,
@@ -290,7 +296,7 @@ export default {
                 },
                 series: this.echarts_data.series,
             };
-            myChart.setOption(option);
+            myChart.setOption(option, true); //setOption(option,boolean) boolean true可随着数据变化重新初始化
         },
     },
 };
