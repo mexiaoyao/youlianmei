@@ -75,7 +75,7 @@
                 :locale="locale"
                 :pagination="pagination"
                 :rowKey="item => item.id"
-                :scroll="{ x: 2340, y: 300 }"
+                :scroll="{ x: 2640, y: 500 }"
             >
                 <a-table-column align="center" key="id" title="序号" width="100">
                     <template slot-scope="text, item, index">{{ index+1 }}</template>
@@ -129,9 +129,9 @@
                     width="160"
                 />
                 <a-table-column align="center" data-index="dealAmount" key="dealAmount" title="成交金额" width="160" />
-                <a-table-column align="center" data-index="type" key="type" title="来源">
+                <a-table-column align="center" data-index="source" key="source" title="来源">
                     <template slot-scope="text, item">
-                        <span>{{ item.type | CusListFind(sourceList, 'code', 'codeName') }}</span>
+                        <span>{{ item.source | CusListFind(sourceList, 'code', 'codeName') }}</span>
                     </template>
                 </a-table-column>
                 <a-table-column
@@ -148,13 +148,13 @@
                     title="可流动股票总数"
                     width="190"
                 />
-                <a-table-column align="center" data-index="createTime" key="sharesDate" title="记录时间" width="160" />
-                <a-table-column align="center" data-index="createTime" key="createTime" title="注入时间" width="160" />
-                <a-table-column align="center" data-index="updateTime" key="updateTime" title="修改时间" width="160" />
+                <a-table-column align="center" data-index="createTime" key="sharesDate" title="记录时间" width="260" />
+                <a-table-column align="center" data-index="createTime" key="createTime" title="注入时间" width="260" />
+                <a-table-column align="center" data-index="updateTime" key="updateTime" title="修改时间" width="260" />
                 <a-table-column align="center" data-index="remarks" key="remarks" title="备注" />
-                <a-table-column align="center" fixed="right" key="action" title="操作">
+                <a-table-column align="center" key="action" title="操作">
                     <template slot-scope="text, item">
-                        <a-button @click="deletes(item)" icon="delete" size="small" title="删除" type="danger" />
+                        <a-button @click="deleteId(item.id)" icon="delete" size="small" title="删除" type="danger" />
                     </template>
                 </a-table-column>
             </a-table>
@@ -224,7 +224,7 @@ export default {
         },
         getfinanceDetail() {
             this.isLoading = true;
-            let dateRange = {};
+            let dateRange = { sharesDate_1: "", sharesDate_2: "", createTime_1: "", createTime_2: "", updateTime_1: "", updateTime_2: "" };
             if (null != this.timeData.sharesDate[0]) {
                 dateRange["sharesDate_1"] = this.timeData.sharesDate[0].format("YYYY-MM-DD");
             }
@@ -248,6 +248,21 @@ export default {
             axios.post("/ylm/finance/detail", parmes).then((res) => {
                 this.isLoading = false;
                 this.list = res.data.data.list || [];
+            });
+        },
+        deleteId(id) {
+            axios.post("/ylm/finance/deleteById", { id: id }).then((res) => {
+                if (res.data.code === 10000) {
+                    this.$notification.success({
+                        message: "提示",
+                        description: "操作成功！",
+                    });
+                } else {
+                    this.$notification.error({
+                        message: "提示",
+                        description: "操作失败！",
+                    });
+                }
             });
         },
     },

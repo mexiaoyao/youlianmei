@@ -43,11 +43,14 @@ Mock.mock("/ylm/finance/detail", "post", {
                 "source|1": [1, 2, 3], //1定时器 2导入 3手动添加
                 "sharesTotalNumber|10000-100000": 1, //股票总数
                 "sharesAllowTotalNumber|10000-100000": 1, //可流动股票总数
-                sharesDate: "@datetime", //记录时间
+                sharesDate: "@date", //记录时间
                 createTime: "@datetime",
                 updateTime: "@datetime",
                 remarks: "@csentence(1,5)"
             }
         ]
     }
+});
+Mock.mock("/ylm/finance/deleteById", "post", {
+    code: 10000
 });
