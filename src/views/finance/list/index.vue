@@ -32,16 +32,6 @@
                         >{{item.codeName}}</a-select-option>
                     </a-select>
                 </a-form-item>
-                <!--
-                     :disabled-date="disabledStartDateCreateTime" 
-                     @openChange="handleStartOpenChange"
-                     v-model="createTimeStart"
-                -->
-                <!---
-                    :disabled-date="disabledEndDateCreateTime"
-                     @openChange="handleEndOpenChange"
-                     :open="endOpen"
-                --->
                 <a-form-item label="添加时间">
                     <a-range-picker format="YYYY-MM-DD" v-model="createTime" />
                 </a-form-item>
@@ -54,6 +44,9 @@
             </a-form>
         </a-row>
         <a-row class="rowPdMar">
+            <a-row class="tr pt15">
+                <a-button :disabled="isLoading" @click="visible=true;" type="primary">新增</a-button>
+            </a-row>
             <a-table
                 :data-source="list"
                 :loading="isLoading"
@@ -77,6 +70,14 @@
                 <a-table-column align="center" data-index="codeNumber" key="codeNumber" title="股票代码" />
                 <a-table-column align="center" data-index="sharesName" key="sharesName" title="股票名称" />
                 <a-table-column align="center" data-index="sharesAlise" key="sharesAlise" title="股票别名" />
+                <a-table-column align="center" data-index="sharesTotalNumber" key="sharesTotalNumber" title="股票总数" />
+                <a-table-column
+                    align="center"
+                    data-index="sharesAllowTotalNumber"
+                    key="sharesAllowTotalNumber"
+                    title="可流动股票总数"
+                />
+                <a-table-column align="center" data-index="loadTime" key="loadTime" title="最后更新" />
                 <a-table-column align="center" data-index="status" key="status" title="状态">
                     <template slot-scope="text, item">
                         <span
@@ -135,15 +136,18 @@
                 </a-table-column>
             </a-table>
         </a-row>
+        <add-modal :visible="visible" @cancel="visible=false" @ok="getfinanceList;" />
     </div>
 </template>
 <script>
 import axios from "axios";
 import Constants from "@/libs/utils/constants";
 import Breadcrumb from "@/components/common/Breadcrumb";
+
+import AddModal from "./modal/index";
 export default {
     name: "finance-list",
-    components: { Breadcrumb },
+    components: { Breadcrumb, AddModal },
     data() {
         return {
             isLoading: false,
@@ -168,6 +172,8 @@ export default {
             statusList: Constants.FINANCE.STATUS,
 
             endOpenCreateTime: false,
+
+            visible: false,
         };
     },
     watch: {},
