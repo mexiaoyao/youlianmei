@@ -136,12 +136,13 @@
                 </a-table-column>
             </a-table>
         </a-row>
-        <add-modal :visible="visible" @cancel="visible=false" @ok="getfinanceList;" />
+        <add-modal :visible="visible" @cancel="visible=false" @ok="getfinanceList" />
     </div>
 </template>
 <script>
 import axios from "axios";
 import Constants from "@/libs/utils/constants";
+import LangUtil from "@/libs/utils/langUtil";
 import Breadcrumb from "@/components/common/Breadcrumb";
 
 import AddModal from "./modal/index";
@@ -167,15 +168,16 @@ export default {
             pagination: {},
             locale: { emptyText: <a-empty description="暂无数据" /> },
 
-            indexTypeList: Constants.FINANCE.INDEX_TYPE,
-            indexTypeCodeList: Constants.FINANCE.INDEX_TYPE_CODE,
-            statusList: Constants.FINANCE.STATUS,
+            indexTypeList: LangUtil.addAll(Constants.FINANCE.INDEX_TYPE),
+            indexTypeCodeList: LangUtil.addAll(Constants.FINANCE.INDEX_TYPE_CODE),
+            statusList: LangUtil.addAll(Constants.FINANCE.STATUS),
 
             endOpenCreateTime: false,
 
             visible: false,
         };
     },
+    computed: {},
     watch: {},
     created() {
         this.init();
@@ -184,9 +186,6 @@ export default {
         onChange() {},
 
         init() {
-            // axios.get("/ylm/indexCode").then((res) => {
-            //     this.verCode = res;
-            // });
             this.getfinanceList({});
         },
         submitSearch() {

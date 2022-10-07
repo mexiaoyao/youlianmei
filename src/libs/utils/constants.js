@@ -1,4 +1,11 @@
 export default class Constants {
+    /**
+     * 公用部分
+     * **/
+    static PUBLICCOMMON_ALL = {
+        code: 0,
+        codeName: "全部"
+    };
     /***
      * 股票全局设置
      * **/
@@ -7,7 +14,6 @@ export default class Constants {
          * 指数类型
          * **/
         INDEX_TYPE: [
-            { code: 0, codeName: "全部" },
             { code: 1, codeName: "沪指" },
             { code: 2, codeName: "深指" }
         ],
@@ -23,7 +29,6 @@ export default class Constants {
          * @parme “正常”表示可以自动获取股票数据了 “待转正”表示当前记录还不完善。
          * **/
         STATUS: [
-            { code: 0, codeName: "全部" },
             { code: 1, codeName: "上线" },
             { code: 2, codeName: "下线" }
         ],
@@ -32,7 +37,6 @@ export default class Constants {
          * @parme “正常”表示可以自动获取股票数据了 “待转正”表示当前记录还不完善。
          * **/
         ADDSOURCE: [
-            { code: 0, codeName: "全部" },
             { code: 1, codeName: "定时器" },
             { code: 2, codeName: "导入" },
             { code: 3, codeName: "手动添加" }

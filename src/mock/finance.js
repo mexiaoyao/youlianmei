@@ -57,3 +57,7 @@ Mock.mock("/ylm/finance/detail", "post", {
 Mock.mock("/ylm/finance/deleteById", "post", {
     code: 10000
 });
+
+Mock.mock("/ylm/finance/actionFinance", "post", {
+    code: 10000
+});
