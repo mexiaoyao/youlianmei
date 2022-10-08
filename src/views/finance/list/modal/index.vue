@@ -28,10 +28,10 @@
                 <a-input placeholder="请输入股票别名" v-model="form.sharesAlise"></a-input>
             </a-form-model-item>
             <a-form-model-item label="股票总数" prop="sharesTotalNumber">
-                <a-input placeholder="请输入股票总数" v-model="form.sharesTotalNumber"></a-input>
+                <a-input-number placeholder="请输入股票总数" style="width:100%;" v-model="form.sharesTotalNumber"></a-input-number>
             </a-form-model-item>
             <a-form-model-item label="可流动股票总数" prop="sharesAllowTotalNumber">
-                <a-input placeholder="请输入可流动股票总数" v-model="form.sharesAllowTotalNumber"></a-input>
+                <a-input-number placeholder="请输入可流动股票总数" style="width:100%;" v-model="form.sharesAllowTotalNumber"></a-input-number>
             </a-form-model-item>
             <a-form-model-item label="备注">
                 <a-input placeholder="请输入备注" v-model="form.remarks"></a-input>
@@ -47,6 +47,7 @@
 <script>
 import axios from "axios";
 import Constants from "@/libs/utils/constants";
+import { gpCodeCheck, zhengshuCheck } from "@/libs/utils/decorator";
 export default {
     name: "shares-list-add",
     props: {
@@ -72,18 +73,43 @@ export default {
                 indexType: [{ required: true, message: "指数类型不可为空", trigger: "change" }],
                 codeNumber: [
                     { required: true, message: "股票代码不可为空", trigger: "blur" },
-                    { min: 3, max: 5, message: "Length should be 3 to 5", trigger: "blur" },
+                    {
+                        validator: gpCodeCheck.bind(this),
+                        message: "请输入正确的股票代码",
+                        trigger: "blur",
+                    },
                 ],
                 sharesName: [{ required: true, message: "股票名称不可为空", trigger: "blur" }],
                 sharesAlise: [{ required: true, message: "股票别名不可为空", trigger: "blur" }],
-                sharesTotalNumber: [{ required: true, message: "股票总数不可为空", trigger: "blur" }],
-                sharesAllowTotalNumber: [{ required: true, message: "可流动股票总数不可为空", trigger: "blur" }],
+                sharesTotalNumber: [
+                    { required: true, message: "股票总数不可为空", trigger: "blur" },
+                    {
+                        validator: zhengshuCheck.bind(this),
+                        message: "请输入正确的股票总数",
+                        trigger: "blur",
+                    },
+                ],
+                sharesAllowTotalNumber: [
+                    { required: true, message: "可流动股票总数不可为空", trigger: "blur" },
+                    {
+                        validator: zhengshuCheck.bind(this),
+                        message: "请输入正确的可流动股票总数",
+                        trigger: "blur",
+                    },
+                ],
             },
             isLoading: false,
         };
     },
     created() {},
     methods: {
+        checkPrice(rule, value, callback) {
+            if (value.number > 0) {
+                callback();
+                return;
+            }
+            callback("请输入正整数!");
+        },
         cancelClick() {
             this.resetForm();
             this.$emit("cancel");
