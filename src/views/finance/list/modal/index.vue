@@ -55,6 +55,10 @@ export default {
             type: Boolean,
             default: false,
         },
+        item: {
+            type: Object,
+            default: () => {},
+        },
     },
     data() {
         return {
@@ -103,13 +107,6 @@ export default {
     },
     created() {},
     methods: {
-        checkPrice(rule, value, callback) {
-            if (value.number > 0) {
-                callback();
-                return;
-            }
-            callback("请输入正整数!");
-        },
         cancelClick() {
             this.resetForm();
             this.$emit("cancel");
@@ -141,7 +138,19 @@ export default {
             });
         },
         resetForm() {
-            this.$refs.addForm.resetFields();
+            this.form = this.$options.data.call(this).form;
+            //this.$refs.addForm.resetFields();
+        },
+    },
+    watch: {
+        visible(newVal, oldVal) {
+            if (newVal != oldVal && newVal) {
+                if (null == this.item.id || undefined == this.item.id) {
+                    this.resetForm();
+                } else {
+                    Object.assign(this.form, this.item);
+                }
+            }
         },
     },
 };

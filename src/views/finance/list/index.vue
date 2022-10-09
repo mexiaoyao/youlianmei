@@ -100,7 +100,7 @@
                                 v-if="item.status===1"
                             />
                             <a-button
-                                @click="showModal(item)"
+                                @click="edit(item)"
                                 icon="edit"
                                 size="small"
                                 title="编辑"
@@ -136,7 +136,7 @@
                 </a-table-column>
             </a-table>
         </a-row>
-        <add-modal :visible="visible" @cancel="visible=false" @ok="getfinanceList" />
+        <add-modal :item="editObj" :visible="visible" @cancel="visible=false;editObj={}" @ok="getfinanceList" />
     </div>
 </template>
 <script>
@@ -175,6 +175,7 @@ export default {
             endOpenCreateTime: false,
 
             visible: false,
+            editObj: {},
         };
     },
     computed: {},
@@ -220,6 +221,12 @@ export default {
             let push = { path: "/finance/detail", name: "finance-detail", params: { id: row.id } };
             this.$router.push(push);
             //this.$router.push({ path: "/finance/detail", name: "finance.detail", params: { id: row.id } });
+        },
+
+        /**编辑**/
+        edit(row) {
+            this.visible = true;
+            this.editObj = row;
         },
     },
 };
