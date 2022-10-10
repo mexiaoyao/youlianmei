@@ -61,3 +61,12 @@ Mock.mock("/ylm/finance/deleteById", "post", {
 Mock.mock("/ylm/finance/actionFinance", "post", {
     code: 10000
 });
+
+//上架下架
+Mock.mock("/ylm/finance/status", "post", {
+    code: 10000
+});
+//删除
+Mock.mock("/ylm/finance/delete", "post", {
+    code: 10000
+});

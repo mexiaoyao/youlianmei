@@ -81,7 +81,7 @@
                 <a-table-column align="center" data-index="status" key="status" title="状态">
                     <template slot-scope="text, item">
                         <span
-                            :style="{color: item.status===1?'#67C23A':'#303133'}"
+                            :style="{color: item.status===1?'#67C23A':'red'}"
                         >{{ item.status | CusListFind(statusList, 'code', 'codeName') }}</span>
                     </template>
                 </a-table-column>
@@ -108,7 +108,7 @@
                                 v-if="item.status===2"
                             />
                             <a-button
-                                @click="deletes(item)"
+                                @click="statusAction(item.id,1)"
                                 icon="check"
                                 size="small"
                                 title="上线"
@@ -116,7 +116,7 @@
                                 v-if="item.status===2"
                             />
                             <a-button
-                                @click="deletes(item)"
+                                @click="statusAction(item.id,2)"
                                 icon="close"
                                 size="small"
                                 title="下线"
@@ -124,7 +124,7 @@
                                 v-if="item.status===1"
                             />
                             <a-button
-                                @click="deletes(item)"
+                                @click="deleteAction(item.id)"
                                 icon="delete"
                                 size="small"
                                 title="删除"
@@ -227,6 +227,80 @@ export default {
         edit(row) {
             this.visible = true;
             this.editObj = row;
+        },
+
+        /**
+         * 上架：1，下架：2操作
+         * **/
+        statusAction(id, status) {
+            let _self = this;
+            if (status === 2) {
+                this.$confirm({
+                    title: "警告",
+                    content: "您确定要下架这条数据吗",
+                    onOk() {
+                        axios.post("/ylm/finance/status", { id: id, status: status }).then((res) => {
+                            if (res.data.code === 10000) {
+                                _self.$notification.success({
+                                    message: "提示",
+                                    description: "操作成功！",
+                                });
+                                _self.getfinanceList({});
+                            } else {
+                                _self.$notification.error({
+                                    message: "提示",
+                                    description: "操作失败！",
+                                });
+                            }
+                        });
+                        return;
+                    },
+                    onCancel() {},
+                });
+            } else {
+                axios.post("/ylm/finance/status", { id: id, status: status }).then((res) => {
+                    if (res.data.code === 10000) {
+                        _self.$notification.success({
+                            message: "提示",
+                            description: "操作成功！",
+                        });
+                        _self.getfinanceList({});
+                    } else {
+                        _self.$notification.error({
+                            message: "提示",
+                            description: "操作失败！",
+                        });
+                    }
+                });
+            }
+        },
+        /**
+         * 删除
+         * **/
+        deleteAction(id) {
+            let _self = this;
+            this.$confirm({
+                title: "警告",
+                content: "您确定要删除这条数据吗",
+                onOk() {
+                    axios.post("/ylm/finance/delete", { id: id }).then((res) => {
+                        if (res.data.code === 10000) {
+                            _self.$notification.success({
+                                message: "提示",
+                                description: "操作成功！",
+                            });
+                            _self.getfinanceList({});
+                        } else {
+                            _self.$notification.error({
+                                message: "提示",
+                                description: "操作失败！",
+                            });
+                        }
+                    });
+                    return;
+                },
+                onCancel() {},
+            });
         },
     },
 };
