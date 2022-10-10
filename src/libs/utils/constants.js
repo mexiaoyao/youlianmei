@@ -6,6 +6,16 @@ export default class Constants {
         code: 0,
         codeName: "全部"
     };
+    static PUBLICCOMMON_FESTIVAL = [
+        {
+            code: 1,
+            codeName: "节假日"
+        },
+        {
+            code: 2,
+            codeName: "自定义"
+        }
+    ];
     /***
      * 股票全局设置
      * **/

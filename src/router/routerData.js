@@ -23,6 +23,14 @@ export default [
         path: "/finance",
         children: [
             {
+                key: "finance.date",
+                meta: {
+                    title: "更新日期"
+                },
+                name: "finance-date",
+                path: "/finance/date"
+            },
+            {
                 key: "finance.list",
                 meta: {
                     title: "股票列表"
