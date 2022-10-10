@@ -70,3 +70,8 @@ Mock.mock("/ylm/finance/status", "post", {
 Mock.mock("/ylm/finance/delete", "post", {
     code: 10000
 });
+
+//日历添加注释
+Mock.mock("/ylm/finance/addContent", "post", {
+    code: 10000
+});

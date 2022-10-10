@@ -40,19 +40,26 @@ export default {
     data() {
         return {
             id: 123,
-            listObj: {
-                "2022-06-06": [],
-                "2022-06-07": [
-                    { type: 1, content: "春节" },
-                    { type: 2, content: "特殊纪念日" },
-                ],
-                "2022-06-08": [{ type: 2, content: "特殊纪念日" }],
-            },
+            listObj: [
+                {
+                    dateTime: "2022-06-06",
+                    content: [
+                        { type: 1, content: "春节" },
+                        { type: 2, content: "特殊纪念日" },
+                    ],
+                },
+                {
+                    dateTime: "2022-06-07",
+                    content: [
+                        { type: 1, content: "端午节" },
+                        { type: 2, content: "测试" },
+                    ],
+                },
+            ],
             visible: false,
             editObj: {}, //待处理数据
         };
     },
-    watch: {},
     created() {
         this.init();
     },
@@ -97,31 +104,38 @@ export default {
          type:1节假日，2自定义
          * **/
         isFestival(value, type) {
-            let content = [];
-            if (this.listObj[value.format("YYYY-MM-DD")]) {
-                content = this.listObj[value.format("YYYY-MM-DD")];
-            }
-            return content.some((item, index, arr) => {
-                return item.type === type;
-            });
+            // let content = this.listObj.find((item) => {
+            //     return item.dateTime === value.format("YYYY-MM-DD");
+            // });
+            // return content.some((item, index, arr) => {
+            //     return item.type === type;
+            // });
         },
         /**
          * 点击日期回调
          * **/
         clickSelect(value) {
             let dateTime = value.format("YYYY-MM-DD");
-            let content = [];
-            if (this.listObj[dateTime]) {
-                content = this.listObj[dateTime];
-            }
+            let content = this.listObj.find((item) => {
+                return item.dateTime === value.format("YYYY-MM-DD");
+            });
             let obj = { dateTime: dateTime, content: content };
-            Object.assign(this.editObj, obj);
+            this.editObj = obj;
             this.visible = true;
         },
-        addContent() {},
-
+        addContent(val) {
+            this.listObj.forEach((item) => {
+                if (item.dateTime === val.dateTime) {
+                    item.content = val.content;
+                }
+            });
+            this.visible = false;
+        },
         getListData(value) {
-            return this.listObj[value.format("YYYY-MM-DD")];
+            let ret = this.listObj.find((item) => {
+                return item.dateTime === value.format("YYYY-MM-DD");
+            });
+            return ret ? ret.content : [];
         },
         getMonthData(value) {
             if (value.month() === 8) {

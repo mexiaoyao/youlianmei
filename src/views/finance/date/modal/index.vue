@@ -9,10 +9,10 @@
         destroyOnClose
     >
         <a-form-model :label-col="{ span: 8 }" :wrapper-col="{ span: 12 }" ref="addForm">
-            <a-row class="tc pt15" v-if="null==item.content || item.content.length==0">
+            <a-row class="tc pt15" v-if="null==listData || listData.length==0">
                 <a-button @click="add" icon="plus" type="primary" />
             </a-row>
-            <a-row :key="index" class="pt15" v-for="(obj,index) in item.content">
+            <a-row :key="index" class="pt15" v-for="(obj,index) in listData">
                 <a-col :span="8">
                     <a-select :style="{width:'170px'}" placeholder="请选择指数类型" v-model="obj.type">
                         <a-select-option :key="index" :value="arr.code" v-for="(arr,index) in typeList">{{arr.codeName}}</a-select-option>
@@ -27,10 +27,6 @@
                 </a-col>
             </a-row>
         </a-form-model>
-        <template #footer>
-            <a-button @click="cancelClick" key="back">取消</a-button>
-            <a-button @click="onSubmit" key="submit" type="primary">提交</a-button>
-        </template>
     </a-modal>
 </template>
 <script>
@@ -51,15 +47,15 @@ export default {
     data() {
         return {
             typeList: Constants.PUBLICCOMMON_FESTIVAL,
+            listData: [],
         };
     },
-    created() {},
     methods: {
         add() {
-            this.item.content.push({ type: 1, content: "" });
+            this.listData.push({ type: 1, content: "" });
         },
         reduce(index) {
-            this.item.content.splice(index, 1);
+            this.listData.splice(index, 1);
         },
         cancelClick() {
             this.$emit("cancel");
@@ -68,13 +64,13 @@ export default {
             this.onSubmit();
         },
         onSubmit() {
-            axios.post("/ylm/finance/actionFinance", this.form).then((res) => {
+            axios.post("/ylm/finance/addContent", this.form).then((res) => {
                 if (res.data.code === 10000) {
                     this.$notification.success({
                         message: "提示",
                         description: "操作成功！",
                     });
-                    this.cancelClick();
+                    this.$emit("ok", { dateTime: this.item.dateTime, content: this.listData });
                 } else {
                     this.$notification.error({
                         message: "提示",
@@ -82,6 +78,15 @@ export default {
                     });
                 }
             });
+        },
+    },
+    watch: {
+        visible(newVal) {
+            if (newVal) {
+                this.listData = JSON.parse(JSON.stringify(this.item.content));
+            } else {
+                this.listData = [];
+            }
         },
     },
 };
