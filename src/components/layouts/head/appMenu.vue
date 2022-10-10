@@ -31,7 +31,7 @@ export default {
         },
     },
     created() {
-        this.getDefaultMenuKeys();
+        //this.getDefaultMenuKeys();
     },
     methods: {
         //获取当前URL打开的菜单

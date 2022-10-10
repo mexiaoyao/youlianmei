@@ -39,7 +39,7 @@
         </a-form-model>
         <template #footer>
             <a-button @click="cancelClick" key="back">取消</a-button>
-            <a-button @click="resetForm" key="reSet">重置</a-button>
+            <a-button @click="resetForm" key="reSet" v-if="!form.id">重置</a-button>
             <a-button :loading="isLoading" @click="onSubmit" key="submit" type="primary">提交</a-button>
         </template>
     </a-modal>
@@ -138,18 +138,26 @@ export default {
             });
         },
         resetForm() {
-            this.form = this.$options.data.call(this).form;
-            //this.$refs.addForm.resetFields();
+            // this.$refs.form.resetFields(); //移除校验结果并重置字段值
+            // this.$refs.form.clearValidate(); //移除校验结果
+            // 二者都能清除验证，但是resetFields（）会重置字段值，而在vue中大量用到的数据的绑定，很可能出现
+            // 同一个数据绑定在多处的情况，如果滥用resetFields很可能造成界面上出现莫名的bug
+            // this.form = this.$options.data.call(this).form;
+            //this.$nextTick(() => {
+            this.$refs.addForm.resetFields();
+            //});
         },
     },
     watch: {
         visible(newVal, oldVal) {
-            if (newVal != oldVal && newVal) {
-                if (null == this.item.id || undefined == this.item.id) {
-                    this.resetForm();
-                } else {
+            if (newVal) {
+                if (null != this.item.id && undefined != this.item.id) {
                     Object.assign(this.form, this.item);
+                } else {
+                    this.form = this.$options.data.call(this).form;
                 }
+            } else {
+                this.resetForm();
             }
         },
     },
