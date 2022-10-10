@@ -3,7 +3,7 @@
         <a-row>
             <Breadcrumb />
         </a-row>
-        <a-row class="rowPdMar">
+        <a-row class="rowBorder">
             <a-form :form="form" @submit="submitSearch" layout="inline">
                 <a-form-item label="指数类型">
                     <a-select :style="{width:'100px'}" v-model="form.indexType">
@@ -43,7 +43,7 @@
                 </a-form-item>
             </a-form>
         </a-row>
-        <a-row class="rowPdMar">
+        <a-row class="rowBorder">
             <a-row class="tr pt15">
                 <a-button :disabled="isLoading" @click="visible=true;" type="primary">新增</a-button>
             </a-row>

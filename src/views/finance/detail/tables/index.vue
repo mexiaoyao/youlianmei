@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-row class="rowPdMar">
+        <a-row class="rowBorder">
             <a-form labelAlign="right" layout="inline">
                 <a-form-item :label-col="labelCol" :wrapper-col="wrapperCol" class="formItem" label="今日开盘价">
                     <a-input-number :step="0.01" v-model="form.todayOpenPrice_1" />~
@@ -68,7 +68,7 @@
                 </a-form-item>
             </a-form>
         </a-row>
-        <a-row class="rowPdMar">
+        <a-row class="rowBorder">
             <a-table
                 :data-source="list"
                 :loading="isLoading"

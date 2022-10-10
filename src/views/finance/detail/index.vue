@@ -3,7 +3,7 @@
         <a-row>
             <Breadcrumb />
         </a-row>
-        <a-row class="rowPdMar">
+        <a-row class="rowBorder">
             <a-tabs default-active-key="1">
                 <a-tab-pane key="1" tab="折线图">
                     <shares-echarts />
