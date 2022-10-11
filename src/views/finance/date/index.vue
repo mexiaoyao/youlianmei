@@ -75,7 +75,7 @@ export default {
                 return "orange";
             }
             if (this.isFestival(value, 1)) {
-                return "red";
+                return "orange";
             }
             if (this.isFestival(value, 2)) {
                 return "purple";
