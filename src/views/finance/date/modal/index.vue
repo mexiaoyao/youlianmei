@@ -82,7 +82,7 @@ export default {
     },
     watch: {
         visible(newVal) {
-            if (newVal) {
+            if (newVal && null != this.item.content && this.item.content.length > 0) {
                 this.listData = JSON.parse(JSON.stringify(this.item.content));
             } else {
                 this.listData = [];
