@@ -136,6 +136,9 @@ export default {
             this.editObj = obj;
             this.visible = true;
         },
+        /**
+         * 对应日期加注释
+         * **/
         addContent(val) {
             let isDo = false;
             this.listObj.forEach((item) => {
@@ -149,12 +152,18 @@ export default {
             }
             this.visible = false;
         },
+        /**
+         * 对应日期获取注释
+         * **/
         getListData(value) {
             let ret = this.listObj.find((item) => {
                 return item.dateTime === value.format("YYYY-MM-DD");
             });
             return ret ? ret.content : [];
         },
+        /**
+         * 获取当月注释
+         * **/
         getMonthData(value) {
             if (value.month() === 8) {
                 return 1394;
