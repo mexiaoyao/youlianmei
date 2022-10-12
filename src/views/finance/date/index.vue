@@ -9,7 +9,7 @@
                     <a-card
                         :bodyStyle="{padding: '5px 10px'}"
                         :bordered="false"
-                        :style="{backgroundColor:dateColor(value),color:'white',width:'100%',height:'100%'}"
+                        :style="{backgroundColor:dateColor(value),color:'white'}"
                         class="cardp"
                     >
                         <p :title="'农历:'+dateChanage(value)">{{value.format("YYYY年MM月DD日")}}</p>
@@ -127,12 +127,26 @@ export default {
             let content = this.listObj.find((item) => {
                 return item.dateTime === value.format("YYYY-MM-DD");
             });
-            let obj = { dateTime: dateTime, content: content };
+            let obj = {};
+            if (content) {
+                obj = content;
+            } else {
+                obj = { dateTime: dateTime, content: [] };
+            }
             this.editObj = obj;
             this.visible = true;
         },
         addContent(val) {
-            this.listObj.push(val);
+            let isDo = false;
+            this.listObj.forEach((item) => {
+                if (item.dateTime === val.dateTime) {
+                    item.content = val.content;
+                    isDo = true;
+                }
+            });
+            if (!isDo) {
+                this.listObj.push(val);
+            }
             this.visible = false;
         },
         getListData(value) {
