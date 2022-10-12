@@ -64,7 +64,7 @@ export default {
             this.onSubmit();
         },
         onSubmit() {
-            axios.post("/ylm/finance/addContent", this.form).then((res) => {
+            axios.post("/ylm/finance/addNotes", this.form).then((res) => {
                 if (res.data.code === 10000) {
                     this.$notification.success({
                         message: "提示",
