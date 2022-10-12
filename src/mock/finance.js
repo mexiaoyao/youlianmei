@@ -72,6 +72,6 @@ Mock.mock("/ylm/finance/delete", "post", {
 });
 
 //日历添加注释
-Mock.mock("/ylm/finance/AddNotes", "post", {
+Mock.mock("/ylm/finance/addNotes", "post", {
     code: 10000
 });
