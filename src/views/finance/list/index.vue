@@ -141,6 +141,7 @@
 </template>
 <script>
 import axios from "axios";
+import { httpAjax } from "@/api/finance";
 import Constants from "@/libs/utils/constants";
 import LangUtil from "@/libs/utils/langUtil";
 import Breadcrumb from "@/components/common/Breadcrumb";
@@ -162,10 +163,17 @@ export default {
             createTime: [null, null],
             updateTime: [null, null],
 
-            page: 1,
-            taotal: 0,
+            pagination: {
+                pageNo: 1,
+                pageSize: 10, // 默认每页显示数量
+                showSizeChanger: true, // 显示可改变每页数量
+                pageSizeOptions: ["10", "20", "50", "100"], // 每页数量选项
+                showTotal: (total) => `共 ${total} 条`, // 显示总数
+                onShowSizeChange: (current, pageSize) => this.onSizeChange(current, pageSize), // 改变每页数量时更新显示
+                onChange: (page, pageSize) => this.onPageChange(page, pageSize), //点击页码事件
+                total: 0, //总条数
+            },
             list: [],
-            pagination: {},
             locale: { emptyText: <a-empty description="暂无数据" /> },
 
             indexTypeList: LangUtil.addAll(Constants.FINANCE.INDEX_TYPE),
@@ -184,6 +192,15 @@ export default {
         this.init();
     },
     methods: {
+        onPageChange(page, pageSize) {
+            this.pagination.pageNo = page;
+            this.submitSearch();
+        },
+        onSizeChange(current, pageSize) {
+            this.pagination.pageNo = 1;
+            this.pagination.pageSize = pageSize;
+            this.submitSearch();
+        },
         onChange() {},
 
         init() {
@@ -210,10 +227,10 @@ export default {
         },
         //定义一个请求数据的方法
         getfinanceList(timeRange) {
-            let parme = Object.assign(this.form, timeRange);
-            axios.post("/ylm/finance/list", parme).then((res) => {
+            let parme = Object.assign(this.form, timeRange, { pageNo: this.pagination.pageNo, pageSize: this.pagination.pageSize });
+            httpAjax("/finance/list", "post", parme).then((res) => {
                 this.list = res.data.list || [];
-                this.taotal = res.data.total || 0;
+                this.pagination.total = res.data.total || 0;
             });
         },
         goToDetail(row) {
