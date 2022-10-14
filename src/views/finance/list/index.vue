@@ -70,12 +70,12 @@
                 <a-table-column align="center" data-index="codeNumber" key="codeNumber" title="股票代码" />
                 <a-table-column align="center" data-index="sharesName" key="sharesName" title="股票名称" />
                 <a-table-column align="center" data-index="sharesAlise" key="sharesAlise" title="股票别名" />
-                <a-table-column align="center" data-index="sharesTotalNumber" key="sharesTotalNumber" title="股票总数" />
+                <a-table-column align="center" data-index="sharesTotalNumber" key="sharesTotalNumber" title="股票总股数" />
                 <a-table-column
                     align="center"
                     data-index="sharesAllowTotalNumber"
                     key="sharesAllowTotalNumber"
-                    title="可流动股票总数"
+                    title="可流动股票股数"
                 />
                 <a-table-column align="center" data-index="loadTime" key="loadTime" title="最后更新" />
                 <a-table-column align="center" data-index="status" key="status" title="状态">
@@ -212,7 +212,8 @@ export default {
         getfinanceList(timeRange) {
             let parme = Object.assign(this.form, timeRange);
             axios.post("/ylm/finance/list", parme).then((res) => {
-                this.list = res.data.data.list || [];
+                this.list = res.data.list || [];
+                this.taotal = res.data.total || 0;
             });
         },
         goToDetail(row) {

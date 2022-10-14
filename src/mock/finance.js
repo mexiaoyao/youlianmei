@@ -2,29 +2,29 @@ import Mock from "mockjs";
 //@increment(1) 自增主键
 //@uuid 获取uuid
 
-Mock.mock("/ylm/finance/list", "post", {
-    code: 10000,
-    data: {
-        total: 100,
-        page: 1,
-        [`list|10`]: [
-            {
-                id: "@uuid",
-                "indexType|1": [1, 2],
-                codeNumber: "@cword('0123456789', 6, 6)", //随机生成留个数字
-                sharesName: "@cname",
-                sharesAlise: "@cname",
-                "sharesTotalNumber|10000-100000": 1, //股票总数
-                "sharesAllowTotalNumber|10000-100000": 1, //可流动股票总数
-                "status|1": [1, 2],
-                loadTime: "@datetime", //最后获取日期
-                createTime: "@datetime",
-                updateTime: "@datetime",
-                remarks: "@csentence(1,5)"
-            }
-        ]
-    }
-});
+// Mock.mock("/ylm/finance/list", "post", {
+//     code: 10000,
+//     data: {
+//         total: 100,
+//         page: 1,
+//         [`list|10`]: [
+//             {
+//                 id: "@uuid",
+//                 "indexType|1": [1, 2],
+//                 codeNumber: "@cword('0123456789', 6, 6)", //随机生成留个数字
+//                 sharesName: "@cname",
+//                 sharesAlise: "@cname",
+//                 "sharesTotalNumber|10000-100000": 1, //股票总数
+//                 "sharesAllowTotalNumber|10000-100000": 1, //可流动股票总数
+//                 "status|1": [1, 2],
+//                 loadTime: "@datetime", //最后获取日期
+//                 createTime: "@datetime",
+//                 updateTime: "@datetime",
+//                 remarks: "@csentence(1,5)"
+//             }
+//         ]
+//     }
+// });
 Mock.mock("/ylm/finance/detail", "post", {
     code: 10000,
     data: {
