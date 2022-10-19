@@ -141,7 +141,7 @@
 </template>
 <script>
 import axios from "axios";
-import { httpAjax } from "@/api/finance";
+import { FinanceControl } from "@/api";
 import Constants from "@/libs/utils/constants";
 import LangUtil from "@/libs/utils/langUtil";
 import Breadcrumb from "@/components/common/Breadcrumb";
@@ -228,9 +228,9 @@ export default {
         //定义一个请求数据的方法
         getfinanceList(timeRange) {
             let parme = Object.assign(this.form, timeRange, { pageNo: this.pagination.pageNo, pageSize: this.pagination.pageSize });
-            httpAjax("/finance/list", "post", parme).then((res) => {
-                this.list = res.data.list || [];
-                this.pagination.total = res.data.total || 0;
+            FinanceControl.financeList(parme).then((res) => {
+                this.list = res.list || [];
+                this.pagination.total = res.total || 0;
             });
         },
         goToDetail(row) {
