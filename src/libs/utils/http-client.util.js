@@ -33,6 +33,9 @@ axios.interceptors.request.use(config => {
     config.headers["Access-Control-Allow-Methods"] = "POST,GET,OPTIONS,DELETE,HEAD,PUT,PATCH";
     config.headers["Access-Control-Allow-Headers"] = "Authorization, Origin, X-Requested-With, Content-Type, Accept, token";
     config.headers["Access-Control-Allow-Credentials"] = "true"; // 保持前端跨域时携带的cookie
+    config.headers["Content-Type"] = "application/json;charset=utf-8";
+    //axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
+    //axios.defaults.withCredentials = true;
     //config.headers.token = localStorage.getItem(Constants.LOCAL_STORAGE.TOKEN);
     config.headers.timestamp = Date.now();
     return config;
