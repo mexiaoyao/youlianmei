@@ -15,13 +15,13 @@
                     </a-select>
                 </a-form-item>
                 <a-form-item label="股票代码">
-                    <a-input placeholder="请输入股票代码" v-model="form.codeNumber"></a-input>
+                    <a-input allowClear placeholder="请输入股票代码" v-model="form.codeNumber"></a-input>
                 </a-form-item>
                 <a-form-item label="股票名称">
-                    <a-input placeholder="请输入股票名称" v-model="form.sharesName"></a-input>
+                    <a-input allowClear placeholder="请输入股票名称" v-model="form.sharesName"></a-input>
                 </a-form-item>
                 <a-form-item label="股票别名">
-                    <a-input placeholder="请输入股票别名" v-model="form.sharesAlise"></a-input>
+                    <a-input allowClear placeholder="请输入股票别名" v-model="form.sharesAlise"></a-input>
                 </a-form-item>
                 <a-form-item label="状态">
                     <a-select :style="{width:'100px'}" v-model="form.status">
@@ -33,10 +33,10 @@
                     </a-select>
                 </a-form-item>
                 <a-form-item label="添加时间">
-                    <a-range-picker format="YYYY-MM-DD" v-model="createTime" />
+                    <a-range-picker allowClear format="YYYY-MM-DD" v-model="createTime" />
                 </a-form-item>
                 <a-form-item label="修改时间">
-                    <a-range-picker format="YYYY-MM-DD" v-model="updateTime" />
+                    <a-range-picker allowClear format="YYYY-MM-DD" v-model="updateTime" />
                 </a-form-item>
                 <a-form-item>
                     <a-button :disabled="isLoading" html-type="submit" type="primary">查询</a-button>
@@ -55,7 +55,7 @@
                 :rowKey="item => item.id"
             >
                 <a-table-column align="center" key="id" title="序号">
-                    <template slot-scope="text, item, index">{{ index+1 }}</template>
+                    <template slot-scope="text, item, index">{{ (pagination.pageNo - 1)*pagination.pageSize + index+1 }}</template>
                 </a-table-column>
                 <a-table-column align="center" title="股票编码">
                     <template slot-scope="text, item">
@@ -136,11 +136,15 @@
                 </a-table-column>
             </a-table>
         </a-row>
-        <add-modal :item="editObj" :visible="visible" @cancel="visible=false;editObj={}" @ok="getfinanceList" />
+        <add-modal
+            :item="editObj"
+            :visible="visible"
+            @cancel="visible=false;editObj={}"
+            @ok="visible=false;editObj={};getfinanceList()"
+        />
     </div>
 </template>
 <script>
-import axios from "axios";
 import { FinanceControl } from "@/api";
 import Constants from "@/libs/utils/constants";
 import LangUtil from "@/libs/utils/langUtil";
@@ -257,8 +261,8 @@ export default {
                     title: "警告",
                     content: "您确定要下架这条数据吗",
                     onOk() {
-                        axios.post("/ylm/finance/status", { id: id, status: status }).then((res) => {
-                            if (res.data.code === 10000) {
+                        FinanceControl.financeStatus({ id: id, status: status }).then((res) => {
+                            if (res.code === 10000) {
                                 _self.$notification.success({
                                     message: "提示",
                                     description: "操作成功！",
@@ -276,8 +280,8 @@ export default {
                     onCancel() {},
                 });
             } else {
-                axios.post("/ylm/finance/status", { id: id, status: status }).then((res) => {
-                    if (res.data.code === 10000) {
+                FinanceControl.financeStatus({ id: id, status: status }).then((res) => {
+                    if (res.code === 10000) {
                         _self.$notification.success({
                             message: "提示",
                             description: "操作成功！",
@@ -301,8 +305,8 @@ export default {
                 title: "警告",
                 content: "您确定要删除这条数据吗",
                 onOk() {
-                    axios.post("/ylm/finance/delete", { id: id }).then((res) => {
-                        if (res.data.code === 10000) {
+                    FinanceControl.financeDelete({ id: id }).then((res) => {
+                        if (res.code === 10000) {
                             _self.$notification.success({
                                 message: "提示",
                                 description: "操作成功！",
@@ -323,5 +327,3 @@ export default {
     },
 };
 </script>
-<style scoped>
-</style>

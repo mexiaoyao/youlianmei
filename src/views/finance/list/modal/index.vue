@@ -45,7 +45,7 @@
     </a-modal>
 </template>
 <script>
-import axios from "axios";
+import { FinanceControl } from "@/api";
 import Constants from "@/libs/utils/constants";
 import { gpCodeCheck, zhengshuCheck } from "@/libs/utils/decorator";
 export default {
@@ -115,17 +115,18 @@ export default {
             this.onSubmit();
         },
         onSubmit() {
+            let _slef = this;
             this.$refs.addForm.validate((valid) => {
                 if (valid) {
-                    axios.post("/ylm/finance/actionFinance", this.form).then((res) => {
-                        if (res.data.code === 10000) {
-                            this.$notification.success({
+                    FinanceControl.actionFinance(_slef.form).then((res) => {
+                        if (res.code == 10000) {
+                            _slef.$notification.success({
                                 message: "提示",
                                 description: "操作成功！",
                             });
-                            this.cancelClick();
+                            _slef.$emit("ok");
                         } else {
-                            this.$notification.error({
+                            _slef.$notification.error({
                                 message: "提示",
                                 description: "操作失败！",
                             });
