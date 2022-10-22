@@ -70,13 +70,25 @@
                 <a-table-column align="center" data-index="codeNumber" key="codeNumber" title="股票代码" />
                 <a-table-column align="center" data-index="sharesName" key="sharesName" title="股票名称" />
                 <a-table-column align="center" data-index="sharesAlise" key="sharesAlise" title="股票别名" />
-                <a-table-column align="center" data-index="sharesTotalNumber" key="sharesTotalNumber" title="股票总股数" />
+                <a-table-column align="center" data-index="sharesTotalNumber" key="sharesTotalNumber" title="股票总股数">
+                    <template slot-scope="text, item">
+                        <span>{{ item.sharesTotalNumber }}</span>
+                        <br />
+                        <span>{{ item.sharesTotalNumber | TableMoneyChanageChinese(sharesTotalNumber) }}</span>
+                    </template>
+                </a-table-column>
                 <a-table-column
                     align="center"
                     data-index="sharesAllowTotalNumber"
                     key="sharesAllowTotalNumber"
                     title="可流动股票股数"
-                />
+                >
+                    <template slot-scope="text, item">
+                        <span>{{ item.sharesAllowTotalNumber }}</span>
+                        <br />
+                        <span>{{ item.sharesAllowTotalNumber | TableMoneyChanageChinese(sharesAllowTotalNumber) }}</span>
+                    </template>
+                </a-table-column>
                 <a-table-column align="center" data-index="loadTime" key="loadTime" title="最后更新" />
                 <a-table-column align="center" data-index="status" key="status" title="状态">
                     <template slot-scope="text, item">

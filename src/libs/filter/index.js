@@ -1,5 +1,6 @@
-import { CusListFind } from "./findFilter";
+import { CusListFind, TableMoneyChanageChinese } from "./findFilter";
 
 export default {
-    CusListFind
+    CusListFind,
+    TableMoneyChanageChinese
 };
