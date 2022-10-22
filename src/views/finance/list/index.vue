@@ -53,8 +53,9 @@
                 :locale="locale"
                 :pagination="pagination"
                 :rowKey="item => item.id"
+                :scroll="{ x: true }"
             >
-                <a-table-column align="center" key="id" title="序号">
+                <a-table-column align="center" fixed="left" key="id" title="序号" width="80">
                     <template slot-scope="text, item, index">{{ (pagination.pageNo - 1)*pagination.pageSize + index+1 }}</template>
                 </a-table-column>
                 <a-table-column align="center" title="股票编码">
@@ -62,15 +63,21 @@
                         <span>{{item.codeNumber}}{{ item.indexType | CusListFind(indexTypeCodeList, 'code', 'codeName') }}</span>
                     </template>
                 </a-table-column>
-                <a-table-column align="center" data-index="indexType" key="indexType" title="指数类型">
+                <a-table-column align="center" data-index="indexType" key="indexType" title="指数类型" width="160">
                     <template slot-scope="text, item">
                         <span>{{ item.indexType | CusListFind(indexTypeList, 'code', 'codeName') }}({{ item.indexType | CusListFind(indexTypeCodeList, 'code', 'codeName') }})</span>
                     </template>
                 </a-table-column>
-                <a-table-column align="center" data-index="codeNumber" key="codeNumber" title="股票代码" />
-                <a-table-column align="center" data-index="sharesName" key="sharesName" title="股票名称" />
-                <a-table-column align="center" data-index="sharesAlise" key="sharesAlise" title="股票别名" />
-                <a-table-column align="center" data-index="sharesTotalNumber" key="sharesTotalNumber" title="股票总股数">
+                <a-table-column align="center" data-index="codeNumber" key="codeNumber" title="股票代码" width="200" />
+                <a-table-column align="center" data-index="sharesName" key="sharesName" title="股票名称" width="160" />
+                <a-table-column align="center" data-index="sharesAlise" key="sharesAlise" title="股票别名" width="300" />
+                <a-table-column
+                    align="center"
+                    data-index="sharesTotalNumber"
+                    key="sharesTotalNumber"
+                    title="股票总股数"
+                    width="300"
+                >
                     <template slot-scope="text, item">
                         <span>{{ item.sharesTotalNumber }}</span>
                         <br />
@@ -82,6 +89,7 @@
                     data-index="sharesAllowTotalNumber"
                     key="sharesAllowTotalNumber"
                     title="可流动股票股数"
+                    width="360"
                 >
                     <template slot-scope="text, item">
                         <span>{{ item.sharesAllowTotalNumber }}</span>
@@ -89,18 +97,18 @@
                         <span>{{ item.sharesAllowTotalNumber | TableMoneyChanageChinese(sharesAllowTotalNumber) }}</span>
                     </template>
                 </a-table-column>
-                <a-table-column align="center" data-index="loadTime" key="loadTime" title="最后更新" />
-                <a-table-column align="center" data-index="status" key="status" title="状态">
+                <a-table-column align="center" data-index="loadTime" key="loadTime" title="最后更新" width="240" />
+                <a-table-column align="center" data-index="status" key="status" title="状态" width="240">
                     <template slot-scope="text, item">
                         <span
                             :style="{color: item.status===1?'#67C23A':'red'}"
                         >{{ item.status | CusListFind(statusList, 'code', 'codeName') }}</span>
                     </template>
                 </a-table-column>
-                <a-table-column align="center" data-index="createTime" key="createTime" title="添加时间" />
-                <a-table-column align="center" data-index="updateTime" key="updateTime" title="修改时间" />
+                <a-table-column align="center" data-index="createTime" key="createTime" title="添加时间" width="240" />
+                <a-table-column align="center" data-index="updateTime" key="updateTime" title="修改时间" width="240" />
                 <a-table-column align="center" data-index="remarks" key="remarks" title="备注" />
-                <a-table-column align="center" key="action" title="操作" width="180px">
+                <a-table-column align="center" fixed="right" key="action" title="操作" width="150px">
                     <template slot-scope="text, item">
                         <div style="text-align:right;">
                             <a-button
