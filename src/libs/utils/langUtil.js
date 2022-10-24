@@ -39,9 +39,9 @@ export default class LangUtil {
         //对应小数部分单位
         var cnDecUnits = new Array("角", "分", "毫", "厘");
         //整数金额时后面跟的字符
-        var cnInteger = "整";
+        var cnInteger = "";
         //整型完以后的单位
-        var cnIntLast = "元";
+        var cnIntLast = "股";
         //最大处理的数字
         var maxNum = 999999999999999.9999;
         //金额整数部分

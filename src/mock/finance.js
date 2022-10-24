@@ -72,22 +72,23 @@ Mock.mock("/ylm/finance/deleteById", "post", {
 // });
 
 //更新记录
-Mock.mock("/ylm/financeUpdate/list", "post", {
-    code: 10000,
-    data: {
-        total: 100,
-        page: 1,
-        [`list|100`]: [
-            {
-                id: "@uuid",
-                sharesId: "@uuid", //股票id
-                "status|1": [1, 2],
-                createTime: "@datetime",
-                remarks: "@csentence(1,5)"
-            }
-        ]
-    }
-});
+// Mock.mock("/ylm/financeUpdate/list", "post", {
+//     code: 10000,
+//     data: {
+//         total: 100,
+//         page: 1,
+//         [`list|100`]: [
+//             {
+//                 id: "@uuid",
+//                 sharesId: "@uuid", //股票id
+//                 "status|1": [1, 2],
+//                 "failNum|1": [0, 1, 2],
+//                 createTime: "@datetime",
+//                 remarks: "@csentence(1,5)"
+//             }
+//         ]
+//     }
+// });
 
 //股票记录重新获取
 Mock.mock("/ylm/finance/getAgain", "post", {

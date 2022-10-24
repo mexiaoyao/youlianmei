@@ -1,7 +1,7 @@
 <template>
     <a-modal
         :bodyStyle="{ maxHeight: '500px', overflowY: 'auto' }"
-        :title="getTitle()+'更新记录'"
+        :title="getTitle()+':更新记录'"
         :visible="visible"
         :width="800"
         @cancel="cancelClick"
@@ -50,6 +50,7 @@
                             >{{ item.status | CusListFind(updateStatus, 'code', 'codeName') }}</span>
                         </template>
                     </a-table-column>
+                    <a-table-column align="center" data-index="failNum" key="failNum" title="失败次数" />
                     <a-table-column align="center" data-index="remarks" key="remarks" title="备注" />
                     <a-table-column align="center" key="action" title="操作" width="100px">
                         <template slot-scope="text, item">
@@ -111,11 +112,6 @@ export default {
             updateStatus: LangUtil.addAll(Constants.FINANCE.UPDATE_STATUS),
         };
     },
-    computed: {},
-    watch: {},
-    created() {
-        this.init();
-    },
     methods: {
         getTitle() {
             let str = this.itemProp.sharesName;
@@ -135,7 +131,7 @@ export default {
             this.$emit("cancel");
         },
         save() {
-            this.onSubmit();
+            this.cancelClick();
         },
 
         onPageChange(page, pageSize) {
@@ -165,10 +161,10 @@ export default {
         },
         //定义一个请求数据的方法
         getList(timeRange) {
-            let parme = Object.assign(this.form, timeRange, { pageNo: this.pagination.pageNo, pageSize: this.pagination.pageSize });
+            let parme = Object.assign(this.form, { sharesId: this.itemProp.id }, timeRange, { pageNo: this.pagination.pageNo, pageSize: this.pagination.pageSize });
             FinanceUpdateControl.updateList(parme).then((res) => {
-                this.list = res.data.list || [];
-                this.pagination.total = res.data.total || 0;
+                this.list = res.list || [];
+                this.pagination.total = res.total || 0;
             });
         },
 
@@ -199,6 +195,13 @@ export default {
                 },
                 onCancel() {},
             });
+        },
+    },
+    watch: {
+        visible(newVal, oldVal) {
+            if (newVal) {
+                this.getList({});
+            }
         },
     },
 };
