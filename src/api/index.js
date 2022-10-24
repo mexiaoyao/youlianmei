@@ -1,2 +1,3 @@
 import { FinanceControl } from "./finance.control";
-export { FinanceControl };
+import { FinanceUpdateControl } from "./finance.update.control";
+export { FinanceControl, FinanceUpdateControl };

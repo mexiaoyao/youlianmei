@@ -50,6 +50,14 @@ export default class Constants {
             { code: 1, codeName: "定时器" },
             { code: 2, codeName: "导入" },
             { code: 3, codeName: "手动添加" }
+        ],
+        /**
+         * 股票更新状态---股票更新表用到
+         * @parme 1成功 2失败
+         * **/
+        UPDATE_STATUS: [
+            { code: 1, codeName: "成功" },
+            { code: 2, codeName: "失败" }
         ]
     };
 }

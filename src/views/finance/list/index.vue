@@ -55,7 +55,7 @@
                 :rowKey="item => item.id"
                 :scroll="{ x: true }"
             >
-                <a-table-column align="center" fixed="left" key="id" title="序号" width="80">
+                <a-table-column align="center" key="id" title="序号" width="80">
                     <template slot-scope="text, item, index">{{ (pagination.pageNo - 1)*pagination.pageSize + index+1 }}</template>
                 </a-table-column>
                 <a-table-column align="center" title="股票编码">
@@ -81,7 +81,7 @@
                     <template slot-scope="text, item">
                         <span>{{ item.sharesTotalNumber }}</span>
                         <br />
-                        <span>{{ item.sharesTotalNumber | TableMoneyChanageChinese(sharesTotalNumber) }}</span>
+                        <span>{{ item.sharesTotalNumber | TableMoneyChanageChinese(item.sharesTotalNumber) }}</span>
                     </template>
                 </a-table-column>
                 <a-table-column
@@ -94,7 +94,7 @@
                     <template slot-scope="text, item">
                         <span>{{ item.sharesAllowTotalNumber }}</span>
                         <br />
-                        <span>{{ item.sharesAllowTotalNumber | TableMoneyChanageChinese(sharesAllowTotalNumber) }}</span>
+                        <span>{{ item.sharesAllowTotalNumber | TableMoneyChanageChinese(item.sharesAllowTotalNumber) }}</span>
                     </template>
                 </a-table-column>
                 <a-table-column align="center" data-index="loadTime" key="loadTime" title="最后更新" width="240" />
@@ -111,6 +111,14 @@
                 <a-table-column align="center" fixed="right" key="action" title="操作" width="150px">
                     <template slot-scope="text, item">
                         <div style="text-align:right;">
+                            <a-button
+                                @click="goToUpdate(item)"
+                                icon="unordered-list"
+                                size="small"
+                                title="更新记录"
+                                type="primary"
+                                v-if="item.status===1"
+                            />
                             <a-button
                                 @click="goToDetail(item)"
                                 icon="eye"
@@ -162,6 +170,12 @@
             @cancel="visible=false;editObj={}"
             @ok="visible=false;editObj={};getfinanceList()"
         />
+        <update-list-modal
+            :itemProp="updateItem"
+            :visible="updateVisible"
+            @cancel="updateVisible=false;updateItem={}"
+            @ok="updateVisible=false;updateItem={};"
+        />
     </div>
 </template>
 <script>
@@ -171,9 +185,10 @@ import LangUtil from "@/libs/utils/langUtil";
 import Breadcrumb from "@/components/common/Breadcrumb";
 
 import AddModal from "./modal/index";
+import UpdateListModal from "./modal/updateList";
 export default {
     name: "finance-list",
-    components: { Breadcrumb, AddModal },
+    components: { Breadcrumb, AddModal, UpdateListModal },
     data() {
         return {
             isLoading: false,
@@ -206,8 +221,11 @@ export default {
 
             endOpenCreateTime: false,
 
-            visible: false,
-            editObj: {},
+            visible: false, //新增/编辑 弹框
+            editObj: {}, //新增/编辑 数据
+
+            updateVisible: false, //更新弹框
+            updateItem: {}, //更新数据,
         };
     },
     computed: {},
@@ -343,6 +361,14 @@ export default {
                 },
                 onCancel() {},
             });
+        },
+
+        /**
+         * 弹出更新记录列表
+         * **/
+        goToUpdate(item) {
+            this.updateVisible = true;
+            this.updateItem = item;
         },
     },
 };
