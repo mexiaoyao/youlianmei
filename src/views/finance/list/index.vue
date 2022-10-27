@@ -108,7 +108,7 @@
                 <a-table-column align="center" data-index="createTime" key="createTime" title="添加时间" width="240" />
                 <a-table-column align="center" data-index="updateTime" key="updateTime" title="修改时间" width="240" />
                 <a-table-column align="center" data-index="remarks" key="remarks" title="备注" />
-                <a-table-column align="center" fixed="right" key="action" title="操作" width="150px">
+                <a-table-column align="center" fixed="right" key="action" title="操作" width="180px">
                     <template slot-scope="text, item">
                         <div style="text-align:right;">
                             <a-button
@@ -159,6 +159,19 @@
                                 type="danger"
                                 v-if="item.status===2"
                             />
+                            <a-upload
+                                :action="url"
+                                :data="item"
+                                :headers="headers"
+                                :multiple="false"
+                                @change="handleChange"
+                                name="file"
+                                v-if="item.status===1"
+                            >
+                                <a-button size="small" type="primary">
+                                    <a-icon type="upload" />
+                                </a-button>
+                            </a-upload>
                         </div>
                     </template>
                 </a-table-column>
@@ -226,6 +239,11 @@ export default {
 
             updateVisible: false, //更新弹框
             updateItem: {}, //更新数据,
+
+            headers: {
+                authorization: "authorization-text",
+            },
+            url: process.env.VUE_APP_API_FIEX + "",
         };
     },
     computed: {},
@@ -234,6 +252,20 @@ export default {
         this.init();
     },
     methods: {
+        /*
+         *导入
+         */
+        handleChange(info) {
+            if (info.file.status !== "uploading") {
+                console.log(info.file, info.fileList);
+            }
+            if (info.file.status === "done") {
+                this.$message.success(`${info.file.name} file uploaded successfully`);
+            } else if (info.file.status === "error") {
+                this.$message.error(`${info.file.name} file upload failed.`);
+            }
+        },
+
         onPageChange(page, pageSize) {
             this.pagination.pageNo = page;
             this.submitSearch();
@@ -297,7 +329,7 @@ export default {
             if (status === 2) {
                 this.$confirm({
                     title: "警告",
-                    content: "您确定要下架这条数据吗",
+                    content: "您确定要下架这条数据吗,此举将删除股票记录表，且不可逆！",
                     onOk() {
                         FinanceControl.financeStatus({ id: id, status: status }).then((res) => {
                             if (res.code === 10000) {

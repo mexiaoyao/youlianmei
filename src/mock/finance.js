@@ -91,9 +91,9 @@ Mock.mock("/ylm/finance/deleteById", "post", {
 // });
 
 //股票记录重新获取
-Mock.mock("/ylm/finance/getAgain", "post", {
-    code: 10000
-});
+// Mock.mock("/ylm/financeUpdate/getAgain", "post", {
+//     code: 10000
+// });
 
 //日历添加注释
 Mock.mock("/ylm/finance/addNotes", "post", {

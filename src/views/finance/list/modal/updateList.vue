@@ -37,13 +37,13 @@
                     :rowKey="item => item.id"
                     :scroll="{ y: 280 }"
                 >
-                    <a-table-column align="center" key="id" title="序号" width="100">
+                    <a-table-column align="center" key="id" title="序号">
                         <template
                             slot-scope="text, item, index"
                         >{{ (pagination.pageNo - 1)*pagination.pageSize + index+1 }}</template>
                     </a-table-column>
                     <a-table-column align="center" data-index="createTime" key="createTime" title="更新时间" width="240" />
-                    <a-table-column align="center" data-index="status" key="status" title="更新状态" width="130">
+                    <a-table-column align="center" data-index="status" key="status" title="更新状态">
                         <template slot-scope="text, item">
                             <span
                                 :style="{color: item.status===1?'#67C23A':'red'}"
@@ -52,7 +52,7 @@
                     </a-table-column>
                     <a-table-column align="center" data-index="failNum" key="failNum" title="失败次数" />
                     <a-table-column align="center" data-index="remarks" key="remarks" title="备注" />
-                    <a-table-column align="center" key="action" title="操作" width="100px">
+                    <a-table-column align="center" key="action" title="操作">
                         <template slot-scope="text, item">
                             <a-button
                                 @click="getAgain(item.id)"
@@ -178,7 +178,7 @@ export default {
                 content: "您确定要重新获取数据吗",
                 onOk() {
                     FinanceUpdateControl.getAgain({ id: id }).then((res) => {
-                        if (res.data.code == 10000) {
+                        if (res.code == 10000) {
                             _self.$notification.success({
                                 message: "提示",
                                 description: "操作成功！",

@@ -13,7 +13,7 @@ export class FinanceUpdateControl {
      * @des股票上下架操作
      * params 请求参数
      * **/
-    static getAgain = params => {
+    static   = params => {
         return HttpClientUtil.postJsonData("financeUpdate/getAgain", params);
     };
 }
