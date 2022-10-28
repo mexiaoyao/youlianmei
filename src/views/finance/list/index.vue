@@ -161,15 +161,17 @@
                             />
                             <a-upload
                                 :action="url"
+                                :before-upload="beforeUpload"
                                 :data="item"
+                                :file-list="[]"
                                 :headers="headers"
                                 :multiple="false"
                                 @change="handleChange"
-                                name="file"
+                                name="fileName"
                                 v-if="item.status===1"
                             >
                                 <a-button size="small" type="primary">
-                                    <a-icon type="upload" />
+                                    <a-icon :type="importIng?'loading':'upload'" />
                                 </a-button>
                             </a-upload>
                         </div>
@@ -243,7 +245,8 @@ export default {
             headers: {
                 authorization: "authorization-text",
             },
-            url: process.env.VUE_APP_API_FIEX + "",
+            url: process.env.VUE_APP_API_FIEX + "/shares/upload",
+            importIng: false,
         };
     },
     computed: {},
@@ -252,6 +255,19 @@ export default {
         this.init();
     },
     methods: {
+        beforeUpload(file) {
+            const isExcel = file.type === "application/vnd.ms-excel";
+            if (isExcel) {
+                this.importIng = true;
+                return true;
+            } else {
+                this.$notification.error({
+                    message: "提示",
+                    description: "请上传excel文件",
+                });
+                return false;
+            }
+        },
         /*
          *导入
          */
@@ -260,10 +276,17 @@ export default {
                 console.log(info.file, info.fileList);
             }
             if (info.file.status === "done") {
-                this.$message.success(`${info.file.name} file uploaded successfully`);
+                this.$notification.success({
+                    message: "提示",
+                    description: "提交成功",
+                });
             } else if (info.file.status === "error") {
-                this.$message.error(`${info.file.name} file upload failed.`);
+                this.$notification.error({
+                    message: "提示",
+                    description: "提交失败",
+                });
             }
+            this.importIng = false;
         },
 
         onPageChange(page, pageSize) {
