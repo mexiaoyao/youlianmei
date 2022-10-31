@@ -3,7 +3,7 @@
         <a-layout-header>
             <head-index />
         </a-layout-header>
-        <a-layout-content style="padding: 0 50px; height: calc(100% - 103px);">
+        <a-layout-content class="layoutOver" style="padding: 0 50px; height: calc(100% - 103px);">
             <Breadcrumb />
             <div class="contentMain">
                 <router-view />
