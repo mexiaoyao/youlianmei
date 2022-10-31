@@ -1,14 +1,18 @@
 <template>
-    <div class="menuTop">
-        <a-menu :openKeys="openKeys" @openChange="menuOpenChange" mode="horizontal" v-model="selectedKeys">
-            <template v-for="item in menus">
-                <a-menu-item :key="item.key" @click="menuClick(item.path)" v-if="!item.children">
-                    <span>{{ item.meta.title }}</span>
-                </a-menu-item>
-                <sub-menu :key="item.key + 'sub'" :menuInfo="item" v-else />
-            </template>
-        </a-menu>
-    </div>
+    <a-menu
+        :openKeys="openKeys"
+        @openChange="menuOpenChange"
+        mode="horizontal"
+        style="padding-top:10px;"
+        v-model="selectedKeys"
+    >
+        <template v-for="item in menus">
+            <a-menu-item :key="item.key" @click="menuClick(item.path)" v-if="!item.children">
+                <span>{{ item.meta.title }}</span>
+            </a-menu-item>
+            <sub-menu :key="item.key + 'sub'" :menuInfo="item" v-else />
+        </template>
+    </a-menu>
 </template>
 <script>
 import SubMenu from "./subMenu";
@@ -81,13 +85,10 @@ export default {
 .menuTop {
     width: 100%;
     height: 100%;
-    position: relative;
 }
 .ant-menu {
     background: none;
     color: #fff;
-    position: absolute;
-    bottom: -2px;
-    left: 0px;
+    border-bottom: none;
 }
 </style>

@@ -12,15 +12,15 @@ export default {
         return {
             company: process.env.VUE_APP_COMPANY,
             email: process.env.VUE_APP_EMAIL,
-            beian: process.env.VUE_APP_BEIAN
+            beian: process.env.VUE_APP_BEIAN,
         };
     },
     created() {
         this.init();
     },
     methods: {
-        init() {}
-    }
+        init() {},
+    },
 };
 </script>
 <style scoped>

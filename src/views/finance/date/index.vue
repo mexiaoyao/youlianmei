@@ -1,41 +1,35 @@
 <template>
     <div>
-        <a-row>
-            <Breadcrumb />
-        </a-row>
-        <a-row class="rowBorder">
-            <a-calendar @select="clickSelect">
-                <template slot="dateCellRender" slot-scope="value">
-                    <a-card
-                        :bodyStyle="{padding: '5px 10px'}"
-                        :bordered="false"
-                        :style="{backgroundColor:dateColor(value),color:'white'}"
-                        class="cardp"
-                    >
-                        <p :title="'农历:'+dateChanage(value)">{{value.format("YYYY年MM月DD日")}}</p>
-                        <p>{{isMarketDay(value) ? "交易日" : "非交易日"}}</p>
-                        <p :key="index" v-for="(item,index) in getListData(value)">{{(index+1)+":"+item.content}}</p>
-                    </a-card>
-                </template>
-                <template slot="monthCellRender" slot-scope="value">
-                    <div class="notes-month" v-if="getMonthData(value)">
-                        <section>{{ getMonthData(value) }}</section>
-                        <span>Backlog number------------</span>
-                    </div>
-                </template>
-            </a-calendar>
-        </a-row>
+        <a-calendar @select="clickSelect">
+            <template slot="dateCellRender" slot-scope="value">
+                <a-card
+                    :bodyStyle="{padding: '5px 10px'}"
+                    :bordered="false"
+                    :style="{backgroundColor:dateColor(value),color:'white'}"
+                    class="cardp"
+                >
+                    <p :title="'农历:'+dateChanage(value)">{{value.format("YYYY年MM月DD日")}}</p>
+                    <p>{{isMarketDay(value) ? "交易日" : "非交易日"}}</p>
+                    <p :key="index" v-for="(item,index) in getListData(value)">{{(index+1)+":"+item.content}}</p>
+                </a-card>
+            </template>
+            <template slot="monthCellRender" slot-scope="value">
+                <div class="notes-month" v-if="getMonthData(value)">
+                    <section>{{ getMonthData(value) }}</section>
+                    <span>Backlog number------------</span>
+                </div>
+            </template>
+        </a-calendar>
         <add-modal :item="editObj" :visible="visible" @cancel="visible=false;editObj={}" @ok="addContent" />
     </div>
 </template>
 <script>
 import calendarFormatter from "@/libs/utils/dateChanage";
-import Breadcrumb from "@/components/common/Breadcrumb";
 
 import AddModal from "./modal/index";
 export default {
     name: "finance-date",
-    components: { Breadcrumb, AddModal },
+    components: { AddModal },
     data() {
         return {
             id: 123,

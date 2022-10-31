@@ -46,8 +46,7 @@ export default {
 <style lang="less" scoped>
 .app-breadcrumb {
     display: flex;
-    padding: 14px 24px;
-    background: #fff;
+    padding: 14px 0px;
 
     .tips {
         color: rgba(0, 0, 0, 0.45);

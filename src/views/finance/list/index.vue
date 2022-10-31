@@ -1,8 +1,5 @@
 <template>
     <div>
-        <a-row>
-            <Breadcrumb />
-        </a-row>
         <a-row class="rowBorder">
             <a-form :form="form" @submit="submitSearch" layout="inline">
                 <a-form-item label="指数类型">
@@ -197,13 +194,12 @@
 import { FinanceControl } from "@/api";
 import Constants from "@/libs/utils/constants";
 import LangUtil from "@/libs/utils/langUtil";
-import Breadcrumb from "@/components/common/Breadcrumb";
 
 import AddModal from "./modal/index";
 import UpdateListModal from "./modal/updateList";
 export default {
     name: "finance-list",
-    components: { Breadcrumb, AddModal, UpdateListModal },
+    components: { AddModal, UpdateListModal },
     data() {
         return {
             isLoading: false,

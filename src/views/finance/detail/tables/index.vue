@@ -75,7 +75,7 @@
                 :locale="locale"
                 :pagination="pagination"
                 :rowKey="item => item.id"
-                :scroll="{ x: 2640, y: 500 }"
+                :scroll="{ x: 2440, y: 500 }"
             >
                 <a-table-column align="center" key="id" title="序号" width="100">
                     <template slot-scope="text, item, index">{{ index+1 }}</template>

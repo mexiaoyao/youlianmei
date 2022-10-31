@@ -6,7 +6,6 @@
 }
 .rowBorder {
     padding: 15px;
-    margin: 15px;
     background-color: #ffffff;
 }
 .pdlr20 {
@@ -25,4 +24,34 @@
 }
 .tc {
     text-align: center;
+}
+
+.contentMain {
+    width: 100%;
+    height: calc(100% - 49px);
+    background: #ffffff;
+    overflow-y: auto;
+}
+
+/**滚动轴样式设置**/
+.ant-table:hover .ant-table-content .ant-table-fixed-right .ant-table-body-outer .ant-table-body-inner::-webkit-scrollbar-thumb {
+    background-color: #999;
+}
+
+.ant-table .ant-table-content .ant-table-fixed-right .ant-table-body-outer .ant-table-body-inner::-webkit-scrollbar-thumb {
+    background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar {
+    // width: 8px;
+    // height: 8px;
+    width: 0px;
+    height: 0px;
+    background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #999;
+    // border-radius: 8px;
+    border-radius: 0px;
 }
