@@ -45,17 +45,18 @@ export default [
                 },
                 name: "finance-detail",
                 path: "/finance/detail/:id"
-            },
-            {
-                key: "finance.update",
-                meta: {
-                    title: "股票更新"
-                },
-                name: "finance-update",
-                path: "/finance/update"
             }
+            // {
+            //     key: "finance.update",
+            //     meta: {
+            //         title: "股票更新"
+            //     },
+            //     name: "finance-update",
+            //     path: "/finance/update"
+            // }
         ]
-    },
+    }
+    /*
     {
         key: "health",
         icon: "read",
@@ -82,5 +83,5 @@ export default [
                 path: "/health/import"
             }
         ]
-    }
+    }*/
 ];

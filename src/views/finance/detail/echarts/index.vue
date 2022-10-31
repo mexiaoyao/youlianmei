@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="rowBorder">
         <a-row>
             <a-form layout="inline">
                 <a-form-item label="今日开盘价">

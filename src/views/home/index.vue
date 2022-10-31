@@ -1,5 +1,5 @@
 <template>
-    <div style="padding:15px;">
+    <div>
         <a-row :gutter="16">
             <carousel-cont />
         </a-row>

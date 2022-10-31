@@ -1,13 +1,8 @@
 <template>
-    <a-row type="flex">
-        <a-col class="logo" flex="180px">Ant Design Vue</a-col>
-        <a-col flex="auto">
-            <app-menu />
-        </a-col>
-        <a-col flex="160px">
-            <user-info />
-        </a-col>
-    </a-row>
+    <div>
+        <div class="logo">log</div>
+        <app-menu />
+    </div>
 </template>
 <script>
 import AppMenu from "./appMenu.vue";
@@ -29,14 +24,15 @@ export default {
 };
 </script>
 <style scoped>
-.lf {
-    float: left;
-}
-.logo {
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
+#components-layout-demo-top .logo {
+    width: 120px;
+    height: 31px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px 24px 16px 0;
+    padding: 0px;
     color: #fff;
-    line-height: 64px;
+    line-height: 31px;
+    text-align: center;
+    float: left;
 }
 </style>

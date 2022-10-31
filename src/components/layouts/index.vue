@@ -1,33 +1,38 @@
 <template>
-    <div>
-        <div class="app_header">
+    <a-layout class="layout" id="components-layout-demo-top">
+        <a-layout-header>
             <head-index />
-        </div>
-        <div class="app_content">
-            <router-view />
-        </div>
-        <div class="app_footer">
+        </a-layout-header>
+        <a-layout-content class="layoutOver" style="padding: 0 50px; height: calc(100% - 103px);">
+            <Breadcrumb />
+            <div class="contentMain">
+                <router-view />
+            </div>
+        </a-layout-content>
+        <a-layout-footer style="height:90px; text-align: center">
             <footer-index />
-        </div>
-    </div>
+        </a-layout-footer>
+    </a-layout>
 </template>
 <script>
 import HeadIndex from "./head/index";
+import Breadcrumb from "@/components/common/Breadcrumb";
 import FooterIndex from "./footer/index";
 export default {
     name: "layouts",
-    components: { HeadIndex, FooterIndex },
+    components: { HeadIndex, Breadcrumb, FooterIndex },
 };
 </script>
 <style scoped>
-.app_header {
-    background: #141414;
+#components-layout-demo-top {
+    width: 100%;
+    height: 100%;
 }
-.app_content {
-    background: #f0f2f5;
-}
-
-.app_footer {
-    text-align: center;
+#components-layout-demo-top .logo {
+    width: 120px;
+    height: 31px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px 24px 16px 0;
+    float: left;
 }
 </style>
