@@ -1,31 +1,26 @@
 <template>
     <a-modal
         :bodyStyle="{ maxHeight: '500px', overflowY: 'auto' }"
-        :title="'操作'"
+        :title="'登录'"
         :visible="visible"
-        :width="600"
+        :width="400"
         @cancel="cancelClick"
         @ok="save"
         destroyOnClose
     >
-        <a-form-model :label-col="{ span: 8 }" :wrapper-col="{ span: 12 }" ref="addForm">
-            <a-row class="tc pt15" v-if="null==listData || listData.length==0">
-                <a-button @click="add" icon="plus" type="primary" />
-            </a-row>
-            <a-row :key="index" class="pt15" v-for="(obj,index) in listData">
-                <a-col :span="8">
-                    <a-select :style="{width:'170px'}" placeholder="请选择指数类型" v-model="obj.type">
-                        <a-select-option :key="index" :value="arr.code" v-for="(arr,index) in typeList">{{arr.codeName}}</a-select-option>
-                    </a-select>
-                </a-col>
-                <a-col :span="12">
-                    <a-input :style="{width:'260px'}" placeholder="请输入内容" v-model="obj.content"></a-input>
-                </a-col>
-                <a-col :span="4">
-                    <a-button @click="reduce(index)" icon="minus" type="danger" />
-                    <a-button @click="add" icon="plus" type="primary" />
-                </a-col>
-            </a-row>
+        <a-form-model :model="form" :rules="rules" ref="loginForm">
+            <a-form-model-item prop="username">
+                <a-input placeholder="请输入用户名" v-model="form.username">
+                    <a-icon slot="prefix" type="user" style="color:rgba(0,0,0,.25)" />
+                </a-input>
+            </a-form-model-item>
+            <a-form-model-item prop="password">
+                <a-input :type="password" placeholder="请输入密码" v-model="form.password">
+                    <a-icon slot="prefix" type="lock" style="color:rgba(0,0,0,.25)" />
+                    <a-icon slot="suffix" type="eye" v-if="delubukejian" style="color:rgba(0,0,0,.25)" @click="changeType()" />
+                    <a-icon slot="suffix" type="eye-invisible" v-else style="color:rgba(0,0,0,.25)" @click="changeType()" />
+                </a-input>
+            </a-form-model-item>
         </a-form-model>
     </a-modal>
 </template>
@@ -44,45 +39,43 @@ export default {
                 username: "",
                 password: "",
             },
+            rules: {
+                username: [{ required: true, message: "用户名不可为空", trigger: "blur" }],
+                password: [{ required: true, message: "密码不可为空", trigger: "blur" }],
+            },
+            delubukejian: true, //眼睛显示隐藏
+            password:"password"
         };
     },
     methods: {
-        add() {
-            this.listData.push({ type: 1, content: "" });
-        },
-        reduce(index) {
-            this.listData.splice(index, 1);
+        changeType() {
+            if (this.delubukejian) {
+                this.delubukejian = false
+                this.password = 'text'
+            } else {
+                this.delubukejian = true
+                this.password = 'password'
+            }
         },
         cancelClick() {
-            this.$emit("cancel");
+            this.$emit("ok");
         },
         save() {
-            this.onSubmit();
-        },
-        onSubmit() {
-            axios.post("/ylm/finance/addNotes", this.form).then((res) => {
-                if (res.data.code === 10000) {
-                    this.$notification.success({
-                        message: "提示",
-                        description: "操作成功！",
-                    });
-                    this.$emit("ok", { dateTime: this.item.dateTime, content: this.listData });
+            let _slef = this;
+            this.$refs.loginForm.validate((valid) => {
+                if (valid) {
+                    console.log("-------------------------");
+                    this.$emit("ok");
                 } else {
-                    this.$notification.error({
-                        message: "提示",
-                        description: "操作失败！",
-                    });
+                    console.log("error submit!!");
+                    return false;
                 }
             });
         },
     },
     watch: {
-        visible(newVal) {
-            if (newVal && null != this.item.content && this.item.content.length > 0) {
-                this.listData = JSON.parse(JSON.stringify(this.item.content));
-            } else {
-                this.listData = [];
-            }
+        visible() {
+            this.$options.data.call(this).form;
         },
     },
 };

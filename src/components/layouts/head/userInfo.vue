@@ -1,6 +1,6 @@
 <template>
     <div>
-        请登录
+        <span @click="loginShow" style="color:#FFFFFF;">请登录</span>
         <a-dropdown>
             <div>
                 <a-avatar icon="user" shape="circle" />
@@ -15,7 +15,7 @@
                 </a-menu-item>
             </a-menu>
         </a-dropdown>
-        <login-modal />
+        <login-modal :visible="visible" @ok="visible=false;" />
     </div>
 </template>
 <script>
@@ -35,6 +35,9 @@ export default {
     },
     methods: {
         init() {},
+        loginShow(){
+            this.visible = true;
+        }
     },
 };
 </script>
