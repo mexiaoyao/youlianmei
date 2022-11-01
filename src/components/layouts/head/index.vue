@@ -1,7 +1,8 @@
 <template>
     <div>
-        <div class="logo">log</div>
-        <app-menu />
+        <div class="logo fl">log</div>
+        <app-menu class="fl" />
+        <user-info class="fr" />
     </div>
 </template>
 <script>
