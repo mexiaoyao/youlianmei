@@ -1,6 +1,6 @@
 <template>
     <div>
-        <span @click="loginShow" style="color:#FFFFFF;">请登录</span>
+        <span @click="loginShow" style="color:#FFFFFF; cursor: pointer;">请登录</span>
         <a-dropdown>
             <div>
                 <a-avatar icon="user" shape="circle" />
@@ -35,9 +35,9 @@ export default {
     },
     methods: {
         init() {},
-        loginShow(){
+        loginShow() {
             this.visible = true;
-        }
+        },
     },
 };
 </script>
