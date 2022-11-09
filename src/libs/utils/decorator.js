@@ -64,3 +64,13 @@ export function zhengshuCheck(rule, value, callbackFn) {
     }
     callbackFn();
 }
+
+// 布尔校验
+export function booleanCheck(rule, value, callbackFn) {
+    console.log("value:" + value);
+    if (!value) {
+        callbackFn("请请确认");
+        return;
+    }
+    callbackFn();
+}

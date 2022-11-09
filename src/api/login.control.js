@@ -26,7 +26,7 @@ export class LoginControl {
      * @des股票上下架操作
      * params 请求参数
      * **/
-    static financeStatus = params => {
-        return HttpClientUtil.postJsonData("finance/status", params);
+    static LoginSubmit = params => {
+        return HttpClientUtil.postJsonData("/login", params);
     };
 }

@@ -48,11 +48,9 @@ axios.interceptors.response.use(
         const responseData = response.data;
         if (responseData.code == 10000) {
             // 处理错误码，若返回成功则进入resolve
-            console.log("-----------------");
             return Promise.resolve(responseData);
         } else if (response.config.responseType === "blob") {
             // 取请求头用
-            console.log("-----------------");
             return Promise.resolve(responseData);
         } else if (responseData.code === 102) {
             // 用户会话过期

@@ -8,45 +8,32 @@
         @ok="save"
         destroyOnClose
     >
-        <a-form-model :model="form" :rules="rules" ref="loginForm">
+        <a-form-model :model="form" :rules="rules" autocomplete="off" ref="loginForm">
             <a-form-model-item prop="username">
-                <a-input placeholder="请输入用户名" v-model="form.username">
+                <a-input allow-clear placeholder="请输入用户名" v-model="form.username">
                     <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="user" />
                 </a-input>
             </a-form-model-item>
-            <a-form-model-item prop="password">
-                <a-input :type="password" placeholder="请输入密码" v-model="form.password">
+            <a-form-model-item prop="userpwd">
+                <a-input-password allow-clear autocomplete="off" placeholder="请输入密码" v-model="form.userpwd">
                     <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="lock" />
-                    <a-icon
-                        @click="changeType()"
-                        slot="suffix"
-                        style="color:rgba(0,0,0,.25)"
-                        type="eye"
-                        v-if="delubukejian"
-                    />
-                    <a-icon
-                        @click="changeType()"
-                        slot="suffix"
-                        style="color:rgba(0,0,0,.25)"
-                        type="eye-invisible"
-                        v-else
-                    />
-                </a-input>
+                </a-input-password>
             </a-form-model-item>
             <a-form-model-item prop="code">
-                <a-input placeholder="请输入验证码" style="width:200px; float:left;" v-model="form.code">
+                <a-input allow-clear placeholder="请输入验证码" style="width:200px; float:left;" v-model="form.code">
                     <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="safety" />
                 </a-input>
                 <img :src="codeUrl" @click="getCode" height="32" style="float:right" width="140" />
             </a-form-model-item>
             <a-form-item prop="isCheck">
-                <a-checkbox v-model="form.isCheck">股市有风险，入市请谨慎！</a-checkbox>
+                <a-checkbox :checked="form.isCheck==1" @change="handleChange">股市有风险，入市请谨慎！</a-checkbox>
             </a-form-item>
         </a-form-model>
     </a-modal>
 </template>
 <script>
 import { LoginControl } from "@/api";
+import { booleanCheck } from "@/libs/utils/decorator";
 export default {
     name: "layouts-head-userInfo-modal",
     props: {
@@ -56,47 +43,32 @@ export default {
         },
     },
     data() {
-        // 自定义校验函数
-        // rule：当前被校验对象
-        // value: 用户输入的值
-        const check = async (rule, value, callback) => {
-            debugger;
-            if (!value) {
-                // 失败时执行
-                return Promise.reject("警示信息必选");
-            } else {
-                // 成功时执行
-                return Promise.resolve(); //成功
-            }
-        };
         return {
             form: {
                 username: "",
-                password: "",
+                userpwd: "",
                 uuid: "",
                 code: "",
-                isCheck: false,
+                isCheck: 0,
             },
             rules: {
                 username: [{ required: true, message: "用户名不可为空", trigger: "blur" }],
-                password: [{ required: true, message: "密码不可为空", trigger: "blur" }],
+                userpwd: [{ required: true, message: "密码不可为空", trigger: "blur" }],
                 code: [{ required: true, message: "验证码不可为空", trigger: "blur" }],
-                isCheck: [{ validator: check, trigger: "change" }],
+                // isCheck: [
+                //     {
+                //         validator: booleanCheck.bind(this),
+                //         message: "请阅读风险提示，并确认",
+                //         trigger: "change",
+                //     },
+                // ],
             },
-            delubukejian: true, //眼睛显示隐藏
-            password: "password",
             codeUrl: null,
         };
     },
     methods: {
-        changeType() {
-            if (this.delubukejian) {
-                this.delubukejian = false;
-                this.password = "text";
-            } else {
-                this.delubukejian = true;
-                this.password = "password";
-            }
+        handleChange(e) {
+            this.form.isCheck = e ? 1 : 0;
         },
         cancelClick() {
             this.$emit("ok");
@@ -104,17 +76,29 @@ export default {
         getCode() {
             let parmes = {};
             LoginControl.getCode(parmes).then((res) => {
-                this.codeUrl = res.img;
-                this.form.uuid = res.uuid;
+                console.log("res:" + res);
+                this.codeUrl = res.data.img;
+                this.form.uuid = res.data.uuid;
             });
         },
         save() {
-            let ss = this.form;
             let _slef = this;
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
-                    console.log("-------------------------");
-                    this.$emit("ok");
+                    // if (_self.form.isCheck) {
+                    //     alert("#######");
+                    //     return;
+                    // }
+                    LoginControl.LoginSubmit(_slef.form).then((res) => {
+                        if (res.code === 10000) {
+                            this.$emit("ok");
+                        } else {
+                            _self.$notification.error({
+                                message: "提示",
+                                description: "登录失败！",
+                            });
+                        }
+                    });
                 } else {
                     console.log("error submit!!");
                     return false;
