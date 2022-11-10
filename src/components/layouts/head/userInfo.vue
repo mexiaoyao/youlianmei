@@ -1,10 +1,10 @@
 <template>
     <div>
-        <span @click="loginShow" style="color:#FFFFFF; cursor: pointer;">请登录</span>
-        <a-dropdown>
+        <span @click="loginShow" style="color:#FFFFFF; cursor: pointer;" v-if="!userName">请登录</span>
+        <a-dropdown v-else>
             <div>
                 <a-avatar icon="user" shape="circle" />
-                <span class="username">郑雷</span>
+                <span class="username">{{userName}}</span>
             </div>
             <a-menu slot="overlay" style="min-width: 120px">
                 <a-menu-item>
@@ -19,6 +19,7 @@
     </div>
 </template>
 <script>
+import Constants from "@/libs/utils/constants";
 import LoginModal from "./modal/index.vue";
 export default {
     name: "user-info",
@@ -26,8 +27,12 @@ export default {
     data() {
         return {
             visible: false,
-            isLogin: false, //是否登录
         };
+    },
+    computed: {
+        userName() {
+            return localStorage.getItem(Constants.LOGIN_PARMES.USER_NAME) || "";
+        },
     },
     watch: {},
     created() {

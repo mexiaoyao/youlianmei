@@ -32,6 +32,8 @@
     </a-modal>
 </template>
 <script>
+import { v4 } from "uuid";
+import Constants from "@/libs/utils/constants";
 import { LoginControl } from "@/api";
 import { booleanCheck } from "@/libs/utils/decorator";
 export default {
@@ -74,11 +76,11 @@ export default {
             this.$emit("ok");
         },
         getCode() {
-            let parmes = {};
+            this.form.uuid = v4();
+            let parmes = { uuid: this.form.uuid };
             LoginControl.getCode(parmes).then((res) => {
                 console.log("res:" + res);
                 this.codeUrl = res.data.img;
-                this.form.uuid = res.data.uuid;
             });
         },
         save() {
@@ -91,6 +93,8 @@ export default {
                     // }
                     LoginControl.LoginSubmit(_slef.form).then((res) => {
                         if (res.code === 10000) {
+                            localStorage.setItem(Constants.LOGIN_PARMES.USER_NAME, res.data.username);
+                            localStorage.setItem(Constants.LOGIN_PARMES.USER_TOKEN, res.data.token);
                             this.$emit("ok");
                         } else {
                             _self.$notification.error({

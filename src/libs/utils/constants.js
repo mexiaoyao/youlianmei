@@ -1,5 +1,13 @@
 export default class Constants {
     /**
+     * 登录后键名
+     * **/
+    static LOGIN_PARMES = {
+        USER_NAME: "userName",
+        USER_TOKEN: "token"
+    };
+
+    /**
      * 公用部分
      * **/
     static PUBLICCOMMON_ALL = {
