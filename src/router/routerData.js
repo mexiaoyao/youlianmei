@@ -55,6 +55,33 @@ export default [
             //     path: "/finance/update"
             // }
         ]
+    },
+    {
+        key: "考题集锦",
+        icon: "read",
+        meta: {
+            title: "考题集锦"
+        },
+        name: "examination",
+        path: "/examination",
+        children: [
+            {
+                key: "examination.type",
+                meta: {
+                    title: "考题分类"
+                },
+                name: "examination-type",
+                path: "/examination/type"
+            },
+            {
+                key: "examination.qustion",
+                meta: {
+                    title: "考题列表"
+                },
+                name: "examination-qustion",
+                path: "/examination/qustion"
+            }
+        ]
     }
     /*
     {
