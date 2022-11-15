@@ -25,37 +25,30 @@
             </a-row>
             <a-table
                 :data-source="list"
+                :expanded-row-keys.sync="expandedRowKeys"
                 :loading="isLoading"
                 :locale="locale"
-                :pagination="pagination"
+                :pagination="false"
                 :rowKey="item => item.id"
-                :scroll="{ x: true }"
             >
                 <a-table-column align="center" key="id" title="序号" width="80">
                     <template slot-scope="text, item, index">{{ (pagination.pageNo - 1)*pagination.pageSize + index+1 }}</template>
                 </a-table-column>
-                <a-table-column align="center" data-index="dictName" key="dictName" title="类型名称" width="200" />
-                <a-table-column align="center" data-index="createTime" key="createTime" title="添加时间" width="240" />
-                <a-table-column align="center" data-index="updateTime" key="updateTime" title="修改时间" width="240" />
-                <a-table-column align="center" data-index="createName" key="createName" title="创建人" width="200" />
+                <a-table-column align="center" data-index="dictName" key="dictName" title="类型名称" />
+                <a-table-column align="center" data-index="createTime" key="createTime" title="添加时间" />
+                <a-table-column align="center" data-index="updateTime" key="updateTime" title="修改时间" />
+                <a-table-column align="center" data-index="createName" key="createName" title="创建人" />
                 <a-table-column align="center" fixed="right" key="action" title="操作" width="180px">
                     <template slot-scope="text, item">
                         <div style="text-align:right;">
-                            <a-button
-                                @click="edit(item)"
-                                icon="edit"
-                                size="small"
-                                title="编辑"
-                                type="primary"
-                                v-if="item.status===2"
-                            />
+                            <a-button @click="edit(item)" icon="edit" size="small" title="编辑" type="primary" />
+                            <a-button @click="addSon(item)" icon="plus" size="small" title="添加子级" type="primary" />
                             <a-button
                                 @click="deleteAction(item.id)"
                                 icon="delete"
                                 size="small"
                                 title="删除"
                                 type="danger"
-                                v-if="item.status===2"
                             />
                             <a-upload
                                 :action="url"
@@ -66,7 +59,6 @@
                                 :multiple="false"
                                 @change="handleChange"
                                 name="fileName"
-                                v-if="item.status===1"
                             >
                                 <a-button size="small" type="primary">
                                     <a-icon :type="importIng?'loading':'upload'" />
@@ -210,6 +202,13 @@ export default {
                 this.list = res.list || [];
                 this.pagination.total = res.total || 0;
             });
+        },
+
+        /**添加子级**/
+        addSon(row) {
+            this.visible = true;
+            let obj = { parentId: row.id };
+            this.editObj = obj;
         },
 
         /**编辑**/

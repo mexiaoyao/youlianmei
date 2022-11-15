@@ -39,6 +39,7 @@ export default {
             form: {
                 id: "",
                 dictId: "",
+                parentId: "",
                 dictName: "",
             },
             rules: {
@@ -93,8 +94,13 @@ export default {
     },
     watch: {
         visible(newVal, oldVal) {
-            if (newVal) {
-                if (null != this.item.id && undefined != this.item.id) {
+            if (newVal && !oldVal) {
+                if (this.item.id) {
+                    //编辑
+                    Object.assign(this.form, this.item);
+                } else if (this.item.parentId) {
+                    //添加子级
+                    this.form = this.$options.data.call(this).form;
                     Object.assign(this.form, this.item);
                 } else {
                     this.form = this.$options.data.call(this).form;
