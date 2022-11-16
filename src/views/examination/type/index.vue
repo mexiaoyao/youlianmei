@@ -25,14 +25,13 @@
             </a-row>
             <a-table
                 :data-source="list"
-                :expanded-row-keys.sync="expandedRowKeys"
                 :loading="isLoading"
                 :locale="locale"
                 :pagination="false"
                 :rowKey="item => item.id"
             >
                 <a-table-column align="center" key="id" title="序号" width="80">
-                    <template slot-scope="text, item, index">{{ (pagination.pageNo - 1)*pagination.pageSize + index+1 }}</template>
+                    <template slot-scope="text, item, index">{{ index+1 }}</template>
                 </a-table-column>
                 <a-table-column align="center" data-index="dictName" key="dictName" title="类型名称" />
                 <a-table-column align="center" data-index="createTime" key="createTime" title="添加时间" />
@@ -50,20 +49,6 @@
                                 title="删除"
                                 type="danger"
                             />
-                            <a-upload
-                                :action="url"
-                                :before-upload="beforeUpload"
-                                :data="item"
-                                :file-list="[]"
-                                :headers="headers"
-                                :multiple="false"
-                                @change="handleChange"
-                                name="fileName"
-                            >
-                                <a-button size="small" type="primary">
-                                    <a-icon :type="importIng?'loading':'upload'" />
-                                </a-button>
-                            </a-upload>
                         </div>
                     </template>
                 </a-table-column>
@@ -93,17 +78,6 @@ export default {
             },
             createTime: [null, null],
             updateTime: [null, null],
-
-            pagination: {
-                pageNo: 1,
-                pageSize: 10, // 默认每页显示数量
-                showSizeChanger: true, // 显示可改变每页数量
-                pageSizeOptions: ["10", "20", "50", "100"], // 每页数量选项
-                showTotal: (total) => `共 ${total} 条`, // 显示总数
-                onShowSizeChange: (current, pageSize) => this.onSizeChange(current, pageSize), // 改变每页数量时更新显示
-                onChange: (page, pageSize) => this.onPageChange(page, pageSize), //点击页码事件
-                total: 0, //总条数
-            },
             list: [],
             locale: { emptyText: <a-empty description="暂无数据" /> },
 
@@ -114,12 +88,6 @@ export default {
 
             updateVisible: false, //更新弹框
             updateItem: {}, //更新数据,
-
-            headers: {
-                authorization: "authorization-text",
-            },
-            url: process.env.VUE_APP_API_FIEX + "/shares/upload",
-            importIng: false,
         };
     },
     computed: {},
@@ -128,51 +96,6 @@ export default {
         this.init();
     },
     methods: {
-        beforeUpload(file) {
-            const isExcel = file.type === "application/vnd.ms-excel";
-            if (isExcel) {
-                this.importIng = true;
-                return true;
-            } else {
-                this.$notification.error({
-                    message: "提示",
-                    description: "请上传excel文件",
-                });
-                return false;
-            }
-        },
-        /*
-         *导入
-         */
-        handleChange(info) {
-            if (info.file.status !== "uploading") {
-                console.log(info.file, info.fileList);
-            }
-            if (info.file.status === "done") {
-                this.$notification.success({
-                    message: "提示",
-                    description: "提交成功",
-                });
-            } else if (info.file.status === "error") {
-                this.$notification.error({
-                    message: "提示",
-                    description: "提交失败",
-                });
-            }
-            this.importIng = false;
-        },
-
-        onPageChange(page, pageSize) {
-            this.pagination.pageNo = page;
-            this.submitSearch();
-        },
-        onSizeChange(current, pageSize) {
-            this.pagination.pageNo = 1;
-            this.pagination.pageSize = pageSize;
-            this.submitSearch();
-        },
-        onChange() {},
-
         init() {
             this.getList({});
         },
@@ -193,14 +116,13 @@ export default {
             if (null != this.updateTime[1]) {
                 updateTimeEnd = this.updateTime[1].format("YYYY-MM-DD");
             }
-            this.getfinanceList({ createTimeStart: createTimeStart, createTimeEnd: createTimeEnd, updateTimeStart: updateTimeStart, updateTimeEnd: updateTimeEnd });
+            this.getList({ createTimeStart: createTimeStart, createTimeEnd: createTimeEnd, updateTimeStart: updateTimeStart, updateTimeEnd: updateTimeEnd });
         },
         //定义一个请求数据的方法
         getList(timeRange) {
-            let parme = Object.assign(this.form, timeRange, { pageNo: this.pagination.pageNo, pageSize: this.pagination.pageSize });
+            let parme = Object.assign(this.form, timeRange);
             GradeDictControl.list(parme).then((res) => {
                 this.list = res.list || [];
-                this.pagination.total = res.total || 0;
             });
         },
 
@@ -232,7 +154,7 @@ export default {
                                 message: "提示",
                                 description: "操作成功！",
                             });
-                            _self.getfinanceList({});
+                            _self.getList({});
                         } else {
                             _self.$notification.error({
                                 message: "提示",
