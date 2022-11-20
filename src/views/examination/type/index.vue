@@ -30,8 +30,8 @@
                 :pagination="false"
                 :rowKey="item => item.id"
             >
-                <a-table-column align="center" key="id" title="序号" width="80">
-                    <template slot-scope="text, item, index">{{ index+1 }}</template>
+                <a-table-column align="center" key="id" title="序号/子级数量" width="80">
+                    <template slot-scope="text, item, index">{{ index+1 }}/{{ item.children.length }}</template>
                 </a-table-column>
                 <a-table-column align="center" data-index="dictName" key="dictName" title="类型名称" />
                 <a-table-column align="center" data-index="createTime" key="createTime" title="添加时间" />

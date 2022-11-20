@@ -5,6 +5,14 @@ export class GradeDictControl {
      * @des列表请求
      * params 请求参数
      * **/
+    static listAll = params => {
+        return HttpClientUtil.postJsonData("gradeDict/listAll", params);
+    };
+
+    /**
+     * @des列表请求
+     * params 请求参数
+     * **/
     static list = params => {
         return HttpClientUtil.postJsonData("gradeDict/list", params);
     };

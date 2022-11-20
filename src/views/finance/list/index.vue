@@ -228,7 +228,7 @@ export default {
 
             indexTypeList: LangUtil.addAll(Constants.FINANCE.INDEX_TYPE),
             indexTypeCodeList: LangUtil.addAll(Constants.FINANCE.INDEX_TYPE_CODE),
-            statusList: LangUtil.addAll(Constants.FINANCE.STATUS),
+            statusList: LangUtil.addAll(Constants.PUBLICCOMMON_STATUS),
 
             endOpenCreateTime: false,
 

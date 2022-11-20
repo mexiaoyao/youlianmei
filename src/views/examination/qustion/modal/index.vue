@@ -9,29 +9,36 @@
         destroyOnClose
     >
         <a-form-model :label-col="{ span: 8 }" :model="form" :rules="rules" :wrapper-col="{ span: 12 }" ref="addForm">
-            <a-form-model-item label="指数类型" prop="indexType">
-                <a-select placeholder="请选择指数类型" v-model="form.indexType">
+            <a-form-model-item label="所属类型" prop="indexType">
+                <a-tree-select
+                    :allowClear="true"
+                    show-search
+                    :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                    v-model="form.dictId"
+                    :tree-data="treeData"
+                    :placeholder="'请选择所属类型'"
+                    tree-default-expand-all
+                    :search-placeholder="'请搜索所属类型'"
+                    :replaceFields="{children:'children', title:'dictName', key:'id', value: 'dictName' }"
+                />
+            </a-form-model-item>
+            <a-form-model-item label="类型" prop="type">
+                <a-select :style="{width:'100px'}" v-model="form.type" placeholder="Select a person">
                     <a-select-option
                         :key="index"
                         :value="item.code"
-                        v-for="(item,index) in indexTypeList"
+                        v-for="(item,index) in typeList"
                     >{{item.codeName}}</a-select-option>
                 </a-select>
             </a-form-model-item>
-            <a-form-model-item label="股票代码" prop="codeNumber">
-                <a-input placeholder="请输入股票代码" v-model="form.codeNumber"></a-input>
+            <a-form-model-item label="问题" prop="question">
+                <a-input placeholder="请输入问题" v-model="form.question"></a-input>
             </a-form-model-item>
-            <a-form-model-item label="股票名称" prop="sharesName">
-                <a-input placeholder="请输入股票名称" v-model="form.sharesName"></a-input>
+            <a-form-model-item label="答案" prop="answers">
+                <a-input placeholder="请输入答案" v-model="form.answers"></a-input>
             </a-form-model-item>
-            <a-form-model-item label="股票别名" prop="sharesAlise">
-                <a-input placeholder="请输入股票别名" v-model="form.sharesAlise"></a-input>
-            </a-form-model-item>
-            <a-form-model-item label="股票总数" prop="sharesTotalNumber">
-                <a-input-number placeholder="请输入股票总数" style="width:100%;" v-model="form.sharesTotalNumber"></a-input-number>
-            </a-form-model-item>
-            <a-form-model-item label="可流动股票总数" prop="sharesAllowTotalNumber">
-                <a-input-number placeholder="请输入可流动股票总数" style="width:100%;" v-model="form.sharesAllowTotalNumber"></a-input-number>
+            <a-form-model-item label="正确答案" prop="answerRight">
+                <a-input placeholder="请输入正确答案" v-model="form.answerRight"></a-input>
             </a-form-model-item>
             <a-form-model-item label="备注">
                 <a-input placeholder="请输入备注" v-model="form.remarks"></a-input>
@@ -45,11 +52,12 @@
     </a-modal>
 </template>
 <script>
-import { FinanceControl } from "@/api";
+import { TreeSelect } from 'ant-design-vue';
+import { GradeDictControl, GradeQuestionControl } from "@/api";
 import Constants from "@/libs/utils/constants";
-import { gpCodeCheck, zhengshuCheck } from "@/libs/utils/decorator";
+import LangUtil from "@/libs/utils/langUtil";
 export default {
-    name: "shares-list-add",
+    name: "grade-question-list-add",
     props: {
         visible: {
             type: Boolean,
@@ -62,51 +70,44 @@ export default {
     },
     data() {
         return {
-            indexTypeList: Constants.FINANCE.INDEX_TYPE,
+            SHOW_ALL : TreeSelect.SHOW_ALL,
+            treeData:[],
             form: {
                 id: "",
-                indexType: undefined,
-                codeNumber: "",
-                sharesName: "",
-                sharesAlise: "",
-                sharesTotalNumber: null,
-                sharesAllowTotalNumber: null,
+                dictId: "",
+                type:"",
+                question: "",
+                answers: "",
+                answerRight: "",
                 remarks: "",
             },
             rules: {
-                indexType: [{ required: true, message: "指数类型不可为空", trigger: "change" }],
-                codeNumber: [
-                    { required: true, message: "股票代码不可为空", trigger: "blur" },
-                    {
-                        validator: gpCodeCheck.bind(this),
-                        message: "请输入正确的股票代码",
-                        trigger: "blur",
-                    },
-                ],
-                sharesName: [{ required: true, message: "股票名称不可为空", trigger: "blur" }],
-                sharesAlise: [{ required: true, message: "股票别名不可为空", trigger: "blur" }],
-                sharesTotalNumber: [
-                    { required: true, message: "股票总数不可为空", trigger: "blur" },
-                    {
-                        validator: zhengshuCheck.bind(this),
-                        message: "请输入正确的股票总数",
-                        trigger: "blur",
-                    },
-                ],
-                sharesAllowTotalNumber: [
-                    { required: true, message: "可流动股票总数不可为空", trigger: "blur" },
-                    {
-                        validator: zhengshuCheck.bind(this),
-                        message: "请输入正确的可流动股票总数",
-                        trigger: "blur",
-                    },
-                ],
+                dictId: [{ required: true, message: "请选择所属类型", trigger: "change" }],
+                type: [{ required: true, message: "请选择开题类型", trigger: "change" }],
+                question: [{ required: true, message: "问题不可为空", trigger: "blur" }],
+                answers: [{ required: true, message: "答案不可为空", trigger: "blur" }],
+                answerRight: [{ required: true, message: "正确答案不可为空", trigger: "blur" }],
             },
             isLoading: false,
+
+            typeList: Constants.GRDEQUESTION.TYPE,
         };
     },
-    created() {},
     methods: {
+        init(){
+            this.isLoading = true;
+            GradeDictControl.list({}).then((res) => {
+                this.treeData = res.list || [];
+            }).finally(()=>{
+                this.isLoading = false;
+            });
+        },
+        selectChange(value, e){
+            for (let i = 0; i < value.length; i++) {
+                value[i].label = value[i].value;
+            }
+            this.form.dictId = value;
+        },
         cancelClick() {
             this.resetForm();
             this.$emit("cancel");
@@ -118,7 +119,7 @@ export default {
             let _slef = this;
             this.$refs.addForm.validate((valid) => {
                 if (valid) {
-                    FinanceControl.actionFinance(_slef.form).then((res) => {
+                    GradeQuestionControl.actionDo(_slef.form).then((res) => {
                         if (res.code == 10000) {
                             _slef.$notification.success({
                                 message: "提示",
@@ -151,12 +152,13 @@ export default {
     },
     watch: {
         visible(newVal, oldVal) {
-            if (newVal) {
+            if (newVal && !oldVal)  {
                 if (null != this.item.id && undefined != this.item.id) {
                     Object.assign(this.form, this.item);
                 } else {
-                    this.form = this.$options.data.call(this).form;
+                    Object.assign(this.$data, this.$options.data.call(this));
                 }
+                this.init();
             } else {
                 this.resetForm();
             }

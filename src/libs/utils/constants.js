@@ -14,15 +14,17 @@ export default class Constants {
         code: 0,
         codeName: "全部"
     };
+    /**
+     * 状态
+     * @parme “正常”表示可以自动获取股票数据了 “待转正”表示当前记录还不完善。
+     * **/
+    static PUBLICCOMMON_STATUS = [
+        { code: 1, codeName: "上线" },
+        { code: 2, codeName: "下线" }
+    ];
     static PUBLICCOMMON_FESTIVAL = [
-        {
-            code: 1,
-            codeName: "节假日"
-        },
-        {
-            code: 2,
-            codeName: "自定义"
-        }
+        {code: 1,codeName: "节假日"},
+        {code: 2,codeName: "自定义"}
     ];
     /***
      * 股票全局设置
@@ -43,14 +45,6 @@ export default class Constants {
             { code: 2, codeName: ".SZ" }
         ],
         /**
-         * 股票状态
-         * @parme “正常”表示可以自动获取股票数据了 “待转正”表示当前记录还不完善。
-         * **/
-        STATUS: [
-            { code: 1, codeName: "上线" },
-            { code: 2, codeName: "下线" }
-        ],
-        /**
          * 数据注入类型
          * @parme “正常”表示可以自动获取股票数据了 “待转正”表示当前记录还不完善。
          * **/
@@ -67,5 +61,14 @@ export default class Constants {
             { code: 1, codeName: "成功" },
             { code: 2, codeName: "失败" }
         ]
+    };
+    /***
+     * 考题类型
+     * **/
+    static GRDEQUESTION = {
+        TYPE: [
+            { code: 1, codeName: "单选题" },
+            { code: 2, codeName: "多选题" }
+        ],
     };
 }

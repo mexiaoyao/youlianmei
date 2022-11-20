@@ -2,23 +2,38 @@
     <div>
         <a-row class="rowBorder">
             <a-form :form="form" @submit="submitSearch" layout="inline">
-                <a-form-item label="指数类型">
-                    <a-select :style="{width:'100px'}" v-model="form.indexType">
+                <a-form-item label="所属类型">
+                    <a-tree-select
+                        :style="{width:'100px'}"
+                        :allowClear="true"
+                        show-search
+                        label-in-value
+                        :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                        v-model="form.dictId"
+                        :tree-data="treeData"
+                        :placeholder="'请选择所属类型'"
+                        tree-default-expand-all
+                        :search-placeholder="'请搜索所属类型'"
+                        :replaceFields="{children:'children', title:'dictName', key:'id', value: 'dictName' }"
+                    />
+                </a-form-item>
+                <a-form-item label="类型">
+                    <a-select :style="{width:'100px'}" v-model="form.type">
                         <a-select-option
                             :key="index"
                             :value="item.code"
-                            v-for="(item,index) in indexTypeList"
+                            v-for="(item,index) in typeList"
                         >{{item.codeName}}</a-select-option>
                     </a-select>
                 </a-form-item>
-                <a-form-item label="股票代码">
-                    <a-input allowClear placeholder="请输入股票代码" v-model="form.codeNumber"></a-input>
+                <a-form-item label="问题">
+                    <a-input allowClear placeholder="请输入问题" v-model="form.question"></a-input>
                 </a-form-item>
-                <a-form-item label="股票名称">
-                    <a-input allowClear placeholder="请输入股票名称" v-model="form.sharesName"></a-input>
+                <a-form-item label="答案">
+                    <a-input allowClear placeholder="请输入答案" v-model="form.answers"></a-input>
                 </a-form-item>
-                <a-form-item label="股票别名">
-                    <a-input allowClear placeholder="请输入股票别名" v-model="form.sharesAlise"></a-input>
+                <a-form-item label="正确答案">
+                    <a-input allowClear placeholder="请输入正确答案" v-model="form.answerRight"></a-input>
                 </a-form-item>
                 <a-form-item label="状态">
                     <a-select :style="{width:'100px'}" v-model="form.status">
@@ -28,6 +43,12 @@
                             v-for="(item,index) in statusList"
                         >{{item.codeName}}</a-select-option>
                     </a-select>
+                </a-form-item>
+                <a-form-item label="创建人">
+                    <a-input allowClear placeholder="请输入创建人" v-model="form.createName"></a-input>
+                </a-form-item>
+                <a-form-item label="描述">
+                    <a-input allowClear placeholder="请输入描述" v-model="form.remarks"></a-input>
                 </a-form-item>
                 <a-form-item label="添加时间">
                     <a-range-picker allowClear format="YYYY-MM-DD" v-model="createTime" />
@@ -55,46 +76,13 @@
                 <a-table-column align="center" key="id" title="序号" width="80">
                     <template slot-scope="text, item, index">{{ (pagination.pageNo - 1)*pagination.pageSize + index+1 }}</template>
                 </a-table-column>
-                <a-table-column align="center" title="股票编码">
-                    <template slot-scope="text, item">
-                        <span>{{item.codeNumber}}{{ item.indexType | CusListFind(indexTypeCodeList, 'code', 'codeName') }}</span>
-                    </template>
-                </a-table-column>
-                <a-table-column align="center" data-index="indexType" key="indexType" title="指数类型" width="160">
-                    <template slot-scope="text, item">
-                        <span>{{ item.indexType | CusListFind(indexTypeList, 'code', 'codeName') }}({{ item.indexType | CusListFind(indexTypeCodeList, 'code', 'codeName') }})</span>
-                    </template>
-                </a-table-column>
-                <a-table-column align="center" data-index="codeNumber" key="codeNumber" title="股票代码" width="200" />
-                <a-table-column align="center" data-index="sharesName" key="sharesName" title="股票名称" width="160" />
-                <a-table-column align="center" data-index="sharesAlise" key="sharesAlise" title="股票别名" width="300" />
-                <a-table-column
-                    align="center"
-                    data-index="sharesTotalNumber"
-                    key="sharesTotalNumber"
-                    title="股票总股数"
-                    width="300"
-                >
-                    <template slot-scope="text, item">
-                        <span>{{ item.sharesTotalNumber }}</span>
-                        <br />
-                        <span>{{ item.sharesTotalNumber | TableMoneyChanageChinese(item.sharesTotalNumber) }}</span>
-                    </template>
-                </a-table-column>
-                <a-table-column
-                    align="center"
-                    data-index="sharesAllowTotalNumber"
-                    key="sharesAllowTotalNumber"
-                    title="可流动股票股数"
-                    width="360"
-                >
-                    <template slot-scope="text, item">
-                        <span>{{ item.sharesAllowTotalNumber }}</span>
-                        <br />
-                        <span>{{ item.sharesAllowTotalNumber | TableMoneyChanageChinese(item.sharesAllowTotalNumber) }}</span>
-                    </template>
-                </a-table-column>
-                <a-table-column align="center" data-index="loadTime" key="loadTime" title="最后更新" width="240" />
+                <a-table-column align="center" data-index="dictId" key="dictId" title="类型路径" width="200" />
+                <a-table-column align="center" data-index="question" key="question" title="问题" width="200" />
+                <a-table-column align="center" data-index="answers" key="answers" title="答案" width="200" />
+                <a-table-column align="center" data-index="answerRight" key="answerRight" title="正确答案" width="200" />
+                <a-table-column align="center" data-index="usedNum" key="usedNum" title="使用次数" width="200" />
+                <a-table-column align="center" data-index="goodNum" key="goodNum" title="点赞数" width="200" />
+                <a-table-column align="center" data-index="poorNum" key="poorNum" title="踩数" width="200" />
                 <a-table-column align="center" data-index="status" key="status" title="状态" width="240">
                     <template slot-scope="text, item">
                         <span
@@ -102,8 +90,16 @@
                         >{{ item.status | CusListFind(statusList, 'code', 'codeName') }}</span>
                     </template>
                 </a-table-column>
+                <a-table-column align="center" data-index="type" key="type" title="类型" width="240">
+                    <template slot-scope="text, item">
+                        <span>{{ item.type | CusListFind(typeList, 'code', 'codeName') }}</span>
+                    </template>
+                </a-table-column>
                 <a-table-column align="center" data-index="createTime" key="createTime" title="添加时间" width="240" />
                 <a-table-column align="center" data-index="updateTime" key="updateTime" title="修改时间" width="240" />
+                <a-table-column align="center" data-index="shareNum" key="shareNum" title="分享次数" width="200" />
+                <a-table-column align="center" data-index="imgUrl" key="imgUrl" title="图片" width="200" />
+                <a-table-column align="center" data-index="createName" key="createName" title="创建人" width="200" />
                 <a-table-column align="center" data-index="remarks" key="remarks" title="备注" />
                 <a-table-column align="center" fixed="right" key="action" title="操作" width="180px">
                     <template slot-scope="text, item">
@@ -180,35 +176,35 @@
             :item="editObj"
             :visible="visible"
             @cancel="visible=false;editObj={}"
-            @ok="visible=false;editObj={};getfinanceList()"
-        />
-        <update-list-modal
-            :itemProp="updateItem"
-            :visible="updateVisible"
-            @cancel="updateVisible=false;updateItem={}"
-            @ok="updateVisible=false;updateItem={};"
+            @ok="visible=false;editObj={};getList()"
         />
     </div>
 </template>
 <script>
-import { FinanceControl } from "@/api";
+import { TreeSelect } from 'ant-design-vue';
+import { GradeDictControl, GradeQuestionControl } from "@/api";
 import Constants from "@/libs/utils/constants";
 import LangUtil from "@/libs/utils/langUtil";
 
 import AddModal from "./modal/index";
-import UpdateListModal from "./modal/updateList";
 export default {
-    name: "finance-list",
-    components: { AddModal, UpdateListModal },
+    name: "grade-question-list",
+    components: { AddModal },
     data() {
         return {
+            SHOW_ALL : TreeSelect.SHOW_ALL,
+            treeData:[],
+
             isLoading: false,
             form: {
-                indexType: 0,
-                codeNumber: "",
-                sharesName: "",
-                sharesAlise: "",
+                dictId: "",
+                type: 0,
+                question: "",
+                answers: "",
+                answerRight:"",
                 status: 0,
+                createName:"",
+                remarks:""
             },
             createTime: [null, null],
             updateTime: [null, null],
@@ -226,9 +222,9 @@ export default {
             list: [],
             locale: { emptyText: <a-empty description="暂无数据" /> },
 
-            indexTypeList: LangUtil.addAll(Constants.FINANCE.INDEX_TYPE),
-            indexTypeCodeList: LangUtil.addAll(Constants.FINANCE.INDEX_TYPE_CODE),
-            statusList: LangUtil.addAll(Constants.FINANCE.STATUS),
+            typeList: LangUtil.addAll(Constants.GRDEQUESTION.TYPE),
+            statusList: LangUtil.addAll(Constants.PUBLICCOMMON_STATUS),
+            dictList:[],
 
             endOpenCreateTime: false,
 
@@ -237,12 +233,6 @@ export default {
 
             updateVisible: false, //更新弹框
             updateItem: {}, //更新数据,
-
-            headers: {
-                authorization: "authorization-text",
-            },
-            url: process.env.VUE_APP_API_FIEX + "/shares/upload",
-            importIng: false,
         };
     },
     computed: {},
@@ -251,53 +241,9 @@ export default {
         this.init();
     },
     methods: {
-        beforeUpload(file) {
-            const isExcel = file.type === "application/vnd.ms-excel";
-            if (isExcel) {
-                this.importIng = true;
-                return true;
-            } else {
-                this.$notification.error({
-                    message: "提示",
-                    description: "请上传excel文件",
-                });
-                return false;
-            }
-        },
-        /*
-         *导入
-         */
-        handleChange(info) {
-            if (info.file.status !== "uploading") {
-                console.log(info.file, info.fileList);
-            }
-            if (info.file.status === "done") {
-                this.$notification.success({
-                    message: "提示",
-                    description: "提交成功",
-                });
-            } else if (info.file.status === "error") {
-                this.$notification.error({
-                    message: "提示",
-                    description: "提交失败",
-                });
-            }
-            this.importIng = false;
-        },
-
-        onPageChange(page, pageSize) {
-            this.pagination.pageNo = page;
-            this.submitSearch();
-        },
-        onSizeChange(current, pageSize) {
-            this.pagination.pageNo = 1;
-            this.pagination.pageSize = pageSize;
-            this.submitSearch();
-        },
-        onChange() {},
-
         init() {
-            this.getfinanceList({});
+            this.getList({});
+            this.getTreeData();
         },
         submitSearch() {
             let createTimeStart = "";
@@ -316,22 +262,23 @@ export default {
             if (null != this.updateTime[1]) {
                 updateTimeEnd = this.updateTime[1].format("YYYY-MM-DD");
             }
-            this.getfinanceList({ createTimeStart: createTimeStart, createTimeEnd: createTimeEnd, updateTimeStart: updateTimeStart, updateTimeEnd: updateTimeEnd });
+            this.getList({ createTimeStart: createTimeStart, createTimeEnd: createTimeEnd, updateTimeStart: updateTimeStart, updateTimeEnd: updateTimeEnd });
         },
         //定义一个请求数据的方法
-        getfinanceList(timeRange) {
+        getList(timeRange) {
             let parme = Object.assign(this.form, timeRange, { pageNo: this.pagination.pageNo, pageSize: this.pagination.pageSize });
-            FinanceControl.financeList(parme).then((res) => {
+            GradeQuestionControl.list(parme).then((res) => {
                 this.list = res.list || [];
                 this.pagination.total = res.total || 0;
             });
         },
-        goToDetail(row) {
-            //this.$router.push("/finance/detail");
-            console.log("row:" + row.id);
-            let push = { path: "/finance/detail", name: "finance-detail", params: { id: row.id } };
-            this.$router.push(push);
-            //this.$router.push({ path: "/finance/detail", name: "finance.detail", params: { id: row.id } });
+        getTreeData(){
+            this.isLoading = true;
+            GradeDictControl.listAll({}).then((res) => {
+                this.treeData = res.list || [];
+            }).finally(()=>{
+                this.isLoading = false;
+            });
         },
 
         /**编辑**/
@@ -350,13 +297,13 @@ export default {
                     title: "警告",
                     content: "您确定要下架这条数据吗,此举将删除股票记录表，且不可逆！",
                     onOk() {
-                        FinanceControl.financeStatus({ id: id, status: status }).then((res) => {
+                        GradeQuestionControl.status({ id: id, status: status }).then((res) => {
                             if (res.code === 10000) {
                                 _self.$notification.success({
                                     message: "提示",
                                     description: "操作成功！",
                                 });
-                                _self.getfinanceList({});
+                                _self.getList({});
                             } else {
                                 _self.$notification.error({
                                     message: "提示",
@@ -369,13 +316,13 @@ export default {
                     onCancel() {},
                 });
             } else {
-                FinanceControl.financeStatus({ id: id, status: status }).then((res) => {
+                GradeQuestionControl.status({ id: id, status: status }).then((res) => {
                     if (res.code === 10000) {
                         _self.$notification.success({
                             message: "提示",
                             description: "操作成功！",
                         });
-                        _self.getfinanceList({});
+                        _self.getList({});
                     } else {
                         _self.$notification.error({
                             message: "提示",
@@ -394,13 +341,13 @@ export default {
                 title: "警告",
                 content: "您确定要删除这条数据吗",
                 onOk() {
-                    FinanceControl.financeDelete({ id: id }).then((res) => {
+                    GradeQuestionControl.delete({ id: id }).then((res) => {
                         if (res.code === 10000) {
                             _self.$notification.success({
                                 message: "提示",
                                 description: "操作成功！",
                             });
-                            _self.getfinanceList({});
+                            _self.getList({});
                         } else {
                             _self.$notification.error({
                                 message: "提示",
