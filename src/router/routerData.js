@@ -68,7 +68,7 @@ export default [
             {
                 key: "examination.type",
                 meta: {
-                    title: "考题分类"
+                    title: "考题字典"
                 },
                 name: "examination-type",
                 path: "/examination/type"

@@ -14,6 +14,7 @@ export default class Constants {
         code: 0,
         codeName: "全部"
     };
+
     /**
      * 状态
      * @parme “正常”表示可以自动获取股票数据了 “待转正”表示当前记录还不完善。
@@ -22,9 +23,13 @@ export default class Constants {
         { code: 1, codeName: "上线" },
         { code: 2, codeName: "下线" }
     ];
+
+    /**
+     * 当前日期状态
+     * **/
     static PUBLICCOMMON_FESTIVAL = [
-        {code: 1,codeName: "节假日"},
-        {code: 2,codeName: "自定义"}
+        { code: 1, codeName: "节假日" },
+        { code: 2, codeName: "自定义" }
     ];
     /***
      * 股票全局设置
@@ -66,9 +71,21 @@ export default class Constants {
      * 考题类型
      * **/
     static GRDEQUESTION = {
-        TYPE: [
+        /**
+         *考题--数据类型状态
+         * @parme
+         * **/
+        KAOTI_TYPE: [
+            { code: 1, codeName: "考题类型" }, //例如，应用题，单选题等
+            { code: 2, codeName: "考题来源" } //例如，苏教版，第一课等
+        ],
+
+        /**
+         * 考题类型
+         * **/
+        KAOTI_QUESTION_TYPE: [
             { code: 1, codeName: "根据拼音写汉字" },
             { code: 2, codeName: "看汉字写拼音" }
-        ],
+        ]
     };
 }

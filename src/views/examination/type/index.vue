@@ -2,8 +2,18 @@
     <div>
         <a-row class="rowBorder">
             <a-form :form="form" @submit="submitSearch" layout="inline">
-                <a-form-item label="类型名称">
-                    <a-input allowClear placeholder="请输入类型名称" v-model="form.dictName"></a-input>
+                <a-form-item label="类型分类">
+                    <a-select :style="{width:'120px'}" placeholder="Select a person" v-model="form.type">
+                        <a-select-option
+                            :key="index"
+                            :placeholder="'请选类型分类'"
+                            :value="item.code"
+                            v-for="(item,index) in typeList"
+                        >{{item.codeName}}</a-select-option>
+                    </a-select>
+                </a-form-item>
+                <a-form-item label="大类名称">
+                    <a-input allowClear placeholder="请输入大类名称" v-model="form.dictName"></a-input>
                 </a-form-item>
                 <a-form-item label="创建人">
                     <a-input allowClear placeholder="请输入创建人" v-model="form.createName"></a-input>
@@ -21,7 +31,7 @@
         </a-row>
         <a-row class="rowBorder">
             <a-row class="tr pt15">
-                <a-button :disabled="isLoading" @click="visible=true;" type="primary">新增</a-button>
+                <a-button :disabled="isLoading" @click="addDO()" type="primary">新增</a-button>
             </a-row>
             <a-table
                 :data-source="list"
@@ -32,6 +42,11 @@
             >
                 <a-table-column align="center" key="id" title="序号/子级数量" width="80">
                     <template slot-scope="text, item, index">{{ index+1 }}/{{ item.children.length }}</template>
+                </a-table-column>
+                <a-table-column align="center" data-index="type" key="type" title="类型分类">
+                    <template slot-scope="text, item">
+                        <span>{{ item.type | CusListFind(typeList, 'code', 'codeName') }}</span>
+                    </template>
                 </a-table-column>
                 <a-table-column align="center" data-index="dictName" key="dictName" title="类型名称" />
                 <a-table-column align="center" data-index="createTime" key="createTime" title="添加时间" />
@@ -64,6 +79,7 @@
 </template>
 <script>
 import { GradeDictControl } from "@/api";
+import Constants from "@/libs/utils/constants";
 
 import AddModal from "./modal/index";
 export default {
@@ -71,8 +87,11 @@ export default {
     components: { AddModal },
     data() {
         return {
+            typeList: Constants.GRDEQUESTION.KAOTI_TYPE,
+
             isLoading: false,
             form: {
+                type: 1,
                 dictName: "",
                 createName: "",
             },
@@ -125,18 +144,22 @@ export default {
                 this.list = res.list || [];
             });
         },
-
+        addDO() {
+            this.visible = true;
+            let obj = { type: this.form.type };
+            this.editObj = obj;
+        },
         /**添加子级**/
         addSon(row) {
             this.visible = true;
-            let obj = { parentId: row.id };
+            let obj = { type: this.form.type, parentId: row.id };
             this.editObj = obj;
         },
 
         /**编辑**/
         edit(row) {
             this.visible = true;
-            this.editObj = row;
+            this.editObj = { id: row.id, dictName: row.dictName };
         },
 
         /**
