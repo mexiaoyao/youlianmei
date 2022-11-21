@@ -12,18 +12,6 @@
                         >{{item.codeName}}</a-select-option>
                     </a-select>
                 </a-form-item>
-                <a-form-item label="大类名称">
-                    <a-input allowClear placeholder="请输入大类名称" v-model="form.dictName"></a-input>
-                </a-form-item>
-                <a-form-item label="创建人">
-                    <a-input allowClear placeholder="请输入创建人" v-model="form.createName"></a-input>
-                </a-form-item>
-                <a-form-item label="添加时间">
-                    <a-range-picker allowClear format="YYYY-MM-DD" v-model="createTime" />
-                </a-form-item>
-                <a-form-item label="修改时间">
-                    <a-range-picker allowClear format="YYYY-MM-DD" v-model="updateTime" />
-                </a-form-item>
                 <a-form-item>
                     <a-button :disabled="isLoading" html-type="submit" type="primary">查询</a-button>
                 </a-form-item>
@@ -83,7 +71,7 @@ import Constants from "@/libs/utils/constants";
 
 import AddModal from "./modal/index";
 export default {
-    name: "examination-list",
+    name: "examination-type-list",
     components: { AddModal },
     data() {
         return {
@@ -104,9 +92,6 @@ export default {
 
             visible: false, //新增/编辑 弹框
             editObj: {}, //新增/编辑 数据
-
-            updateVisible: false, //更新弹框
-            updateItem: {}, //更新数据,
         };
     },
     computed: {},
@@ -172,7 +157,7 @@ export default {
                 content: "您确定要删除这条数据吗",
                 onOk() {
                     GradeDictControl.delete({ id: id }).then((res) => {
-                        if (res.code === 10000) {
+                        if (res.data.code == 10000) {
                             _self.$notification.success({
                                 message: "提示",
                                 description: "操作成功！",
@@ -181,7 +166,7 @@ export default {
                         } else {
                             _self.$notification.error({
                                 message: "提示",
-                                description: "操作失败！",
+                                description: res.data.msg || "操作失败！",
                             });
                         }
                     });
@@ -189,14 +174,6 @@ export default {
                 },
                 onCancel() {},
             });
-        },
-
-        /**
-         * 弹出更新记录列表
-         * **/
-        goToUpdate(item) {
-            this.updateVisible = true;
-            this.updateItem = item;
         },
     },
 };

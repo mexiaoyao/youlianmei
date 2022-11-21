@@ -63,11 +63,14 @@ axios.interceptors.response.use(
             // router.replace("/login").then(() => {
             //     ModalUtil.openMsgWarning("未登录请重新登录");
             // });
-            console.log("-----------------");
+            console.log("-------response----------");
+            return response;
+        } else if (responseData.code == 20000) {
+            console.log("-------20000----------");
             return response;
         } else {
             // 是接口返回参数的错误
-            console.log("-----------------");
+            console.log("-----------responseData------");
             return Promise.reject(responseData);
         }
     },
@@ -88,24 +91,24 @@ axios.interceptors.response.use(
                     // ModalUtil.closeAllMessage();
                     // // 清空所有存储
                     // CommonsUtil.clearAllStorage();
-                    console.log("-----------------");
+                    console.log("-------503----------");
                     break;
                 case 404: // 接口未找到
                     //ModalUtil.openMsgWarning(Constants.CODE.RESPONSE_STATUS[`${statusCode}`] || "");
-                    console.log("-----------------");
+                    console.log("--------404---------");
                     break;
                 default:
                     // 其他错误
-                    console.log("-----------------");
+                    console.log("-------default----------");
                     break;
             }
         } else {
             // 其他错误
             //ModalUtil.openMsgWarning("系统异常");
-            console.log("-----------------");
+            console.log("--------openMsgWarning---------");
         }
         // 是接口返回参数的错误
-        console.log("-----------------");
+        console.log("--------是接口返回参数的错误---------");
         return Promise.reject(error);
     }
 );
