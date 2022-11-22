@@ -1,7 +1,7 @@
 <template>
     <div>
         <a-row class="rowBorder">
-            <a-form :form="form" @submit="submitSearch" layout="inline">
+            <a-form :form="form" @submit="getList" layout="inline">
                 <a-form-item label="类型分类">
                     <a-select :style="{width:'120px'}" placeholder="Select a person" v-model="form.type">
                         <a-select-option
@@ -80,22 +80,14 @@ export default {
             isLoading: false,
             form: {
                 type: 1,
-                dictName: "",
-                createName: "",
             },
-            createTime: [null, null],
-            updateTime: [null, null],
             list: [],
             locale: { emptyText: <a-empty description="暂无数据" /> },
-
-            endOpenCreateTime: false,
 
             visible: false, //新增/编辑 弹框
             editObj: {}, //新增/编辑 数据
         };
     },
-    computed: {},
-    watch: {},
     created() {
         this.init();
     },
@@ -103,28 +95,9 @@ export default {
         init() {
             this.getList({});
         },
-        submitSearch() {
-            let createTimeStart = "";
-            if (null != this.createTime[0]) {
-                createTimeStart = this.createTime[0].format("YYYY-MM-DD");
-            }
-            let createTimeEnd = "";
-            if (null != this.createTime[1]) {
-                createTimeEnd = this.createTime[1].format("YYYY-MM-DD");
-            }
-            let updateTimeStart = "";
-            if (null != this.updateTime[0]) {
-                updateTimeStart = this.updateTime[0].format("YYYY-MM-DD");
-            }
-            let updateTimeEnd = "";
-            if (null != this.updateTime[1]) {
-                updateTimeEnd = this.updateTime[1].format("YYYY-MM-DD");
-            }
-            this.getList({ createTimeStart: createTimeStart, createTimeEnd: createTimeEnd, updateTimeStart: updateTimeStart, updateTimeEnd: updateTimeEnd });
-        },
         //定义一个请求数据的方法
-        getList(timeRange) {
-            let parme = Object.assign(this.form, timeRange);
+        getList() {
+            let parme = Object.assign(this.form);
             GradeDictControl.list(parme).then((res) => {
                 this.list = res.list || [];
             });

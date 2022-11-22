@@ -2,19 +2,34 @@
     <div>
         <a-row class="rowBorder">
             <a-form :form="form" @submit="submitSearch" layout="inline">
-                <a-form-item label="所属类型">
+                <a-form-item label="题目类型">
                     <a-tree-select
-                        :style="{width:'100px'}"
                         :allowClear="true"
-                        show-search
-                        label-in-value
                         :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                        v-model="form.dictId"
-                        :tree-data="treeData"
-                        :placeholder="'请选择所属类型'"
-                        tree-default-expand-all
-                        :search-placeholder="'请搜索所属类型'"
+                        :placeholder="'请选择题目类型'"
                         :replaceFields="{children:'children', title:'dictName', key:'id', value: 'dictName' }"
+                        :search-placeholder="'请搜索题目类型'"
+                        :style="{width:'100px'}"
+                        :tree-data="questionTypeList"
+                        label-in-value
+                        show-search
+                        tree-default-expand-all
+                        v-model="form.dictId"
+                    />
+                </a-form-item>
+                <a-form-item label="题目来源">
+                    <a-tree-select
+                        :allowClear="true"
+                        :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                        :placeholder="'请选择题目来源'"
+                        :replaceFields="{children:'children', title:'dictName', key:'id', value: 'dictName' }"
+                        :search-placeholder="'请搜索题目来源'"
+                        :style="{width:'100px'}"
+                        :tree-data="questionSourceList"
+                        label-in-value
+                        show-search
+                        tree-default-expand-all
+                        v-model="form.dictId"
                     />
                 </a-form-item>
                 <a-form-item label="类型">
@@ -181,7 +196,7 @@
     </div>
 </template>
 <script>
-import { TreeSelect } from 'ant-design-vue';
+import { TreeSelect } from "ant-design-vue";
 import { GradeDictControl, GradeQuestionControl } from "@/api";
 import Constants from "@/libs/utils/constants";
 import LangUtil from "@/libs/utils/langUtil";
@@ -192,8 +207,9 @@ export default {
     components: { AddModal },
     data() {
         return {
-            SHOW_ALL : TreeSelect.SHOW_ALL,
-            treeData:[],
+            SHOW_ALL: TreeSelect.SHOW_ALL,
+            questionTypeList: [],
+            questionSourceList: [],
 
             isLoading: false,
             form: {
@@ -201,10 +217,10 @@ export default {
                 type: 0,
                 question: "",
                 answers: "",
-                answerRight:"",
+                answerRight: "",
                 status: 0,
-                createName:"",
-                remarks:""
+                createName: "",
+                remarks: "",
             },
             createTime: [null, null],
             updateTime: [null, null],
@@ -224,7 +240,7 @@ export default {
 
             typeList: LangUtil.addAll(Constants.GRDEQUESTION.TYPE),
             statusList: LangUtil.addAll(Constants.PUBLICCOMMON_STATUS),
-            dictList:[],
+            dictList: [],
 
             endOpenCreateTime: false,
 
@@ -272,13 +288,15 @@ export default {
                 this.pagination.total = res.total || 0;
             });
         },
-        getTreeData(){
+        getTreeData() {
             this.isLoading = true;
-            GradeDictControl.listAll({}).then((res) => {
-                this.treeData = res.list || [];
-            }).finally(()=>{
-                this.isLoading = false;
-            });
+            GradeDictControl.listAll({})
+                .then((res) => {
+                    this.treeData = res.list || [];
+                })
+                .finally(() => {
+                    this.isLoading = false;
+                });
         },
 
         /**编辑**/
