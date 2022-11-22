@@ -9,12 +9,12 @@
                         :placeholder="'请选择题目类型'"
                         :replaceFields="{children:'children', title:'dictName', key:'id', value: 'dictName' }"
                         :search-placeholder="'请搜索题目类型'"
-                        :style="{width:'100px'}"
+                        :style="{width:'200px'}"
                         :tree-data="questionTypeList"
                         label-in-value
                         show-search
                         tree-default-expand-all
-                        v-model="form.dictId"
+                        v-model.trim="form.dictTypeId"
                     />
                 </a-form-item>
                 <a-form-item label="题目来源">
@@ -24,16 +24,16 @@
                         :placeholder="'请选择题目来源'"
                         :replaceFields="{children:'children', title:'dictName', key:'id', value: 'dictName' }"
                         :search-placeholder="'请搜索题目来源'"
-                        :style="{width:'100px'}"
+                        :style="{width:'200px'}"
                         :tree-data="questionSourceList"
                         label-in-value
                         show-search
                         tree-default-expand-all
-                        v-model="form.dictId"
+                        v-model.trim="form.dictSourceId"
                     />
                 </a-form-item>
-                <a-form-item label="类型">
-                    <a-select :style="{width:'100px'}" v-model="form.type">
+                <a-form-item label="考题种类">
+                    <a-select :style="{width:'160px'}" v-model.trim="form.type">
                         <a-select-option
                             :key="index"
                             :value="item.code"
@@ -42,34 +42,16 @@
                     </a-select>
                 </a-form-item>
                 <a-form-item label="问题">
-                    <a-input allowClear placeholder="请输入问题" v-model="form.question"></a-input>
-                </a-form-item>
-                <a-form-item label="答案">
-                    <a-input allowClear placeholder="请输入答案" v-model="form.answers"></a-input>
-                </a-form-item>
-                <a-form-item label="正确答案">
-                    <a-input allowClear placeholder="请输入正确答案" v-model="form.answerRight"></a-input>
-                </a-form-item>
-                <a-form-item label="状态">
-                    <a-select :style="{width:'100px'}" v-model="form.status">
-                        <a-select-option
-                            :key="index"
-                            :value="item.code"
-                            v-for="(item,index) in statusList"
-                        >{{item.codeName}}</a-select-option>
-                    </a-select>
+                    <a-input allowClear placeholder="请输入问题" v-model.trim="form.question"></a-input>
                 </a-form-item>
                 <a-form-item label="创建人">
-                    <a-input allowClear placeholder="请输入创建人" v-model="form.createName"></a-input>
-                </a-form-item>
-                <a-form-item label="描述">
-                    <a-input allowClear placeholder="请输入描述" v-model="form.remarks"></a-input>
+                    <a-input allowClear placeholder="请输入创建人" v-model.trim="form.createName"></a-input>
                 </a-form-item>
                 <a-form-item label="添加时间">
-                    <a-range-picker allowClear format="YYYY-MM-DD" v-model="createTime" />
+                    <a-range-picker allowClear format="YYYY-MM-DD" v-model.trim="createTime" />
                 </a-form-item>
                 <a-form-item label="修改时间">
-                    <a-range-picker allowClear format="YYYY-MM-DD" v-model="updateTime" />
+                    <a-range-picker allowClear format="YYYY-MM-DD" v-model.trim="updateTime" />
                 </a-form-item>
                 <a-form-item>
                     <a-button :disabled="isLoading" html-type="submit" type="primary">查询</a-button>
@@ -98,13 +80,6 @@
                 <a-table-column align="center" data-index="usedNum" key="usedNum" title="使用次数" width="200" />
                 <a-table-column align="center" data-index="goodNum" key="goodNum" title="点赞数" width="200" />
                 <a-table-column align="center" data-index="poorNum" key="poorNum" title="踩数" width="200" />
-                <a-table-column align="center" data-index="status" key="status" title="状态" width="240">
-                    <template slot-scope="text, item">
-                        <span
-                            :style="{color: item.status===1?'#67C23A':'red'}"
-                        >{{ item.status | CusListFind(statusList, 'code', 'codeName') }}</span>
-                    </template>
-                </a-table-column>
                 <a-table-column align="center" data-index="type" key="type" title="类型" width="240">
                     <template slot-scope="text, item">
                         <span>{{ item.type | CusListFind(typeList, 'code', 'codeName') }}</span>
@@ -196,7 +171,6 @@
     </div>
 </template>
 <script>
-import { TreeSelect } from "ant-design-vue";
 import { GradeDictControl, GradeQuestionControl } from "@/api";
 import Constants from "@/libs/utils/constants";
 import LangUtil from "@/libs/utils/langUtil";
@@ -207,18 +181,17 @@ export default {
     components: { AddModal },
     data() {
         return {
-            SHOW_ALL: TreeSelect.SHOW_ALL,
             questionTypeList: [],
             questionSourceList: [],
 
             isLoading: false,
             form: {
-                dictId: "",
+                dictTypeId: "",
+                dictSourceId: "",
                 type: 0,
                 question: "",
                 answers: "",
                 answerRight: "",
-                status: 0,
                 createName: "",
                 remarks: "",
             },
@@ -238,17 +211,12 @@ export default {
             list: [],
             locale: { emptyText: <a-empty description="暂无数据" /> },
 
-            typeList: LangUtil.addAll(Constants.GRDEQUESTION.TYPE),
-            statusList: LangUtil.addAll(Constants.PUBLICCOMMON_STATUS),
-            dictList: [],
+            typeList: LangUtil.addAll(Constants.GRDEQUESTION.KAOTI_QUESTION_TYPE),
 
             endOpenCreateTime: false,
 
             visible: false, //新增/编辑 弹框
             editObj: {}, //新增/编辑 数据
-
-            updateVisible: false, //更新弹框
-            updateItem: {}, //更新数据,
         };
     },
     computed: {},
@@ -259,7 +227,8 @@ export default {
     methods: {
         init() {
             this.getList({});
-            this.getTreeData();
+            this.getTreeData(1);
+            this.getTreeData(2);
         },
         submitSearch() {
             let createTimeStart = "";
@@ -288,11 +257,18 @@ export default {
                 this.pagination.total = res.total || 0;
             });
         },
-        getTreeData() {
+        /**
+         * type 1:获取题目类型 2获取考题来源
+         * **/
+        getTreeData(type) {
             this.isLoading = true;
-            GradeDictControl.listAll({})
+            GradeDictControl.listAll({ type: type })
                 .then((res) => {
-                    this.treeData = res.list || [];
+                    if (type == 1) {
+                        this.questionTypeList = res.list || [];
+                    } else if (type == 2) {
+                        this.questionSourceList = res.list || [];
+                    }
                 })
                 .finally(() => {
                     this.isLoading = false;
