@@ -9,6 +9,7 @@
                         :options="questionTypeList"
                         :placeholder="'请选择题目类型'"
                         change-on-select
+                        @change="dictTypeChange"
                         v-model="form.dictTypeId"
                     />
                 </a-form-item>
@@ -19,6 +20,7 @@
                         :options="questionSourceList"
                         :placeholder="'请选择题目来源'"
                         change-on-select
+                        @change="dictSourceChange"
                         v-model="form.dictSourceId"
                     />
                 </a-form-item>
@@ -63,7 +65,8 @@
                 <a-table-column align="center" key="id" title="序号" width="80">
                     <template slot-scope="text, item, index">{{ (pagination.pageNo - 1)*pagination.pageSize + index+1 }}</template>
                 </a-table-column>
-                <a-table-column align="center" data-index="dictId" key="dictId" title="类型路径" width="200" />
+                <a-table-column align="center" data-index="dictTypePathName" key="dictTypePathName" title="题目类型" width="200" />
+                <a-table-column align="center" data-index="dictSourcePathName" key="dictSourcePathName" title="题目来源" width="200" />
                 <a-table-column align="center" data-index="question" key="question" title="问题" width="200" />
                 <a-table-column align="center" data-index="answers" key="answers" title="答案" width="200" />
                 <a-table-column align="center" data-index="answerRight" key="answerRight" title="正确答案" width="200" />
@@ -177,7 +180,9 @@ export default {
             isLoading: false,
             form: {
                 dictTypeId: [],
+                dictTypeName: [],
                 dictSourceId: [],
+                dictSourceName: [],
                 type: 0,
                 question: "",
                 answers: "",
@@ -215,6 +220,28 @@ export default {
         this.init();
     },
     methods: {
+                /**
+         * 所属类型
+         * **/
+         dictTypeChange(value,selectedOptions){
+            this.form.dictTypeName = [];
+            if(null!=selectedOptions && selectedOptions.length>0){
+                selectedOptions.map((item)=>{
+                    this.form.dictTypeName.push(item.dictName);
+                });
+            }
+        },
+        /**
+         * 题目来源
+         * **/
+         dictSourceChange(value,selectedOptions){
+            this.form.dictSourceName = [];
+            if(null!=selectedOptions && selectedOptions.length>0){
+                selectedOptions.map((item)=>{
+                    this.form.dictSourceName.push(item.dictName);
+                });
+            }
+        },
         init() {
             this.getList({});
             this.getTreeData(1);

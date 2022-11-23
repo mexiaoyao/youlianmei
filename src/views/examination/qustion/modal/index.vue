@@ -17,15 +17,17 @@
                     :placeholder="'请选择题目类型'"
                     change-on-select
                     v-model="form.dictTypeId"
+                    @change="dictTypeChange"
                 />
             </a-form-model-item>
-            <a-form-model-item label="所属类型" prop="dictSourceId">
+            <a-form-model-item label="题目来源" prop="dictSourceId">
                 <a-cascader
                     :allowClear="true"
                     :fieldNames="{children:'children', label:'dictName', value: 'id' }"
                     :options="questionSourceList"
                     :placeholder="'请选择题目来源'"
                     change-on-select
+                    @change="dictSourceChange"
                     v-model="form.dictSourceId"
                 />
             </a-form-model-item>
@@ -77,7 +79,9 @@ export default {
             form: {
                 id: "",
                 dictTypeId: [],
+                dictTypeName: [],
                 dictSourceId: [],
+                dictSourceName: [],
                 type: undefined,
                 question: "",
                 answers: "",
@@ -98,6 +102,28 @@ export default {
         };
     },
     methods: {
+        /**
+         * 所属类型
+         * **/
+        dictTypeChange(value,selectedOptions){
+            this.form.dictTypeName = [];
+            if(null!=selectedOptions && selectedOptions.length>0){
+                selectedOptions.map((item)=>{
+                    this.form.dictTypeName.push(item.dictName);
+                });
+            }
+        },
+        /**
+         * 题目来源
+         * **/
+         dictSourceChange(value,selectedOptions){
+            this.form.dictSourceName = [];
+            if(null!=selectedOptions && selectedOptions.length>0){
+                selectedOptions.map((item)=>{
+                    this.form.dictSourceName.push(item.dictName);
+                });
+            }
+        },
         init() {
             this.getTreeData(1);
             this.getTreeData(2);
