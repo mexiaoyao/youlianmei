@@ -10,37 +10,27 @@
     >
         <a-form-model :label-col="{ span: 8 }" :model="form" :rules="rules" :wrapper-col="{ span: 12 }" ref="addForm">
             <a-form-model-item label="所属类型" prop="dictTypeId">
-                <a-tree-select
+                <a-cascader
                     :allowClear="true"
-                    :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                    :fieldNames="{children:'children', label:'dictName', value: 'id' }"
+                    :options="questionTypeList"
                     :placeholder="'请选择题目类型'"
-                    :replaceFields="{children:'children', title:'dictName', key:'id', value: 'dictName' }"
-                    :search-placeholder="'请搜索题目类型'"
-                    :style="{width:'220px'}"
-                    :tree-data="questionTypeList"
-                    label-in-value
-                    show-search
-                    tree-default-expand-all
-                    v-model.trim="form.dictTypeId"
+                    change-on-select
+                    v-model="form.dictTypeId"
                 />
             </a-form-model-item>
             <a-form-model-item label="所属类型" prop="dictSourceId">
-                <a-tree-select
+                <a-cascader
                     :allowClear="true"
-                    :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                    :fieldNames="{children:'children', label:'dictName', value: 'id' }"
+                    :options="questionSourceList"
                     :placeholder="'请选择题目来源'"
-                    :replaceFields="{children:'children', title:'dictName', key:'id', value: 'dictName' }"
-                    :search-placeholder="'请搜索题目来源'"
-                    :style="{width:'220px'}"
-                    :tree-data="questionSourceList"
-                    label-in-value
-                    show-search
-                    tree-default-expand-all
-                    v-model.trim="form.dictSourceId"
+                    change-on-select
+                    v-model="form.dictSourceId"
                 />
             </a-form-model-item>
             <a-form-model-item label="类型" prop="type">
-                <a-select :style="{width:'220px'}" placeholder="Select a person" v-model.trim="form.type">
+                <a-select :placeholder="'请选择类型'" :style="{width:'220px'}" v-model="form.type">
                     <a-select-option :key="index" :value="item.code" v-for="(item,index) in typeList">{{item.codeName}}</a-select-option>
                 </a-select>
             </a-form-model-item>
@@ -86,9 +76,9 @@ export default {
 
             form: {
                 id: "",
-                dictTypeId: "",
-                dictSourceId: "",
-                type: "",
+                dictTypeId: [],
+                dictSourceId: [],
+                type: undefined,
                 question: "",
                 answers: "",
                 answerRight: "",

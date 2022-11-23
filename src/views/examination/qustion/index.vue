@@ -3,33 +3,23 @@
         <a-row class="rowBorder">
             <a-form :form="form" @submit="submitSearch" layout="inline">
                 <a-form-item label="题目类型">
-                    <a-tree-select
+                    <a-cascader
                         :allowClear="true"
-                        :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                        :fieldNames="{children:'children', label:'dictName', value: 'id' }"
+                        :options="questionTypeList"
                         :placeholder="'请选择题目类型'"
-                        :replaceFields="{children:'children', title:'dictName', key:'id', value: 'dictName' }"
-                        :search-placeholder="'请搜索题目类型'"
-                        :style="{width:'200px'}"
-                        :tree-data="questionTypeList"
-                        label-in-value
-                        show-search
-                        tree-default-expand-all
-                        v-model.trim="form.dictTypeId"
+                        change-on-select
+                        v-model="form.dictTypeId"
                     />
                 </a-form-item>
                 <a-form-item label="题目来源">
-                    <a-tree-select
+                    <a-cascader
                         :allowClear="true"
-                        :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                        :fieldNames="{children:'children', label:'dictName', value: 'id' }"
+                        :options="questionSourceList"
                         :placeholder="'请选择题目来源'"
-                        :replaceFields="{children:'children', title:'dictName', key:'id', value: 'dictName' }"
-                        :search-placeholder="'请搜索题目来源'"
-                        :style="{width:'200px'}"
-                        :tree-data="questionSourceList"
-                        label-in-value
-                        show-search
-                        tree-default-expand-all
-                        v-model.trim="form.dictSourceId"
+                        change-on-select
+                        v-model="form.dictSourceId"
                     />
                 </a-form-item>
                 <a-form-item label="考题种类">
@@ -186,8 +176,8 @@ export default {
 
             isLoading: false,
             form: {
-                dictTypeId: "",
-                dictSourceId: "",
+                dictTypeId: [],
+                dictSourceId: [],
                 type: 0,
                 question: "",
                 answers: "",
