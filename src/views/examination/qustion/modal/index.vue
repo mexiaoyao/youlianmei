@@ -31,11 +31,14 @@
                     v-model="form.dictSourceId"
                 />
             </a-form-model-item>
-            <a-form-model-item label="类型" prop="type">
+            <a-form-model-item label="类型1" prop="type">
                 <a-select :placeholder="'请选择类型'" :style="{width:'220px'}" v-model="form.type">
                     <a-select-option :key="index" :value="item.code" v-for="(item,index) in typeList">{{item.codeName}}</a-select-option>
                 </a-select>
             </a-form-model-item>
+
+            <question-one :type="form.type" v-if="form.type==1" />
+            
             <a-form-model-item label="问题" prop="question">
                 <a-input placeholder="请输入问题" v-model.trim="form.question"></a-input>
             </a-form-model-item>
@@ -45,6 +48,7 @@
             <a-form-model-item label="正确答案" prop="answerRight">
                 <a-input placeholder="请输入正确答案" v-model.trim="form.answerRight"></a-input>
             </a-form-model-item>
+
             <a-form-model-item label="备注">
                 <a-input placeholder="请输入备注" v-model.trim="form.remarks"></a-input>
             </a-form-model-item>
@@ -59,6 +63,7 @@
 <script>
 import { GradeDictControl, GradeQuestionControl } from "@/api";
 import Constants from "@/libs/utils/constants";
+import QuestionOne from "./type/formQuestion1";
 export default {
     name: "grade-question-list-add",
     props: {
@@ -71,6 +76,7 @@ export default {
             default: () => {},
         },
     },
+    components: { QuestionOne },
     data() {
         return {
             questionTypeList: [],

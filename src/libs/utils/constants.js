@@ -84,7 +84,7 @@ export default class Constants {
          * 考题类型
          * **/
         KAOTI_QUESTION_TYPE: [
-            { code: "1", codeName: "根据拼音写汉字" },
+            { code: "1", codeName: "看拼音写汉字" },
             { code: "2", codeName: "看汉字写拼音" }
         ]
     };
