@@ -15,9 +15,9 @@
                     :fieldNames="{children:'children', label:'dictName', value: 'id' }"
                     :options="questionTypeList"
                     :placeholder="'请选择题目类型'"
+                    @change="dictTypeChange"
                     change-on-select
                     v-model="form.dictTypeId"
-                    @change="dictTypeChange"
                 />
             </a-form-model-item>
             <a-form-model-item label="题目来源" prop="dictSourceId">
@@ -26,28 +26,19 @@
                     :fieldNames="{children:'children', label:'dictName', value: 'id' }"
                     :options="questionSourceList"
                     :placeholder="'请选择题目来源'"
-                    change-on-select
                     @change="dictSourceChange"
+                    change-on-select
                     v-model="form.dictSourceId"
                 />
             </a-form-model-item>
-            <a-form-model-item label="类型1" prop="type">
+            <a-form-model-item label="类型" prop="type">
                 <a-select :placeholder="'请选择类型'" :style="{width:'220px'}" v-model="form.type">
                     <a-select-option :key="index" :value="item.code" v-for="(item,index) in typeList">{{item.codeName}}</a-select-option>
                 </a-select>
             </a-form-model-item>
 
-            <question-one :type="form.type" v-if="form.type==1" />
-            
-            <a-form-model-item label="问题" prop="question">
-                <a-input placeholder="请输入问题" v-model.trim="form.question"></a-input>
-            </a-form-model-item>
-            <a-form-model-item label="答案" prop="answers">
-                <a-input placeholder="请输入答案" v-model.trim="form.answers"></a-input>
-            </a-form-model-item>
-            <a-form-model-item label="正确答案" prop="answerRight">
-                <a-input placeholder="请输入正确答案" v-model.trim="form.answerRight"></a-input>
-            </a-form-model-item>
+            <question-one :form="form" v-if="form.type==1" />
+            <question-two :form="form" v-if="form.type==2" />
 
             <a-form-model-item label="备注">
                 <a-input placeholder="请输入备注" v-model.trim="form.remarks"></a-input>
@@ -64,6 +55,7 @@
 import { GradeDictControl, GradeQuestionControl } from "@/api";
 import Constants from "@/libs/utils/constants";
 import QuestionOne from "./type/formQuestion1";
+import QuestionTwo from "./type/formQuestion2";
 export default {
     name: "grade-question-list-add",
     props: {
@@ -76,7 +68,7 @@ export default {
             default: () => {},
         },
     },
-    components: { QuestionOne },
+    components: { QuestionOne, QuestionTwo },
     data() {
         return {
             questionTypeList: [],
@@ -88,16 +80,19 @@ export default {
                 dictTypeName: [],
                 dictSourceId: [],
                 dictSourceName: [],
-                type: undefined,
+                type: "1",
+
                 question: "",
                 answers: "",
                 answerRight: "",
+
                 remarks: "",
             },
             rules: {
                 dictTypeId: [{ required: true, message: "请选择题目类型", trigger: "change" }],
                 dictSourceId: [{ required: true, message: "请选择题目来源", trigger: "change" }],
                 type: [{ required: true, message: "请选择考题种类", trigger: "change" }],
+
                 question: [{ required: true, message: "问题不可为空", trigger: "blur" }],
                 answers: [{ required: true, message: "答案不可为空", trigger: "blur" }],
                 answerRight: [{ required: true, message: "正确答案不可为空", trigger: "blur" }],
@@ -111,10 +106,10 @@ export default {
         /**
          * 所属类型
          * **/
-        dictTypeChange(value,selectedOptions){
+        dictTypeChange(value, selectedOptions) {
             this.form.dictTypeName = [];
-            if(null!=selectedOptions && selectedOptions.length>0){
-                selectedOptions.map((item)=>{
+            if (null != selectedOptions && selectedOptions.length > 0) {
+                selectedOptions.map((item) => {
                     this.form.dictTypeName.push(item.dictName);
                 });
             }
@@ -122,10 +117,10 @@ export default {
         /**
          * 题目来源
          * **/
-         dictSourceChange(value,selectedOptions){
+        dictSourceChange(value, selectedOptions) {
             this.form.dictSourceName = [];
-            if(null!=selectedOptions && selectedOptions.length>0){
-                selectedOptions.map((item)=>{
+            if (null != selectedOptions && selectedOptions.length > 0) {
+                selectedOptions.map((item) => {
                     this.form.dictSourceName.push(item.dictName);
                 });
             }
