@@ -9,15 +9,26 @@
         destroyOnClose
     >
         <a-form-model :label-col="{ span: 8 }" :model="form" :rules="rules" :wrapper-col="{ span: 12 }" ref="addForm">
-            <a-form-model-item label="所属类型" prop="dictTypeId">
+            <a-form-model-item label="试卷种类" prop="dictTaskId">
                 <a-cascader
                     :allowClear="true"
                     :fieldNames="{children:'children', label:'dictName', value: 'id' }"
                     :options="questionTypeList"
-                    :placeholder="'请选择题目类型'"
-                    @change="dictTypeChange"
+                    :placeholder="'请选择试卷种类'"
+                    @change="dictTaskChange"
                     change-on-select
-                    v-model="form.dictTypeId"
+                    v-model="form.dictTaskId"
+                />
+            </a-form-model-item>
+            <a-form-model-item label="所属年级" prop="dictGradeId">
+                <a-cascader
+                    :allowClear="true"
+                    :fieldNames="{children:'children', label:'dictName', value: 'id' }"
+                    :options="questionGradeList"
+                    :placeholder="'请选择所属年级'"
+                    @change="dictGradeChange"
+                    change-on-select
+                    v-model="form.dictGradeId"
                 />
             </a-form-model-item>
             <a-form-model-item label="题目来源" prop="dictSourceId">
@@ -31,6 +42,18 @@
                     v-model="form.dictSourceId"
                 />
             </a-form-model-item>
+            <a-form-model-item label="所属类型" prop="dictTypeId">
+                <a-cascader
+                    :allowClear="true"
+                    :fieldNames="{children:'children', label:'dictName', value: 'id' }"
+                    :options="questionTypeList"
+                    :placeholder="'请选择题目类型'"
+                    @change="dictTypeChange"
+                    change-on-select
+                    v-model="form.dictTypeId"
+                />
+            </a-form-model-item>
+            
             <a-form-model-item label="类型" prop="type">
                 <a-select :placeholder="'请选择类型'" :style="{width:'220px'}" v-model="form.type">
                     <a-select-option :key="index" :value="item.code" v-for="(item,index) in typeList">{{item.codeName}}</a-select-option>
@@ -71,15 +94,27 @@ export default {
     components: { QuestionOne, QuestionTwo },
     data() {
         return {
-            questionTypeList: [],
+            questionTaskList: [],
+            questionGradeList: [],
             questionSourceList: [],
+            questionTypeList: [],
+        
 
             form: {
                 id: "",
-                dictTypeId: [],
-                dictTypeName: [],
+
+                dictTaskId: [],
+                dictTaskName: [],
+
+                dictGradeId: [],
+                dictGradeName: [],
+
                 dictSourceId: [],
                 dictSourceName: [],
+
+                dictTypeId: [],
+                dictTypeName: [],
+                
                 type: "1",
 
                 question: "",
@@ -89,8 +124,11 @@ export default {
                 remarks: "",
             },
             rules: {
-                dictTypeId: [{ required: true, message: "请选择题目类型", trigger: "change" }],
+                dictTaskId: [{ required: true, message: "请选择试卷种类", trigger: "change" }],
+                dictGradeId: [{ required: true, message: "请选择所属年级", trigger: "change" }],
                 dictSourceId: [{ required: true, message: "请选择题目来源", trigger: "change" }],
+                dictTypeId: [{ required: true, message: "请选择题目类型", trigger: "change" }],
+                
                 type: [{ required: true, message: "请选择考题种类", trigger: "change" }],
 
                 question: [{ required: true, message: "问题不可为空", trigger: "blur" }],
@@ -104,6 +142,39 @@ export default {
     },
     methods: {
         /**
+         * 试卷种类
+         * **/
+         dictTaskChange(value, selectedOptions) {
+            this.form.dictTaskName = [];
+            if (null != selectedOptions && selectedOptions.length > 0) {
+                selectedOptions.map((item) => {
+                    this.form.dictTaskName.push(item.dictName);
+                });
+            }
+        },
+        /**
+         * 所属年级
+         * **/
+         dictGradeChange(value, selectedOptions) {
+            this.form.dictGradeName = [];
+            if (null != selectedOptions && selectedOptions.length > 0) {
+                selectedOptions.map((item) => {
+                    this.form.dictGradeName.push(item.dictName);
+                });
+            }
+        },
+        /**
+         * 题目来源
+         * **/
+         dictSourceChange(value, selectedOptions) {
+            this.form.dictSourceName = [];
+            if (null != selectedOptions && selectedOptions.length > 0) {
+                selectedOptions.map((item) => {
+                    this.form.dictSourceName.push(item.dictName);
+                });
+            }
+        },
+        /**
          * 所属类型
          * **/
         dictTypeChange(value, selectedOptions) {
@@ -111,17 +182,6 @@ export default {
             if (null != selectedOptions && selectedOptions.length > 0) {
                 selectedOptions.map((item) => {
                     this.form.dictTypeName.push(item.dictName);
-                });
-            }
-        },
-        /**
-         * 题目来源
-         * **/
-        dictSourceChange(value, selectedOptions) {
-            this.form.dictSourceName = [];
-            if (null != selectedOptions && selectedOptions.length > 0) {
-                selectedOptions.map((item) => {
-                    this.form.dictSourceName.push(item.dictName);
                 });
             }
         },

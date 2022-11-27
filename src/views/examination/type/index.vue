@@ -3,7 +3,7 @@
         <a-row class="rowBorder">
             <a-form :form="form" @submit="getList" layout="inline">
                 <a-form-item label="类型分类">
-                    <a-select :style="{width:'120px'}" placeholder="Select a person" v-model="form.type">
+                    <a-select :style="{width:'120px'}" v-model="form.type">
                         <a-select-option
                             :key="index"
                             :placeholder="'请选类型分类'"

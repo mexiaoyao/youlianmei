@@ -2,15 +2,26 @@
     <div>
         <a-row class="rowBorder">
             <a-form :form="form" @submit="submitSearch" layout="inline">
-                <a-form-item label="题目类型">
+                <a-form-item label="试卷种类">
                     <a-cascader
                         :allowClear="true"
                         :fieldNames="{children:'children', label:'dictName', value: 'id' }"
-                        :options="questionTypeList"
-                        :placeholder="'请选择题目类型'"
+                        :options="questionTaskList"
+                        :placeholder="'请选择试卷种类'"
                         change-on-select
-                        @change="dictTypeChange"
-                        v-model="form.dictTypeId"
+                        @change="dictTaskChange"
+                        v-model="form.dictTaskId"
+                    />
+                </a-form-item>
+                <a-form-item label="所属年级">
+                    <a-cascader
+                        :allowClear="true"
+                        :fieldNames="{children:'children', label:'dictName', value: 'id' }"
+                        :options="questionGradeList"
+                        :placeholder="'请选择所属年级'"
+                        change-on-select
+                        @change="dictGradeChange"
+                        v-model="form.dictGradeId"
                     />
                 </a-form-item>
                 <a-form-item label="题目来源">
@@ -24,6 +35,18 @@
                         v-model="form.dictSourceId"
                     />
                 </a-form-item>
+                <a-form-item label="题目类型">
+                    <a-cascader
+                        :allowClear="true"
+                        :fieldNames="{children:'children', label:'dictName', value: 'id' }"
+                        :options="questionTypeList"
+                        :placeholder="'请选择题目类型'"
+                        change-on-select
+                        @change="dictTypeChange"
+                        v-model="form.dictTypeId"
+                    />
+                </a-form-item>
+
                 <a-form-item label="考题种类">
                     <a-select :style="{width:'160px'}" v-model.trim="form.type">
                         <a-select-option
@@ -65,8 +88,10 @@
                 <a-table-column align="center" key="id" title="序号" width="80">
                     <template slot-scope="text, item, index">{{ (pagination.pageNo - 1)*pagination.pageSize + index+1 }}</template>
                 </a-table-column>
-                <a-table-column align="center" data-index="dictTypePathName" key="dictTypePathName" title="题目类型" width="200" />
+                <a-table-column align="center" data-index="dictTaskPathName" key="dictTaskPathName" title="试卷种类" width="200" />
+                <a-table-column align="center" data-index="dictGradePathName" key="dictGradePathName" title="所属年级" width="200" />
                 <a-table-column align="center" data-index="dictSourcePathName" key="dictSourcePathName" title="题目来源" width="200" />
+                <a-table-column align="center" data-index="dictTypePathName" key="dictTypePathName" title="题目类型" width="200" />
                 <a-table-column align="center" data-index="question" key="question" title="问题" width="200" />
                 <a-table-column align="center" data-index="answers" key="answers" title="答案" width="200" />
                 <a-table-column align="center" data-index="answerRight" key="answerRight" title="正确答案" width="200" />
@@ -174,15 +199,25 @@ export default {
     components: { AddModal },
     data() {
         return {
-            questionTypeList: [],
-            questionSourceList: [],
+            questionTaskList: [],//试卷种类
+            questionGradeList: [],//所属年级
+            questionSourceList: [],//考题来源
+            questionTypeList: [],//考题类型
 
             isLoading: false,
             form: {
-                dictTypeId: [],
-                dictTypeName: [],
+                dictTaskId: [],
+                dictTaskName: [],
+
+                dictGradeId: [],
+                dictGradeName: [],
+
                 dictSourceId: [],
                 dictSourceName: [],
+
+                dictTypeId: [],
+                dictTypeName: [],
+                
                 type: 0,
                 question: "",
                 answers: "",
@@ -220,14 +255,25 @@ export default {
         this.init();
     },
     methods: {
-                /**
-         * 所属类型
+        /**
+         * 试卷种类
          * **/
-         dictTypeChange(value,selectedOptions){
-            this.form.dictTypeName = [];
+         dictTaskChange(value,selectedOptions){
+            this.form.dictTaskName = [];
             if(null!=selectedOptions && selectedOptions.length>0){
                 selectedOptions.map((item)=>{
-                    this.form.dictTypeName.push(item.dictName);
+                    this.form.dictTaskName.push(item.dictName);
+                });
+            }
+        },
+        /**
+         * 所属年级
+         * **/
+         dictGradeChange(value,selectedOptions){
+            this.form.dictGradeName = [];
+            if(null!=selectedOptions && selectedOptions.length>0){
+                selectedOptions.map((item)=>{
+                    this.form.dictGradeName.push(item.dictName);
                 });
             }
         },
@@ -242,10 +288,24 @@ export default {
                 });
             }
         },
+        /**
+         * 所属类型
+         * **/
+         dictTypeChange(value,selectedOptions){
+            this.form.dictTypeName = [];
+            if(null!=selectedOptions && selectedOptions.length>0){
+                selectedOptions.map((item)=>{
+                    this.form.dictTypeName.push(item.dictName);
+                });
+            }
+        },
+
         init() {
             this.getList({});
             this.getTreeData(1);
             this.getTreeData(2);
+            this.getTreeData(3);
+            this.getTreeData(4);
         },
         submitSearch() {
             let createTimeStart = "";
@@ -275,16 +335,20 @@ export default {
             });
         },
         /**
-         * type 1:获取题目类型 2获取考题来源
+         * type 1:试卷种类 2:所属年级 3:考题来源 4:考题类型
          * **/
         getTreeData(type) {
             this.isLoading = true;
             GradeDictControl.listAll({ type: type })
                 .then((res) => {
                     if (type == 1) {
-                        this.questionTypeList = res.list || [];
+                        this.questionTaskList = res.list || [];
                     } else if (type == 2) {
+                        this.questionGradeList = res.list || [];
+                    } else if (type == 3) {
                         this.questionSourceList = res.list || [];
+                    } else if (type == 4) {
+                        this.questionTypeList = res.list || [];
                     }
                 })
                 .finally(() => {
