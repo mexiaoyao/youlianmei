@@ -13,7 +13,7 @@
                 <a-cascader
                     :allowClear="true"
                     :fieldNames="{children:'children', label:'dictName', value: 'id' }"
-                    :options="questionTypeList"
+                    :options="questionTaskList"
                     :placeholder="'请选择试卷种类'"
                     @change="dictTaskChange"
                     change-on-select
@@ -94,11 +94,10 @@ export default {
     components: { QuestionOne, QuestionTwo },
     data() {
         return {
-            questionTaskList: [],
-            questionGradeList: [],
-            questionSourceList: [],
-            questionTypeList: [],
-        
+            questionTaskList: [],//试卷种类
+            questionGradeList: [],//所属年级
+            questionSourceList: [],//考题来源
+            questionTypeList: [],//考题类型
 
             form: {
                 id: "",
@@ -188,6 +187,8 @@ export default {
         init() {
             this.getTreeData(1);
             this.getTreeData(2);
+            this.getTreeData(3);
+            this.getTreeData(4);
         },
         /**
          * type 1:获取题目类型 2获取考题来源
@@ -197,20 +198,18 @@ export default {
             GradeDictControl.listAll({ type: type })
                 .then((res) => {
                     if (type == 1) {
-                        this.questionTypeList = res.list || [];
+                        this.questionTaskList = res.list || [];
                     } else if (type == 2) {
+                        this.questionGradeList = res.list || [];
+                    } else if (type == 3) {
                         this.questionSourceList = res.list || [];
+                    } else if (type == 4) {
+                        this.questionTypeList = res.list || [];
                     }
                 })
                 .finally(() => {
                     this.isLoading = false;
                 });
-        },
-        selectChange(value, e) {
-            for (let i = 0; i < value.length; i++) {
-                value[i].label = value[i].value;
-            }
-            this.form.dictId = value;
         },
         cancelClick() {
             this.resetForm();
