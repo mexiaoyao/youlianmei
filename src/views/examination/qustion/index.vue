@@ -92,17 +92,17 @@
                 <a-table-column align="center" data-index="dictGradePathName" key="dictGradePathName" title="所属年级" width="200" />
                 <a-table-column align="center" data-index="dictSourcePathName" key="dictSourcePathName" title="题目来源" width="200" />
                 <a-table-column align="center" data-index="dictTypePathName" key="dictTypePathName" title="题目类型" width="200" />
+                <a-table-column align="center" data-index="type" key="type" title="类型" width="240">
+                    <template slot-scope="text, item">
+                        <span>{{ item.type | CusListFind(typeList, 'code', 'codeName') }}</span>
+                    </template>
+                </a-table-column>
                 <a-table-column align="center" data-index="question" key="question" title="问题" width="200" />
                 <a-table-column align="center" data-index="answers" key="answers" title="答案" width="200" />
                 <a-table-column align="center" data-index="answerRight" key="answerRight" title="正确答案" width="200" />
                 <a-table-column align="center" data-index="usedNum" key="usedNum" title="使用次数" width="200" />
                 <a-table-column align="center" data-index="goodNum" key="goodNum" title="点赞数" width="200" />
                 <a-table-column align="center" data-index="poorNum" key="poorNum" title="踩数" width="200" />
-                <a-table-column align="center" data-index="type" key="type" title="类型" width="240">
-                    <template slot-scope="text, item">
-                        <span>{{ item.type | CusListFind(typeList, 'code', 'codeName') }}</span>
-                    </template>
-                </a-table-column>
                 <a-table-column align="center" data-index="createTime" key="createTime" title="添加时间" width="240" />
                 <a-table-column align="center" data-index="updateTime" key="updateTime" title="修改时间" width="240" />
                 <a-table-column align="center" data-index="shareNum" key="shareNum" title="分享次数" width="200" />
@@ -113,20 +113,11 @@
                     <template slot-scope="text, item">
                         <div style="text-align:right;">
                             <a-button
-                                @click="goToUpdate(item)"
-                                icon="unordered-list"
-                                size="small"
-                                title="更新记录"
-                                type="primary"
-                                v-if="item.status===1"
-                            />
-                            <a-button
                                 @click="goToDetail(item)"
                                 icon="eye"
                                 size="small"
                                 title="详情"
                                 type="primary"
-                                v-if="item.status===1"
                             />
                             <a-button
                                 @click="edit(item)"
@@ -134,23 +125,6 @@
                                 size="small"
                                 title="编辑"
                                 type="primary"
-                                v-if="item.status===2"
-                            />
-                            <a-button
-                                @click="statusAction(item.id,1)"
-                                icon="check"
-                                size="small"
-                                title="上线"
-                                type="primary"
-                                v-if="item.status===2"
-                            />
-                            <a-button
-                                @click="statusAction(item.id,2)"
-                                icon="close"
-                                size="small"
-                                title="下线"
-                                type="primary"
-                                v-if="item.status===1"
                             />
                             <a-button
                                 @click="deleteAction(item.id)"
@@ -158,23 +132,7 @@
                                 size="small"
                                 title="删除"
                                 type="danger"
-                                v-if="item.status===2"
                             />
-                            <a-upload
-                                :action="url"
-                                :before-upload="beforeUpload"
-                                :data="item"
-                                :file-list="[]"
-                                :headers="headers"
-                                :multiple="false"
-                                @change="handleChange"
-                                name="fileName"
-                                v-if="item.status===1"
-                            >
-                                <a-button size="small" type="primary">
-                                    <a-icon :type="importIng?'loading':'upload'" />
-                                </a-button>
-                            </a-upload>
                         </div>
                     </template>
                 </a-table-column>
@@ -186,6 +144,12 @@
             @cancel="visible=false;editObj={}"
             @ok="visible=false;editObj={};getList()"
         />
+        <detail-modal
+            :item="editObj"
+            :visible="visibleDetail"
+            @cancel="visibleDetail=false;editObj={}"
+            @ok="visibleDetail=false;editObj={};"
+        />
     </div>
 </template>
 <script>
@@ -193,10 +157,11 @@ import { GradeDictControl, GradeQuestionControl } from "@/api";
 import Constants from "@/libs/utils/constants";
 import LangUtil from "@/libs/utils/langUtil";
 
-import AddModal from "./modal/index";
+import AddModal from "./modal/add";
+import DetailModal from "./modal/detail";
 export default {
     name: "grade-question-list",
-    components: { AddModal },
+    components: { AddModal, DetailModal },
     data() {
         return {
             questionTaskList: [],//试卷种类
@@ -219,6 +184,7 @@ export default {
                 dictTypeName: [],
                 
                 type: 0,
+                intro:"",
                 question: "",
                 answers: "",
                 answerRight: "",
@@ -247,6 +213,7 @@ export default {
 
             visible: false, //新增/编辑 弹框
             editObj: {}, //新增/编辑 数据
+            visibleDetail: false, //新增/编辑 弹框
         };
     },
     computed: {},
@@ -361,52 +328,6 @@ export default {
             this.visible = true;
             this.editObj = row;
         },
-
-        /**
-         * 上架：1，下架：2操作
-         * **/
-        statusAction(id, status) {
-            let _self = this;
-            if (status === 2) {
-                this.$confirm({
-                    title: "警告",
-                    content: "您确定要下架这条数据吗,此举将删除股票记录表，且不可逆！",
-                    onOk() {
-                        GradeQuestionControl.status({ id: id, status: status }).then((res) => {
-                            if (res.code === 10000) {
-                                _self.$notification.success({
-                                    message: "提示",
-                                    description: "操作成功！",
-                                });
-                                _self.getList({});
-                            } else {
-                                _self.$notification.error({
-                                    message: "提示",
-                                    description: "操作失败！",
-                                });
-                            }
-                        });
-                        return;
-                    },
-                    onCancel() {},
-                });
-            } else {
-                GradeQuestionControl.status({ id: id, status: status }).then((res) => {
-                    if (res.code === 10000) {
-                        _self.$notification.success({
-                            message: "提示",
-                            description: "操作成功！",
-                        });
-                        _self.getList({});
-                    } else {
-                        _self.$notification.error({
-                            message: "提示",
-                            description: "操作失败！",
-                        });
-                    }
-                });
-            }
-        },
         /**
          * 删除
          * **/
@@ -435,13 +356,9 @@ export default {
                 onCancel() {},
             });
         },
-
-        /**
-         * 弹出更新记录列表
-         * **/
-        goToUpdate(item) {
-            this.updateVisible = true;
-            this.updateItem = item;
+        goToDetail(item){
+            this.visibleDetail = true;
+            this.editObj = item;
         },
     },
 };

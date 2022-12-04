@@ -8,8 +8,8 @@
         @ok="save"
         destroyOnClose
     >
-        <a-form-model :label-col="{ span: 8 }" :model="form" :rules="rules" :wrapper-col="{ span: 12 }" ref="addForm">
-            <a-form-model-item label="试卷种类" prop="dictTaskId">
+        <a-form-model :label-col="{ span: 8 }" :model="form" :wrapper-col="{ span: 12 }" ref="addForm">
+            <a-form-model-item label="试卷种类" prop="dictTaskId" :rules="{ required: true, message: '请选择试卷种类', trigger: 'chanage'}">
                 <a-cascader
                     :allowClear="true"
                     :fieldNames="{children:'children', label:'dictName', value: 'id' }"
@@ -18,9 +18,10 @@
                     @change="dictTaskChange"
                     change-on-select
                     v-model="form.dictTaskId"
+                    
                 />
             </a-form-model-item>
-            <a-form-model-item label="所属年级" prop="dictGradeId">
+            <a-form-model-item label="所属年级" prop="dictGradeId" :rules="{ required: true, message: '请选择所属年级', trigger: 'chanage'}">
                 <a-cascader
                     :allowClear="true"
                     :fieldNames="{children:'children', label:'dictName', value: 'id' }"
@@ -31,7 +32,7 @@
                     v-model="form.dictGradeId"
                 />
             </a-form-model-item>
-            <a-form-model-item label="题目来源" prop="dictSourceId">
+            <a-form-model-item label="题目来源" prop="dictSourceId" :rules="{ required: true, message: '请选择题目来源', trigger: 'chanage'}">
                 <a-cascader
                     :allowClear="true"
                     :fieldNames="{children:'children', label:'dictName', value: 'id' }"
@@ -42,7 +43,7 @@
                     v-model="form.dictSourceId"
                 />
             </a-form-model-item>
-            <a-form-model-item label="所属类型" prop="dictTypeId">
+            <a-form-model-item label="所属类型" prop="dictTypeId" :rules="{ required: true, message: '请选择题目类型', trigger: 'chanage'}">
                 <a-cascader
                     :allowClear="true"
                     :fieldNames="{children:'children', label:'dictName', value: 'id' }"
@@ -54,7 +55,7 @@
                 />
             </a-form-model-item>
             
-            <a-form-model-item label="类型" prop="type">
+            <a-form-model-item label="类型" prop="type" :rules="{ required: true, message: '请选择类型', trigger: 'chanage'}">
                 <a-select :placeholder="'请选择类型'" :style="{width:'220px'}" v-model="form.type">
                     <a-select-option :key="index" :value="item.code" v-for="(item,index) in typeList">{{item.codeName}}</a-select-option>
                 </a-select>
@@ -99,6 +100,8 @@ export default {
             questionSourceList: [],//考题来源
             questionTypeList: [],//考题类型
 
+
+
             form: {
                 id: "",
 
@@ -114,25 +117,14 @@ export default {
                 dictTypeId: [],
                 dictTypeName: [],
                 
-                type: "1",
+                type: "",
 
+                intro: "",
                 question: "",
                 answers: "",
                 answerRight: "",
 
                 remarks: "",
-            },
-            rules: {
-                dictTaskId: [{ required: true, message: "请选择试卷种类", trigger: "change" }],
-                dictGradeId: [{ required: true, message: "请选择所属年级", trigger: "change" }],
-                dictSourceId: [{ required: true, message: "请选择题目来源", trigger: "change" }],
-                dictTypeId: [{ required: true, message: "请选择题目类型", trigger: "change" }],
-                
-                type: [{ required: true, message: "请选择考题种类", trigger: "change" }],
-
-                question: [{ required: true, message: "问题不可为空", trigger: "blur" }],
-                answers: [{ required: true, message: "答案不可为空", trigger: "blur" }],
-                answerRight: [{ required: true, message: "正确答案不可为空", trigger: "blur" }],
             },
             isLoading: false,
 
