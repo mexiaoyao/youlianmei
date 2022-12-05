@@ -10,7 +10,10 @@ module.exports = {
                 target: API_FIEX,
                 // 获取cookie
                 changeOrigin: true,
-                secure: false
+                secure: false,
+                pathRewrite: {
+                    "^/api": ""
+                }
             }
         }
     }

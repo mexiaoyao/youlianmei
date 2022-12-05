@@ -3,7 +3,7 @@
         <a-row class="rowBorder">
             <a-form :form="form" @submit="getList" layout="inline">
                 <a-form-item label="类型分类">
-                    <a-select :style="{width:'120px'}" v-model="form.type">
+                    <a-select :style="{width:'120px'}" @change="init" v-model="form.type">
                         <a-select-option
                             :key="index"
                             :placeholder="'请选类型分类'"
@@ -11,9 +11,6 @@
                             v-for="(item,index) in typeList"
                         >{{item.codeName}}</a-select-option>
                     </a-select>
-                </a-form-item>
-                <a-form-item>
-                    <a-button :disabled="isLoading" html-type="submit" type="primary">查询</a-button>
                 </a-form-item>
             </a-form>
         </a-row>
@@ -130,7 +127,7 @@ export default {
                 content: "您确定要删除这条数据吗",
                 onOk() {
                     GradeDictControl.delete({ id: id }).then((res) => {
-                        if (res.data.code == 10000) {
+                        if (res.code == 10000) {
                             _self.$notification.success({
                                 message: "提示",
                                 description: "操作成功！",

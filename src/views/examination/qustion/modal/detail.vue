@@ -17,11 +17,20 @@
             <question-one :form="form" v-if="form.type==1" />
             <question-two :form="form" v-if="form.type==2" />
             <a-form-model-item label="使用次数">{{form.usedNum}}</a-form-model-item>
-            <a-form-model-item label="点赞数"><a-icon type="like" /> {{form.goodNum}}</a-form-model-item>
-            <a-form-model-item label="踩数"><a-icon type="like" rotate="180" /> {{form.poorNum}}</a-form-model-item>
+            <a-form-model-item label="点赞数">
+                <a-icon type="like" />
+                {{form.goodNum}}
+            </a-form-model-item>
+            <a-form-model-item label="踩数">
+                <a-icon :rotate="180" type="like" />
+                {{form.poorNum}}
+            </a-form-model-item>
             <a-form-model-item label="添加时间">{{form.createTime}}</a-form-model-item>
             <a-form-model-item label="修改时间">{{form.updateTime}}</a-form-model-item>
-            <a-form-model-item label="分享次数"><a-icon type="sync" /> {{form.shareNum}}</a-form-model-item>
+            <a-form-model-item label="分享次数">
+                <a-icon type="sync" />
+                {{form.shareNum}}
+            </a-form-model-item>
             <a-form-model-item label="图片">{{form.imgUrl}}</a-form-model-item>
             <a-form-model-item label="创建人">{{form.createName}}</a-form-model-item>
             <a-form-model-item label="备注">{{form.remarks}}</a-form-model-item>
@@ -47,7 +56,7 @@ export default {
     components: { QuestionOne, QuestionTwo },
     data() {
         return {
-            form:{},
+            form: {},
             typeList: Constants.GRDEQUESTION.KAOTI_QUESTION_TYPE,
         };
     },

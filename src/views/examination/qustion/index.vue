@@ -8,8 +8,8 @@
                         :fieldNames="{children:'children', label:'dictName', value: 'id' }"
                         :options="questionTaskList"
                         :placeholder="'请选择试卷种类'"
-                        change-on-select
                         @change="dictTaskChange"
+                        change-on-select
                         v-model="form.dictTaskId"
                     />
                 </a-form-item>
@@ -19,8 +19,8 @@
                         :fieldNames="{children:'children', label:'dictName', value: 'id' }"
                         :options="questionGradeList"
                         :placeholder="'请选择所属年级'"
-                        change-on-select
                         @change="dictGradeChange"
+                        change-on-select
                         v-model="form.dictGradeId"
                     />
                 </a-form-item>
@@ -30,8 +30,8 @@
                         :fieldNames="{children:'children', label:'dictName', value: 'id' }"
                         :options="questionSourceList"
                         :placeholder="'请选择题目来源'"
-                        change-on-select
                         @change="dictSourceChange"
+                        change-on-select
                         v-model="form.dictSourceId"
                     />
                 </a-form-item>
@@ -41,8 +41,8 @@
                         :fieldNames="{children:'children', label:'dictName', value: 'id' }"
                         :options="questionTypeList"
                         :placeholder="'请选择题目类型'"
-                        change-on-select
                         @change="dictTypeChange"
+                        change-on-select
                         v-model="form.dictTypeId"
                     />
                 </a-form-item>
@@ -76,6 +76,18 @@
         <a-row class="rowBorder">
             <a-row class="tr pt15">
                 <a-button :disabled="isLoading" @click="visible=true;" type="primary">新增</a-button>
+                <a-upload
+                    :action="actionUrl"
+                    :data="form"
+                    :headers="headers"
+                    :method="'post'"
+                    :multiple="false"
+                    :showUploadList="false"
+                    @change="handleChange"
+                    name="fileName"
+                >
+                    <a-button type="primary">批量导入</a-button>
+                </a-upload>
             </a-row>
             <a-table
                 :data-source="list"
@@ -88,10 +100,34 @@
                 <a-table-column align="center" key="id" title="序号" width="80">
                     <template slot-scope="text, item, index">{{ (pagination.pageNo - 1)*pagination.pageSize + index+1 }}</template>
                 </a-table-column>
-                <a-table-column align="center" data-index="dictTaskPathName" key="dictTaskPathName" title="试卷种类" width="200" />
-                <a-table-column align="center" data-index="dictGradePathName" key="dictGradePathName" title="所属年级" width="200" />
-                <a-table-column align="center" data-index="dictSourcePathName" key="dictSourcePathName" title="题目来源" width="200" />
-                <a-table-column align="center" data-index="dictTypePathName" key="dictTypePathName" title="题目类型" width="200" />
+                <a-table-column
+                    align="center"
+                    data-index="dictTaskPathName"
+                    key="dictTaskPathName"
+                    title="试卷种类"
+                    width="200"
+                />
+                <a-table-column
+                    align="center"
+                    data-index="dictGradePathName"
+                    key="dictGradePathName"
+                    title="所属年级"
+                    width="200"
+                />
+                <a-table-column
+                    align="center"
+                    data-index="dictSourcePathName"
+                    key="dictSourcePathName"
+                    title="题目来源"
+                    width="200"
+                />
+                <a-table-column
+                    align="center"
+                    data-index="dictTypePathName"
+                    key="dictTypePathName"
+                    title="题目类型"
+                    width="200"
+                />
                 <a-table-column align="center" data-index="type" key="type" title="类型" width="240">
                     <template slot-scope="text, item">
                         <span>{{ item.type | CusListFind(typeList, 'code', 'codeName') }}</span>
@@ -112,20 +148,8 @@
                 <a-table-column align="center" fixed="right" key="action" title="操作" width="180px">
                     <template slot-scope="text, item">
                         <div style="text-align:right;">
-                            <a-button
-                                @click="goToDetail(item)"
-                                icon="eye"
-                                size="small"
-                                title="详情"
-                                type="primary"
-                            />
-                            <a-button
-                                @click="edit(item)"
-                                icon="edit"
-                                size="small"
-                                title="编辑"
-                                type="primary"
-                            />
+                            <a-button @click="goToDetail(item)" icon="eye" size="small" title="详情" type="primary" />
+                            <a-button @click="edit(item)" icon="edit" size="small" title="编辑" type="primary" />
                             <a-button
                                 @click="deleteAction(item.id)"
                                 icon="delete"
@@ -162,12 +186,17 @@ import DetailModal from "./modal/detail";
 export default {
     name: "grade-question-list",
     components: { AddModal, DetailModal },
+    computed: {
+        headers() {
+            return {};
+        },
+    },
     data() {
         return {
-            questionTaskList: [],//试卷种类
-            questionGradeList: [],//所属年级
-            questionSourceList: [],//考题来源
-            questionTypeList: [],//考题类型
+            questionTaskList: [], //试卷种类
+            questionGradeList: [], //所属年级
+            questionSourceList: [], //考题来源
+            questionTypeList: [], //考题类型
 
             isLoading: false,
             form: {
@@ -182,9 +211,9 @@ export default {
 
                 dictTypeId: [],
                 dictTypeName: [],
-                
+
                 type: 0,
-                intro:"",
+                intro: "",
                 question: "",
                 answers: "",
                 answerRight: "",
@@ -214,9 +243,11 @@ export default {
             visible: false, //新增/编辑 弹框
             editObj: {}, //新增/编辑 数据
             visibleDetail: false, //新增/编辑 弹框
+
+            //考题导入参数
+            actionUrl: process.env.VUE_APP_API_FIEX + "ylm/gradeQuestion/upload",
         };
     },
-    computed: {},
     watch: {},
     created() {
         this.init();
@@ -225,10 +256,10 @@ export default {
         /**
          * 试卷种类
          * **/
-         dictTaskChange(value,selectedOptions){
+        dictTaskChange(value, selectedOptions) {
             this.form.dictTaskName = [];
-            if(null!=selectedOptions && selectedOptions.length>0){
-                selectedOptions.map((item)=>{
+            if (null != selectedOptions && selectedOptions.length > 0) {
+                selectedOptions.map((item) => {
                     this.form.dictTaskName.push(item.dictName);
                 });
             }
@@ -236,10 +267,10 @@ export default {
         /**
          * 所属年级
          * **/
-         dictGradeChange(value,selectedOptions){
+        dictGradeChange(value, selectedOptions) {
             this.form.dictGradeName = [];
-            if(null!=selectedOptions && selectedOptions.length>0){
-                selectedOptions.map((item)=>{
+            if (null != selectedOptions && selectedOptions.length > 0) {
+                selectedOptions.map((item) => {
                     this.form.dictGradeName.push(item.dictName);
                 });
             }
@@ -247,10 +278,10 @@ export default {
         /**
          * 题目来源
          * **/
-         dictSourceChange(value,selectedOptions){
+        dictSourceChange(value, selectedOptions) {
             this.form.dictSourceName = [];
-            if(null!=selectedOptions && selectedOptions.length>0){
-                selectedOptions.map((item)=>{
+            if (null != selectedOptions && selectedOptions.length > 0) {
+                selectedOptions.map((item) => {
                     this.form.dictSourceName.push(item.dictName);
                 });
             }
@@ -258,10 +289,10 @@ export default {
         /**
          * 所属类型
          * **/
-         dictTypeChange(value,selectedOptions){
+        dictTypeChange(value, selectedOptions) {
             this.form.dictTypeName = [];
-            if(null!=selectedOptions && selectedOptions.length>0){
-                selectedOptions.map((item)=>{
+            if (null != selectedOptions && selectedOptions.length > 0) {
+                selectedOptions.map((item) => {
                     this.form.dictTypeName.push(item.dictName);
                 });
             }
@@ -356,10 +387,12 @@ export default {
                 onCancel() {},
             });
         },
-        goToDetail(item){
+        goToDetail(item) {
             this.visibleDetail = true;
             this.editObj = item;
         },
+
+        handleChange(e) {},
     },
 };
 </script>
