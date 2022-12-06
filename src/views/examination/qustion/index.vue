@@ -78,15 +78,18 @@
                 <a-button :disabled="isLoading" @click="visible=true;" type="primary">新增</a-button>
                 <a-upload
                     :action="actionUrl"
+                    :beforeUpload="beforeUpload"
                     :data="form"
+                    :disabled="isLoading"
                     :headers="headers"
                     :method="'post'"
                     :multiple="false"
                     :showUploadList="false"
                     @change="handleChange"
+                    accept=".xlsx, .xls"
                     name="fileName"
                 >
-                    <a-button type="primary">批量导入</a-button>
+                    <a-button :disabled="isLoading" type="primary">批量导入</a-button>
                 </a-upload>
             </a-row>
             <a-table
@@ -392,7 +395,39 @@ export default {
             this.editObj = item;
         },
 
-        handleChange(e) {},
+        handleChange(info) {
+            if (info.file.status === "done") {
+                if (info.file.response.code == "10000") {
+                    this.$notification.success({
+                        message: "提示",
+                        description: "考题批量导入成功",
+                    });
+                    this.getList({});
+                } else {
+                    this.$notification.warning({
+                        message: "提示",
+                        description: info.file.response.msg,
+                    });
+                }
+                this.isLoading = false;
+            } else if (info.file.status === "error") {
+                this.$notification.warning({
+                    message: "提示",
+                    description: "考题批量导失败",
+                });
+                this.isLoading = false;
+            }
+        },
+        beforeUpload(e) {
+            if (e.type !== "application/vnd.ms-excel") {
+                this.$notification.warning({
+                    message: "提示",
+                    description: "请上传Excel文件！",
+                });
+                return false;
+            }
+            this.isLoading = true;
+        },
     },
 };
 </script>
