@@ -80,6 +80,14 @@ export default [
                 },
                 name: "examination-qustion",
                 path: "/examination/qustion"
+            },
+            {
+                key: "examination.createtest",
+                meta: {
+                    title: "生成试卷"
+                },
+                name: "examination-createtest",
+                path: "/examination/createtest"
             }
         ]
     }
