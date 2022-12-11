@@ -4,13 +4,11 @@
             <a-button @click="createTest()" type="primary">生成PDF试卷</a-button>
         </a-row>
         <a-row ref="pdf" style="color:#000;">
-            <a-row class="tc testH1">{{testData.title}}练习题</a-row>
+            <a-row class="tc testH1">{{testTitle}}练习题</a-row>
+            <div v-for="(item, index) in list" :key="index + 'key'">
+                <a-row>{{ getNumChange(index + 1)}}、{{item.title}}</a-row>
 
-            <template>
-                <a-row>一、{{testData.one.title}}</a-row>
-
-            </template>
-
+            </div>
             <a-row class="tr">生成日期:{{createTime}}</a-row>
         </a-row>
         <menu-modal />
@@ -19,6 +17,7 @@
 <script>
 import moment from 'moment';
 import { downloadPDF } from "@/libs/utils/pdf.js";
+import LangUtil from "@/libs/utils/langUtil";
 
 import MenuModal from "./modal/menu";
 export default {
@@ -26,25 +25,17 @@ export default {
     components: { MenuModal },
     provide() {
         return {
-            testData: this.testData,
+            testTitle:this.testTitle,
+            visible:this.visible,
+            list: this.list,
         };
     },
     data() {
         return {
-            createTime:"",
-            testData: {
-                visible: false, //右侧浮动菜单是否显示
-                title: "",
-                one: {
-                    title: "",
-                },
-                two: {
-                    title: "",
-                },
-                three: {
-                    title: "",
-                },
-            },
+            testTitle: "",       //练习题标题
+            createTime: "",     //生成时间
+            visible: true,     //菜单显示状态
+            list:[],            //数据集合
         };
     },
     created() {
@@ -57,7 +48,10 @@ export default {
         },
         getCreateTime(){
             moment.locale('zh-cn');
-            this.createTime = moment().format('LLL');
+            this.createTime = moment().format('YYYY-MM-DD HH:mm:ss');
+        },
+        getNumChange(n){
+            return LangUtil.numChanage(n);
         }
     },
 };
