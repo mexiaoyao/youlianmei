@@ -25,9 +25,7 @@ export default {
     components: { MenuModal },
     provide() {
         return {
-            testTitle:this.testTitle,
-            visible:this.visible,
-            list: this.list,
+            test:this,
         };
     },
     data() {

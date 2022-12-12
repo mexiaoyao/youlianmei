@@ -1,7 +1,7 @@
 <template>
     <a-modal
         :bodyStyle="{ maxHeight: '500px', overflowY: 'auto' }"
-        :visible="visible"
+        :visible="test.visible"
         :width="300"
         @cancel="cancelClick"
         @ok="cancelClick"
@@ -89,7 +89,11 @@ import { GradeDictControl, GradeQuestionControl } from "@/api";
 import Constants from "@/libs/utils/constants";
 export default {
     name: "grade-createtest-menu",
-    inject: ["testTitle","visible","list"],
+    inject: {
+        test: {
+            default: () => ({}),
+        },
+    },
     components: {},
     data() {
         return {
@@ -99,8 +103,6 @@ export default {
             questionTypeList: [], //考题类型
 
             form: {
-                id: "",
-
                 dictTaskId: [],
                 dictTaskName: [],
 
@@ -112,20 +114,14 @@ export default {
 
                 dictTypeId: [],
                 dictTypeName: [],
-
-                type: "",
-
-                intro: "",
-                question: "",
-                answers: "",
-                answerRight: "",
-
-                remarks: "",
             },
             isLoading: false,
 
             typeList: Constants.GRDEQUESTION.KAOTI_QUESTION_TYPE,
         };
+    },
+    created(){
+        this.init();
     },
     methods: {
         /**
@@ -138,6 +134,7 @@ export default {
                     this.form.dictTaskName.push(item.dictName);
                 });
             }
+            this.test.testTitle = this.form.dictTaskName.join("-");
         },
         /**
          * 所属年级
