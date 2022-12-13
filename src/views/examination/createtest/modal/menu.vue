@@ -1,13 +1,13 @@
 <template>
     <a-modal
         :bodyStyle="{ maxHeight: '500px', overflowY: 'auto' }"
+        :dialogStyle="{ right:'20px', position: 'absolute' }"
+        :mask="false"
+        :maskClosable="false"
         :visible="test.visible"
         :width="300"
         @cancel="cancelClick"
         @ok="cancelClick"
-        :mask="false"
-        :maskClosable="false"
-        :dialogStyle="{ right:'20px', position: 'absolute' }"
         destroyOnClose
     >
         <a-form-model :label-col="{ span: 8 }" :model="form" :wrapper-col="{ span: 12 }" ref="addForm">
@@ -73,7 +73,7 @@
             </a-form-model-item>
 
             <a-form-model-item :rules="{ required: true, message: '请选择类型', trigger: 'chanage'}" label="类型" prop="type">
-                <a-select :placeholder="'请选择类型'" :style="{width:'220px'}" v-model="form.type">
+                <a-select :placeholder="'请选择类型'" :style="{width:'120px'}" v-model="form.type">
                     <a-select-option :key="index" :value="item.code" v-for="(item,index) in typeList">{{item.codeName}}</a-select-option>
                 </a-select>
             </a-form-model-item>
@@ -93,6 +93,22 @@ export default {
         test: {
             default: () => ({}),
         },
+        /**
+         * {
+         * title:"填空题", //题目名称
+         * list:[
+         *  {
+         *      id:"",
+         *      intro:"",
+         *      question:"",
+         *      answers:"",
+         *      answerRight:"",
+         *      type:""
+         *  }
+         * ], //题目数据
+         * }
+         *
+         * **/
     },
     components: {},
     data() {
@@ -120,7 +136,7 @@ export default {
             typeList: Constants.GRDEQUESTION.KAOTI_QUESTION_TYPE,
         };
     },
-    created(){
+    created() {
         this.init();
     },
     methods: {
@@ -197,8 +213,8 @@ export default {
                 });
         },
         cancelClick() {
-            this.visible = false;
-        }
+            this.test.visible = false;
+        },
     },
 };
 </script>
