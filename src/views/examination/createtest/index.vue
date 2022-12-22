@@ -8,6 +8,20 @@
             <a-row class="tc testH1">{{testTitle}}练习题</a-row>
             <div :key="index + 'key'" v-for="(item, index) in list">
                 <a-row>{{ getNumChange(index + 1)}}、{{item.title}}</a-row>
+                <!--看拼音写汉字-->
+                <a-row class="rowBorder" v-if="item.type==1">
+                    <a-card :key="i + 'key-i'" style="width:160px" v-for="(row, i) in item.list">
+                        <p>
+                            <a-icon class="orange" type="question" />
+                            {{row.question}}
+                        </p>
+                        <p>{{row.answers}}</p>
+                        <p>
+                            <a-icon class="green" type="check" />
+                            {{row.answerRight}}
+                        </p>
+                    </a-card>
+                </a-row>
             </div>
             <a-row class="tr">生成日期:{{createTime}}</a-row>
         </a-row>

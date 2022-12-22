@@ -2,6 +2,7 @@
     <a-modal
         :bodyStyle="{ maxHeight: '500px', overflowY: 'auto' }"
         :dialogStyle="{ right:'20px', position: 'absolute' }"
+        :footer="null"
         :mask="false"
         :maskClosable="false"
         :visible="test.visible"
@@ -112,6 +113,10 @@
                     :locale="locale"
                     :pagination="pagination"
                     :rowKey="item => item.id"
+                    :rowSelection="{
+                        selectedRowKeys:selectedRowKeys,
+                        onChange:onSelectChanage
+                    }"
                     :scroll="{ x: true }"
                 >
                     <a-table-column align="center" key="id" title="序号" width="80">
@@ -129,9 +134,14 @@
                 </a-table>
             </template>
         </div>
+        <div class="tc" style="padding-bottom:15px;" v-if="current == 5">
+            <a-button @click="onSubmit" type="primary">重新获取</a-button>
+            <a-button @click="setTest" type="primary">制题</a-button>
+        </div>
         <div class="tc">
             <a-button @click="current--" type="primary" v-if="current > 0">上一步</a-button>
             <a-button @click="current++;" type="primary" v-if="current < 7">下一步</a-button>
+
             <a-button @click="$message.success('搞定!')" type="primary" v-if="current == 7">完成</a-button>
         </div>
     </a-modal>
@@ -145,22 +155,6 @@ export default {
         test: {
             default: () => ({}),
         },
-        /**
-         * {
-         * title:"填空题", //题目名称
-         * list:[
-         *  {
-         *      id:"",
-         *      intro:"",
-         *      question:"",
-         *      answers:"",
-         *      answerRight:"",
-         *      type:""
-         *  }
-         * ], //题目数据
-         * }
-         *
-         * **/
     },
     components: {},
     data() {
@@ -200,6 +194,9 @@ export default {
             locale: { emptyText: <a-empty description="暂无数据" /> },
 
             typeList: Constants.GRDEQUESTION.KAOTI_QUESTION_TYPE,
+
+            selectedRowKeys: [],
+            selectedRows: [],
         };
     },
     created() {
@@ -284,30 +281,74 @@ export default {
                 });
         },
         onSubmit() {
-            let _slef = this;
             this.$refs.menuForm.validate((valid) => {
-                if (!valid) {
-                    return false;
-                } else {
-                    GradeQuestionControl.actionDo(_slef.form).then((res) => {
-                        if (res.code == 10000) {
-                            _slef.$notification.success({
-                                message: "提示",
-                                description: "操作成功！",
-                            });
-                            _slef.$emit("ok");
-                        } else {
-                            _slef.$notification.error({
-                                message: "提示",
-                                description: "操作失败！",
-                            });
-                        }
+                if (valid) {
+                    let parme = {};
+                    Object.assign(parme, this.form, { pageNo: this.pagination.pageNo, pageSize: this.pagination.pageSize });
+                    GradeQuestionControl.list(parme).then((res) => {
+                        this.list = res.list || [];
+                        this.pagination.total = res.total || 0;
                     });
                 }
             });
         },
         cancelClick() {
             this.test.visible = false;
+        },
+
+        onSelectChanage(selectedRowKeys, selectedRows) {
+            this.selectedRowKeys = selectedRowKeys;
+            this.selectedRows = selectedRows;
+        },
+        /**
+         * {
+         * typeTitle:"填空题", //题目名称
+         * typeId:题目类型
+         * list:[
+         *  {
+         *      id:"",
+         *      intro:"",
+         *      question:"",
+         *      answers:"",
+         *      answerRight:"",
+         *      type:""
+         *  }
+         * ], //题目数据
+         * }
+         *
+         * selectedRowKeys: [],
+            selectedRows: [],
+         * **/
+        setTest() {
+            let parme = [];
+            this.selectedRows.map((item) => {
+                let tem = {};
+                Object.assign(tem, {
+                    id: item.id,
+                    intro: item.intro,
+                    question: item.question,
+                    answers: item.answers,
+                    answerRight: item.answerRight,
+                    type: item.type,
+                });
+                parme.push(tem);
+            });
+            let test = {
+                title: this.form.dictTypeName[this.form.dictTypeName.length - 1],
+                type: this.form.type,
+                list: parme,
+            };
+            if (null == this.test.list || this.test.list.length == 0) {
+                this.test.list = [];
+            }
+            this.test.list.push(test);
+        },
+    },
+    watch: {
+        current(newVal, oldVal) {
+            if (newVal == 5 && oldVal == 4) {
+                this.onSubmit();
+            }
         },
     },
 };
