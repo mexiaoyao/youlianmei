@@ -3,20 +3,28 @@
         <a-row class="tr">
             <a-button @click="showModal()" type="primary">显示菜单</a-button>
             <a-button @click="createTest()" type="primary">生成PDF试卷</a-button>
+            <a-button @click="isAnswerClick()" type="primary">{{isAnswer==false?"显示参考答案":"不显示答案"}}</a-button>
         </a-row>
         <a-row ref="pdf" style="color:#000;">
             <a-row class="tc testH1">{{testTitle}}练习题</a-row>
             <div :key="index + 'key'" v-for="(item, index) in list">
                 <a-row>{{ getNumChange(index + 1)}}、{{item.title}}</a-row>
-                <!--看拼音写汉字-->
-                <a-row class="rowBorder" v-if="item.type==1">
-                    <a-card :key="i + 'key-i'" style="width:160px" v-for="(row, i) in item.list">
+                <!--看拼音写汉字 || 看汉子写拼音-->
+                <a-row class="rowBorder" v-if="item.type==1 || item.type==2 ">
+                    <a-card
+                        :bordered="false"
+                        :key="i + 'key-i'"
+                        style="width:160px; float: left;"
+                        v-for="(row, i) in item.list"
+                    >
                         <p>
                             <a-icon class="orange" type="question" />
                             {{row.question}}
                         </p>
-                        <p>{{row.answers}}</p>
-                        <p>
+                        <p v-if="!isAnswer">
+                            <a-icon type="edit" />
+                        </p>
+                        <p v-if="isAnswer">
                             <a-icon class="green" type="check" />
                             {{row.answerRight}}
                         </p>
@@ -48,18 +56,22 @@ export default {
             createTime: "", //生成时间
             visible: true, //菜单显示状态
             list: [], //数据集合
+
+            isAnswer: false,
         };
     },
     created() {
         this.getCreateTime();
     },
     methods: {
+        isAnswerClick() {
+            this.isAnswer = !this.isAnswer;
+        },
         showModal() {
             this.visible = true;
         },
         createTest() {
-            let docName = "语文试卷练习";
-            downloadPDF(this.$refs.pdf, docName);
+            downloadPDF(this.$refs.pdf, this.testTitle);
         },
         getCreateTime() {
             moment.locale("zh-cn");
