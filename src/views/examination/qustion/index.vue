@@ -180,9 +180,11 @@
     </div>
 </template>
 <script>
-import { GradeDictControl, GradeQuestionControl } from "@/api";
+import { GradeQuestionControl } from "@/api";
 import Constants from "@/libs/utils/constants";
 import LangUtil from "@/libs/utils/langUtil";
+
+import testMixin from "@/views/examination/mixins/testMiXins";
 
 import AddModal from "./modal/add";
 import DetailModal from "./modal/detail";
@@ -194,13 +196,9 @@ export default {
             return {};
         },
     },
+    mixins: [testMixin],
     data() {
         return {
-            questionTaskList: [], //试卷种类
-            questionGradeList: [], //所属年级
-            questionSourceList: [], //考题来源
-            questionTypeList: [], //考题类型
-
             isLoading: false,
             form: {
                 dictTaskId: [],
@@ -251,63 +249,10 @@ export default {
             actionUrl: process.env.VUE_APP_API_FIEX + "ylm/gradeQuestion/upload",
         };
     },
-    watch: {},
     created() {
-        this.init();
+        this.getList({});
     },
     methods: {
-        /**
-         * 试卷种类
-         * **/
-        dictTaskChange(value, selectedOptions) {
-            this.form.dictTaskName = [];
-            if (null != selectedOptions && selectedOptions.length > 0) {
-                selectedOptions.map((item) => {
-                    this.form.dictTaskName.push(item.dictName);
-                });
-            }
-        },
-        /**
-         * 所属年级
-         * **/
-        dictGradeChange(value, selectedOptions) {
-            this.form.dictGradeName = [];
-            if (null != selectedOptions && selectedOptions.length > 0) {
-                selectedOptions.map((item) => {
-                    this.form.dictGradeName.push(item.dictName);
-                });
-            }
-        },
-        /**
-         * 题目来源
-         * **/
-        dictSourceChange(value, selectedOptions) {
-            this.form.dictSourceName = [];
-            if (null != selectedOptions && selectedOptions.length > 0) {
-                selectedOptions.map((item) => {
-                    this.form.dictSourceName.push(item.dictName);
-                });
-            }
-        },
-        /**
-         * 所属类型
-         * **/
-        dictTypeChange(value, selectedOptions) {
-            this.form.dictTypeName = [];
-            if (null != selectedOptions && selectedOptions.length > 0) {
-                selectedOptions.map((item) => {
-                    this.form.dictTypeName.push(item.dictName);
-                });
-            }
-        },
-
-        init() {
-            this.getList({});
-            this.getTreeData(1);
-            this.getTreeData(2);
-            this.getTreeData(3);
-            this.getTreeData(4);
-        },
         submitSearch() {
             let createTimeStart = "";
             if (null != this.createTime[0]) {
@@ -329,32 +274,13 @@ export default {
         },
         //定义一个请求数据的方法
         getList(timeRange) {
+            this.isLoading = true;
             let parme = Object.assign(this.form, timeRange, { pageNo: this.pagination.pageNo, pageSize: this.pagination.pageSize });
             GradeQuestionControl.list(parme).then((res) => {
                 this.list = res.list || [];
                 this.pagination.total = res.total || 0;
+                this.isLoading = false;
             });
-        },
-        /**
-         * type 1:试卷种类 2:所属年级 3:考题来源 4:考题类型
-         * **/
-        getTreeData(type) {
-            this.isLoading = true;
-            GradeDictControl.listAll({ type: type })
-                .then((res) => {
-                    if (type == 1) {
-                        this.questionTaskList = res.list || [];
-                    } else if (type == 2) {
-                        this.questionGradeList = res.list || [];
-                    } else if (type == 3) {
-                        this.questionSourceList = res.list || [];
-                    } else if (type == 4) {
-                        this.questionTypeList = res.list || [];
-                    }
-                })
-                .finally(() => {
-                    this.isLoading = false;
-                });
         },
 
         /**编辑**/
@@ -367,11 +293,13 @@ export default {
          * **/
         deleteAction(id) {
             let _self = this;
+            let deleteArr = [];
+            deleteArr.push(id);
             this.$confirm({
                 title: "警告",
                 content: "您确定要删除这条数据吗",
                 onOk() {
-                    GradeQuestionControl.delete({ id: id }).then((res) => {
+                    GradeQuestionControl.delete({ stringList: deleteArr }).then((res) => {
                         if (res.code === 10000) {
                             _self.$notification.success({
                                 message: "提示",

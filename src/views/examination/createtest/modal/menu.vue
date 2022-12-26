@@ -130,7 +130,6 @@
                     <a-table-column align="center" data-index="usedNum" key="usedNum" title="使用次数" width="200" />
                     <a-table-column align="center" data-index="goodNum" key="goodNum" title="点赞数" width="200" />
                     <a-table-column align="center" data-index="poorNum" key="poorNum" title="踩数" width="200" />
-                    <a-table-column align="center" data-index="shareNum" key="shareNum" title="分享次数" width="200" />
                 </a-table>
             </template>
         </div>

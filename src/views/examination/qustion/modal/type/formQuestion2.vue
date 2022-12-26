@@ -1,9 +1,9 @@
 <template>
     <div>
-        <a-form-model-item label="汉字词语" prop="question">
+        <a-form-model-item :rules="{ required: true, message: '请输入汉字词语', trigger: 'blur'}" label="汉字词语" prop="question">
             <a-input placeholder="请输入汉字词语" v-model.trim="form.question"></a-input>
         </a-form-model-item>
-        <a-form-model-item label="拼音" prop="answerRight">
+        <a-form-model-item :rules="{ required: true, message: '请输入拼音', trigger: 'blur'}" label="拼音" prop="answerRight">
             <a-input placeholder="请输入拼音" v-model.trim="form.answerRight"></a-input>
         </a-form-model-item>
     </div>

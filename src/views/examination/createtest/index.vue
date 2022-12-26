@@ -5,33 +5,28 @@
             <a-button @click="createTest()" type="primary">生成PDF试卷</a-button>
             <a-button @click="isAnswerClick()" type="primary">{{isAnswer==false?"显示参考答案":"不显示答案"}}</a-button>
         </a-row>
-        <a-row ref="pdf" style="color:#000;">
-            <a-row class="tc testH1">{{testTitle}}练习题</a-row>
-            <div :key="index + 'key'" v-for="(item, index) in list">
-                <a-row>{{ getNumChange(index + 1)}}、{{item.title}}</a-row>
-                <!--看拼音写汉字 || 看汉子写拼音-->
-                <a-row class="rowBorder" v-if="item.type==1 || item.type==2 ">
-                    <a-card
-                        :bordered="false"
-                        :key="i + 'key-i'"
-                        style="width:160px; float: left;"
-                        v-for="(row, i) in item.list"
-                    >
-                        <p>
-                            <a-icon class="orange" type="question" />
-                            {{row.question}}
-                        </p>
-                        <p v-if="!isAnswer">
-                            <a-icon type="edit" />
-                        </p>
-                        <p v-if="isAnswer">
-                            <a-icon class="green" type="check" />
-                            {{row.answerRight}}
-                        </p>
-                    </a-card>
-                </a-row>
+        <a-row>
+            <div class="rowBorder" ref="pdf" style="width:1200px;color:#000;">
+                <div class="tc testH1">{{testTitle}}练习题</div>
+                <div :key="index + 'key'" v-for="(item, index) in list">
+                    <div>{{ getNumChange(index + 1)}}、{{item.title}}</div>
+                    <!--看拼音写汉字 || 看汉子写拼音-->
+                    <div class="rowBorder" v-if="item.type==1 || item.type==2 ">
+                        <div
+                            :key="i + 'key-i'"
+                            class="tc"
+                            style="min-width:160px; float: left;"
+                            v-for="(row, i) in item.list"
+                        >
+                            <p>{{row.question}}</p>
+                            <p style="color:#CCC;" v-if="!isAnswer">_______</p>
+                            <p v-if="isAnswer">{{row.answerRight}}</p>
+                        </div>
+                        <div class="cl"></div>
+                    </div>
+                </div>
+                <div class="tr">生成日期:{{createTime}}</div>
             </div>
-            <a-row class="tr">生成日期:{{createTime}}</a-row>
         </a-row>
         <menu-modal />
     </div>
@@ -75,7 +70,7 @@ export default {
         },
         getCreateTime() {
             moment.locale("zh-cn");
-            this.createTime = moment().format("YYYY-MM-DD HH:mm:ss");
+            this.createTime = moment().format("YYYY-MM-DD");
         },
         getNumChange(n) {
             return LangUtil.numChanage(n);
