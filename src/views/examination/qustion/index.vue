@@ -62,12 +62,6 @@
                 <a-form-item label="创建人">
                     <a-input allowClear placeholder="请输入创建人" v-model.trim="form.createName"></a-input>
                 </a-form-item>
-                <a-form-item label="添加时间">
-                    <a-range-picker allowClear format="YYYY-MM-DD" v-model.trim="createTime" />
-                </a-form-item>
-                <a-form-item label="修改时间">
-                    <a-range-picker allowClear format="YYYY-MM-DD" v-model.trim="updateTime" />
-                </a-form-item>
                 <a-form-item>
                     <a-button :disabled="isLoading" html-type="submit" type="primary">查询</a-button>
                 </a-form-item>
@@ -137,17 +131,12 @@
                     </template>
                 </a-table-column>
                 <a-table-column align="center" data-index="question" key="question" title="问题" width="200" />
-                <a-table-column align="center" data-index="answers" key="answers" title="答案" width="200" />
                 <a-table-column align="center" data-index="answerRight" key="answerRight" title="正确答案" width="200" />
                 <a-table-column align="center" data-index="usedNum" key="usedNum" title="使用次数" width="200" />
                 <a-table-column align="center" data-index="goodNum" key="goodNum" title="点赞数" width="200" />
                 <a-table-column align="center" data-index="poorNum" key="poorNum" title="踩数" width="200" />
-                <a-table-column align="center" data-index="createTime" key="createTime" title="添加时间" width="240" />
-                <a-table-column align="center" data-index="updateTime" key="updateTime" title="修改时间" width="240" />
                 <a-table-column align="center" data-index="shareNum" key="shareNum" title="分享次数" width="200" />
-                <a-table-column align="center" data-index="imgUrl" key="imgUrl" title="图片" width="200" />
                 <a-table-column align="center" data-index="createName" key="createName" title="创建人" width="200" />
-                <a-table-column align="center" data-index="remarks" key="remarks" title="备注" />
                 <a-table-column align="center" fixed="right" key="action" title="操作" width="180px">
                     <template slot-scope="text, item">
                         <div style="text-align:right;">

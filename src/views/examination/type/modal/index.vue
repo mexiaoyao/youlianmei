@@ -59,6 +59,7 @@ export default {
         },
         onSubmit() {
             let _slef = this;
+            this.isLoading = true;
             this.$refs.addForm.validate((valid) => {
                 if (valid) {
                     GradeDictControl.actionDo(_slef.form).then((res) => {
@@ -79,6 +80,7 @@ export default {
                     console.log("error submit!!");
                     return false;
                 }
+                _slef.isLoading = false;
             });
         },
         resetForm() {

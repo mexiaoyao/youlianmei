@@ -79,9 +79,7 @@ export default class Constants {
             { code: 1, codeName: "试卷种类" }, //例如，语文，数学，英语等等
             { code: 2, codeName: "所属年级" }, //例如，一年级，大一等
             { code: 3, codeName: "考题来源" }, //例如，苏教版，某年考题等
-            { code: 4, codeName: "考题类型" }, //例如，应用题，字词积累等
-            
-            
+            { code: 4, codeName: "考题类型" } //例如，应用题，字词积累等
         ],
 
         /**
