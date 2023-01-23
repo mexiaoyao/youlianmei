@@ -48,7 +48,7 @@
                 </a-form-item>
 
                 <a-form-item label="考题种类">
-                    <a-select :style="{width:'160px'}" v-model.trim="form.type">
+                    <a-select :allowClear="true" :style="{width:'160px'}" v-model.trim="form.type">
                         <a-select-option
                             :key="index"
                             :value="item.code"
@@ -95,7 +95,9 @@
                 :scroll="{ x: true }"
             >
                 <a-table-column align="center" key="id" title="序号" width="80">
-                    <template slot-scope="text, item, index">{{ (pagination.pageNo - 1)*pagination.pageSize + index+1 }}</template>
+                    <template
+                        slot-scope="text, item, index"
+                    >{{ (pagination.current - 1)*pagination.pageSize + index+1 }}</template>
                 </a-table-column>
                 <a-table-column
                     align="center"
@@ -214,7 +216,7 @@ export default {
             updateTime: [null, null],
 
             pagination: {
-                pageNo: 1,
+                current: 1,
                 pageSize: 10, // 默认每页显示数量
                 showSizeChanger: true, // 显示可改变每页数量
                 pageSizeOptions: ["10", "20", "50", "100"], // 每页数量选项
@@ -239,32 +241,28 @@ export default {
         };
     },
     created() {
-        this.getList({});
+        this.getList();
     },
     methods: {
+        onSizeChange(current, pageSize) {
+            this.pagination.current = 1;
+            this.pagination.pageSize = pageSize;
+            this.getList();
+        },
+        onPageChange(page, pageSize) {
+            this.pagination.current = page;
+            this.pagination.pageSize = pageSize;
+            this.getList();
+        },
+
         submitSearch() {
-            let createTimeStart = "";
-            if (null != this.createTime[0]) {
-                createTimeStart = this.createTime[0].format("YYYY-MM-DD");
-            }
-            let createTimeEnd = "";
-            if (null != this.createTime[1]) {
-                createTimeEnd = this.createTime[1].format("YYYY-MM-DD");
-            }
-            let updateTimeStart = "";
-            if (null != this.updateTime[0]) {
-                updateTimeStart = this.updateTime[0].format("YYYY-MM-DD");
-            }
-            let updateTimeEnd = "";
-            if (null != this.updateTime[1]) {
-                updateTimeEnd = this.updateTime[1].format("YYYY-MM-DD");
-            }
-            this.getList({ createTimeStart: createTimeStart, createTimeEnd: createTimeEnd, updateTimeStart: updateTimeStart, updateTimeEnd: updateTimeEnd });
+            this.pagination = Object.assign({}, this.$options.data.call(this).pagination, { pageSize: this.pagination.pageSize });
+            this.getList();
         },
         //定义一个请求数据的方法
-        getList(timeRange) {
+        getList() {
             this.isLoading = true;
-            let parme = Object.assign(this.form, timeRange, { pageNo: this.pagination.pageNo, pageSize: this.pagination.pageSize });
+            let parme = Object.assign(this.form, { pageNo: this.pagination.current, pageSize: this.pagination.pageSize });
             GradeQuestionControl.list(parme).then((res) => {
                 this.list = res.list || [];
                 this.pagination.total = res.total || 0;
