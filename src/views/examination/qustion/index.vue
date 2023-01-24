@@ -240,6 +240,9 @@ export default {
             actionUrl: process.env.VUE_APP_API_FIEX + "ylm/gradeQuestion/upload",
         };
     },
+    mounted() {
+        this.initTest();
+    },
     created() {
         this.getList();
     },

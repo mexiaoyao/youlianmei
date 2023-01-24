@@ -8,9 +8,6 @@ export default {
             questionTypeList: [] //考题类型
         };
     },
-    created() {
-        this.initTest();
-    },
     methods: {
         /**
          * type 1:试卷种类 2:所属年级 3:考题来源 4:考题类型
