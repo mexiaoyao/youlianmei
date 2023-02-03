@@ -9,17 +9,17 @@
         destroyOnClose
     >
         <a-form-model :model="form" :rules="rules" autocomplete="off" ref="loginForm">
-            <a-form-model-item prop="username">
-                <a-input allow-clear placeholder="请输入用户名" v-model="form.username">
+            <a-form-model-item prop="userName">
+                <a-input allow-clear placeholder="请输入用户名" v-model="form.userName">
                     <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="user" />
                 </a-input>
             </a-form-model-item>
-            <a-form-model-item prop="userpwd">
-                <a-input-password allow-clear autocomplete="off" placeholder="请输入密码" v-model="form.userpwd">
+            <a-form-model-item prop="userPwd">
+                <a-input-password allow-clear autocomplete="off" placeholder="请输入密码" v-model="form.userPwd">
                     <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="lock" />
                 </a-input-password>
             </a-form-model-item>
-            <a-form-model-item prop="code">
+            <!-- <a-form-model-item prop="code">
                 <a-input allow-clear placeholder="请输入验证码" style="width:200px; float:left;" v-model="form.code">
                     <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="safety" />
                 </a-input>
@@ -27,7 +27,7 @@
             </a-form-model-item>
             <a-form-item prop="isCheck">
                 <a-checkbox :checked="form.isCheck==1" @change="handleChange">股市有风险，入市请谨慎！</a-checkbox>
-            </a-form-item>
+            </a-form-item>-->
         </a-form-model>
     </a-modal>
 </template>
@@ -47,16 +47,16 @@ export default {
     data() {
         return {
             form: {
-                username: "",
-                userpwd: "",
+                userName: "",
+                userPwd: "",
                 uuid: "",
-                code: "",
-                isCheck: 0,
+                // code: "",
+                // isCheck: 0,
             },
             rules: {
-                username: [{ required: true, message: "用户名不可为空", trigger: "blur" }],
-                userpwd: [{ required: true, message: "密码不可为空", trigger: "blur" }],
-                code: [{ required: true, message: "验证码不可为空", trigger: "blur" }],
+                userName: [{ required: true, message: "用户名不可为空", trigger: "blur" }],
+                userPwd: [{ required: true, message: "密码不可为空", trigger: "blur" }],
+                //code: [{ required: true, message: "验证码不可为空", trigger: "blur" }],
                 // isCheck: [
                 //     {
                 //         validator: booleanCheck.bind(this),
